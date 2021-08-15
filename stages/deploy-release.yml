@@ -37,10 +37,10 @@ stages:
     - template: '../variables/versions.yml'
     
     pool:
-    - ${{ if eq( parameters.PoolType, 'VM' )}}:
-      vmImage: ${{ parameters.PoolName }}
-    - ${{ if eq( parameters.PoolType, 'Pool' )}}:
-      name: ${{ parameters.PoolName }}
+      ${{ if eq( parameters.PoolType, 'VM' )}}:
+        vmImage: ${{ parameters.PoolName }}
+      ${{ if eq( parameters.PoolType, 'Pool' )}}:
+        name: ${{ parameters.PoolName }}
 
     environment: '${{ variables.Product }} ${{ parameters.PackageType }} NuGet'
       strategy: 
