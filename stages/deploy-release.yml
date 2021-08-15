@@ -56,7 +56,7 @@ stages:
               downloadPath: '$(build.artifactstagingdirectory)'
           
           - ${{ if eq( parameters.PackageType, 'Beta') }}:
-            - template: 'create-github-release.yml'
+            - template: '../steps/create-github-release.yml'
               parameters: 
                 PackageType: ${{ parameters.PackageType }}
                 GitHubConnectionName: ${{ variables.GitHubConnectionName }}
@@ -73,7 +73,7 @@ stages:
                 action: 'delete'
                 tag: ${{ variables.BetaVersion }}
 
-            - template: 'create-github-release.yml'
+            - template: '../steps/create-github-release.yml'
               parameters: 
                 PackageType: ${{ parameters.PackageType }}
                 GitHubConnectionName: ${{ variables.GitHubConnectionName }}
