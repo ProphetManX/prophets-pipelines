@@ -25,10 +25,10 @@ stages:
     - template: '${{ parameters.LocalVariables }}@self'
     
     pool:
-    - ${{ if eq( parameters.PoolType, 'VM' )}}:
-      vmImage: ${{ parameters.PoolName }}
-    - ${{ if eq( parameters.PoolType, 'Pool' )}}:
-      name: ${{ parameters.PoolName }}
+      ${{ if eq( parameters.PoolType, 'VM' )}}:
+        vmImage: ${{ parameters.PoolName }}
+      ${{ if eq( parameters.PoolType, 'Pool' )}}:
+        name: ${{ parameters.PoolName }}
     
     steps:
     - checkout: self
