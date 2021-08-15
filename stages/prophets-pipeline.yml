@@ -40,7 +40,7 @@ stages:
     LocalVariables: ${{ parameters.LocalVariables }}
     PackageType: 'Beta'
     DependantStage: 'Deploy_Alpha'
-    ExtraConditions: ${{ eq(variables['Build.SourceBranchName'], 'main')) }}
+    ExtraConditions: ${{ eq(variables['Build.SourceBranchName'], 'main') }}
     
 - template: 'deploy-release.yml'
   parameters:
