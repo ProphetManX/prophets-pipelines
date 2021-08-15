@@ -43,50 +43,50 @@ stages:
         name: ${{ parameters.PoolName }}
 
     environment: '${{ variables.Product }} ${{ parameters.PackageType }} NuGet'
-      strategy: 
-        runOnce:
-          deploy:
-            steps:
-            - task: DownloadBuildArtifacts@0
-              displayName: Download Artifact
+    strategy: 
+      runOnce:
+        deploy:
+          steps:
+          - task: DownloadBuildArtifacts@0
+            displayName: Download Artifact
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
+              artifactName: '${{ parameters.PackageType}}'
+              downloadPath: '$(build.artifactstagingdirectory)'
+          
+          - ${{ if eq( parameters.PackageType, 'Beta') }}:
+            - template: 'create-github-release.yml'
+              parameters: 
+                PackageType: ${{ parameters.PackageType }}
+                GitHubConnectionName: ${{ variables.GitHubConnectionName }}
+                RepositoryName: ${{ variables.RepoName }}
+                VersionNumber: ${{ variables.BetaVersion }}
+                IsPreRelease: true
+          
+          - ${{ if eq( parameters.PackageType, 'Release') }}:
+            - task: GitHubRelease@1
+              displayName: 'Delete GitHub Beta Release'
               inputs:
-                buildType: 'current'
-                downloadType: 'single'
-                artifactName: '${{ parameters.PackageType}}'
-                downloadPath: '$(build.artifactstagingdirectory)'
-            
-            - ${{ if eq( parameters.PackageType, 'Beta') }}:
-              - template: 'create-github-release.yml'
-                parameters: 
-                  PackageType: ${{ parameters.PackageType }}
-                  GitHubConnectionName: ${{ variables.GitHubConnectionName }}
-                  RepositoryName: ${{ variables.RepoName }}
-                  VersionNumber: ${{ variables.BetaVersion }}
-                  IsPreRelease: true
-            
-            - ${{ if eq( parameters.PackageType, 'Release') }}:
-              - task: GitHubRelease@1
-                displayName: 'Delete GitHub Beta Release'
-                inputs:
-                  gitHubConnection: ${{ variables.GitHubConnectionName }}
-                  repositoryName: '${{ variables.RepoName }}'
-                  action: 'delete'
-                  tag: ${{ variables.BetaVersion }}
+                gitHubConnection: ${{ variables.GitHubConnectionName }}
+                repositoryName: '${{ variables.RepoName }}'
+                action: 'delete'
+                tag: ${{ variables.BetaVersion }}
 
-              - template: 'create-github-release.yml'
-                parameters: 
-                  PackageType: ${{ parameters.PackageType }}
-                  GitHubConnectionName: ${{ variables.GitHubConnectionName }}
-                  RepositoryName: ${{ variables.RepoName }}
-                  VersionNumber: ${{ variables.SemanticVersion }}
+            - template: 'create-github-release.yml'
+              parameters: 
+                PackageType: ${{ parameters.PackageType }}
+                GitHubConnectionName: ${{ variables.GitHubConnectionName }}
+                RepositoryName: ${{ variables.RepoName }}
+                VersionNumber: ${{ variables.SemanticVersion }}
 
-            - task: NuGetCommand@2
-              displayName: 'Push NuGet ${{ parameters.PackageType}} Package'
-              inputs:
-                command: 'push'
-                packagesToPush: '$(build.artifactstagingdirectory)/${{ parameters.PackageType}}/*.nupkg'
-                nuGetFeedType: 'external'
-                publishFeedCredentials: ${{ variables.NuGetFeedCredentialName }}
+          - task: NuGetCommand@2
+            displayName: 'Push NuGet ${{ parameters.PackageType}} Package'
+            inputs:
+              command: 'push'
+              packagesToPush: '$(build.artifactstagingdirectory)/${{ parameters.PackageType}}/*.nupkg'
+              nuGetFeedType: 'external'
+              publishFeedCredentials: ${{ variables.NuGetFeedCredentialName }}
 
 
 
