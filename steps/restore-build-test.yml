@@ -7,7 +7,7 @@ steps:
   displayName: 'Build Solution'
   inputs:
     command: 'build'
-    projects: ${{ parameters.TargetProject }}
+    #projects: ${{ parameters.TargetProject }}
 
 - task: VSTest@2
   displayName: 'Run Unit Tests'
