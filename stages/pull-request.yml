@@ -16,6 +16,7 @@ stages:
 - stage: PullRequest
   displayName: 'PR Build Check'
   condition: eq(variables['Build.Reason'], 'PullRequest')
+  dependsOn: []
 
   jobs:
   - job: BuildAndTest

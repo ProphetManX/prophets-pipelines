@@ -16,6 +16,7 @@ stages:
 - stage: Build
   displayName: 'CI Build'
   condition: ne(variables['Build.Reason'], 'PullRequest')
+  dependsOn: []
 
   jobs:
   - job: BuildAndPackage
