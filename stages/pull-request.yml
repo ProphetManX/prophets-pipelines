@@ -36,6 +36,5 @@ stages:
       submodules: true
 
     - template: '../steps/restore-build-test.yml'
-      parameters:
-        TargetProject: ${{ variables.TargetProject }}
+
     
