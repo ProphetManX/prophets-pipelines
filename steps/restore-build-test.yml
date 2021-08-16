@@ -1,5 +1,5 @@
-# parameters:
-#   none at this time
+parameters:
+- TargetProject: ''
 
 steps:
   # dotnet core inherintly restores when a build is run
@@ -7,6 +7,7 @@ steps:
   displayName: 'Build Solution'
   inputs:
     command: 'build'
+    projects: ${{ parameters.TargetProject }}
 
 - task: VSTest@2
   displayName: 'Run Unit Tests'

@@ -62,6 +62,8 @@ stages:
         DisableTelemetry: false
 
     - template: '../steps/restore-build-test.yml'
+      parameters:
+        TargetProject: ${{ variables.TargetProject }}
     
     - template: '../steps/package-artifacts.yml'
       parameters: 
