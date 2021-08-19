@@ -1,5 +1,5 @@
-parameters:
-  TargetProject: ''
+# parameters:
+#   TargetProject: ''
 
 steps:
   # dotnet core inherintly restores when a build is run
