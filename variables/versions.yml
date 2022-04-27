@@ -1,4 +1,4 @@
 variables:
-  SemanticVersion: '$(Major).$(Minor).$(Patch)'
+  SemanticVersion: '${{ variables.Major}}.${{ variables.Minor}}.${{ variables.Patch }}'
   AlphaVersion: '$(SemanticVersion)-$(Build.BuildId).Alpha'
   BetaVersion: '$(SemanticVersion)-$(Build.BuildId).Beta'

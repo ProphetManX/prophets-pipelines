@@ -1,7 +1,5 @@
-
-
 trigger:
-- master
+- main
 pr:
   branches:
     include:
@@ -13,6 +11,7 @@ resources:
     - repository: pp
       type: github
       name: 'ProphetManX/prophets-pipelines'
+      endpoint: ProphetsWay@GitHub
 
 name: $(SemanticVersion).$(Build.BuildId)
 
@@ -36,10 +35,9 @@ parameters:
   default: 'windows-latest'
 
 
-
 variables:
 - template: '${{ parameters.LocalVariables }}'
-- template: 'variables/version.yml@pp'
+- template: 'variables/versions.yml@pp'
 
 stages:
 - template: 'stages/prophets-pipeline.yml@pp'
@@ -47,13 +45,4 @@ stages:
     PoolType: ${{ parameters.PoolType }}
     PoolName: ${{ parameters.PoolName }}
     LocalVariables: ${{ parameters.LocalVariables }}
-
-
-
-
-
-
-
-
-
 
