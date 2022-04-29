@@ -1,5 +1,11 @@
 trigger:
-- main
+  branches:
+    include:
+      - main
+  paths:
+    exclude:
+      - /*.md
+      - /*.yml
 pr:
   branches:
     include:
@@ -13,7 +19,9 @@ resources:
       name: 'ProphetManX/prophets-pipelines'
       endpoint: ProphetsWay@GitHub
 
-name: $(SemanticVersion).$(Build.BuildId)
+
+name: $(Major).$(Minor).$(Patch).$(Build.BuildId)
+
 
 parameters:
 - name: LocalVariables
@@ -37,7 +45,7 @@ parameters:
 
 variables:
 - template: '${{ parameters.LocalVariables }}'
-- template: 'variables/versions.yml@pp'
+
 
 stages:
 - template: 'stages/prophets-pipeline.yml@pp'
