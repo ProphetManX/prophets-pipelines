@@ -63,21 +63,22 @@ stages:
 
     - template: '../steps/restore-build-test.yml'
     
-    - template: '../steps/package-artifacts.yml'
-      parameters: 
-        PackageToPack: ${{ variables.TargetProject }}
-        OutputDir: 'Alpha'
-        VersionVariable: 'AlphaVersion'
+    ${{ if ne( variables.TargetProject, '' )}}:
+      - template: '../steps/package-artifacts.yml'
+        parameters: 
+          PackageToPack: ${{ variables.TargetProject }}
+          OutputDir: 'Alpha'
+          VersionVariable: 'AlphaVersion'
 
-    - template: '../steps/package-artifacts.yml'
-      parameters: 
-        PackageToPack: ${{ variables.TargetProject }}
-        OutputDir: 'Beta'
-        VersionVariable: 'BetaVersion'
+      - template: '../steps/package-artifacts.yml'
+        parameters: 
+          PackageToPack: ${{ variables.TargetProject }}
+          OutputDir: 'Beta'
+          VersionVariable: 'BetaVersion'
 
-    - template: '../steps/package-artifacts.yml'
-      parameters: 
-        PackageToPack: ${{ variables.TargetProject }}
-        OutputDir: 'Release'
-        VersionVariable: 'SemanticVersion'
+      - template: '../steps/package-artifacts.yml'
+        parameters: 
+          PackageToPack: ${{ variables.TargetProject }}
+          OutputDir: 'Release'
+          VersionVariable: 'SemanticVersion'
 
