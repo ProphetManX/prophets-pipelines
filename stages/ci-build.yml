@@ -63,7 +63,7 @@ stages:
 
     - template: '../steps/restore-build-test.yml'
     
-    ${{ if ne( variables.TargetProject, '' )}}:
+    - ${{ if ne( variables.TargetProject, '' )}}:
       - template: '../steps/package-artifacts.yml'
         parameters: 
           PackageToPack: ${{ variables.TargetProject }}
