@@ -62,6 +62,8 @@ stages:
         DisableTelemetry: false
 
     - template: '../steps/restore-build-test.yml'
+      parameters:  
+        HasSqlProj: ${{ variables.HasSqlProj }}
     
     - ${{ if ne( variables.TargetProject, '' )}}:
       - template: '../steps/package-artifacts.yml'

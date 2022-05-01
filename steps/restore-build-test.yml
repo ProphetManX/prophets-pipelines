@@ -1,5 +1,6 @@
 parameters:
-  HasSqlProj: ''
+- name: HasSqlProj
+  type: string
 
 steps:
 - ${{ if eq(parameters.HasSqlProj, 'yes')}}:
