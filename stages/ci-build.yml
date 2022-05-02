@@ -65,7 +65,7 @@ stages:
       parameters:  
         HasSqlProj: ${{ variables.HasSqlProj }}
     
-    - ${{ if ne( variables.TargetProject, '' )}}:
+    - ${{ if eq( variables.PostTargetToNuGet, 'yes' )}}:
       - template: '../steps/package-artifacts.yml'
         parameters: 
           PackageToPack: ${{ variables.TargetProject }}
