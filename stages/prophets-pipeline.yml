@@ -28,32 +28,31 @@ stages:
     PoolName: ${{ parameters.PoolName }}
     LocalVariables: ${{ parameters.LocalVariables }}
 
-- ${{ if eq( parameters.PostTargetToNuGet, 'yes' )}}:
-  - template: 'deploy-release.yml'
-    parameters:
-      PoolType: ${{ parameters.PoolType }}
-      PoolName: ${{ parameters.PoolName }}
-      LocalVariables: ${{ parameters.LocalVariables }}
-      PackageType: 'Alpha'
-      DependantStage: 'Build'
-      #ExtraConditions: true  # unnecessary
+- template: 'deploy-release.yml'
+  parameters:
+    PoolType: ${{ parameters.PoolType }}
+    PoolName: ${{ parameters.PoolName }}
+    LocalVariables: ${{ parameters.LocalVariables }}
+    PackageType: 'Alpha'
+    DependantStage: 'Build'
+    #ExtraConditions: true  # unnecessary
 
-  - template: 'deploy-release.yml'
-    parameters:
-      PoolType: ${{ parameters.PoolType }}
-      PoolName: ${{ parameters.PoolName }}
-      LocalVariables: ${{ parameters.LocalVariables }}
-      PackageType: 'Beta'
-      DependantStage: 'Deploy_Alpha'
-      ExtraConditions: ${{ eq(variables['Build.SourceBranchName'], 'main') }}
-      
-  - template: 'deploy-release.yml'
-    parameters:
-      PoolType: ${{ parameters.PoolType }}
-      PoolName: ${{ parameters.PoolName }}
-      LocalVariables: ${{ parameters.LocalVariables }}
-      PackageType: 'Release'
-      DependantStage: 'Deploy_Beta'
-      #ExtraConditions: ${{ eq(variables['Build.SourceBranchName'], 'main')) }}  # unnecessary
+- template: 'deploy-release.yml'
+  parameters:
+    PoolType: ${{ parameters.PoolType }}
+    PoolName: ${{ parameters.PoolName }}
+    LocalVariables: ${{ parameters.LocalVariables }}
+    PackageType: 'Beta'
+    DependantStage: 'Deploy_Alpha'
+    ExtraConditions: ${{ eq(variables['Build.SourceBranchName'], 'main') }}
+    
+- template: 'deploy-release.yml'
+  parameters:
+    PoolType: ${{ parameters.PoolType }}
+    PoolName: ${{ parameters.PoolName }}
+    LocalVariables: ${{ parameters.LocalVariables }}
+    PackageType: 'Release'
+    DependantStage: 'Deploy_Beta'
+    #ExtraConditions: ${{ eq(variables['Build.SourceBranchName'], 'main')) }}  # unnecessary
 
 
