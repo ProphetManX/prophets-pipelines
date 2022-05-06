@@ -5,7 +5,7 @@ trigger:
   paths:
     exclude:
       - /*.md
-      - /*.yml
+      - /local-pipeline.yml
 pr:
   branches:
     include:
@@ -54,4 +54,3 @@ stages:
     PoolName: ${{ parameters.PoolName }}
     LocalVariables: ${{ parameters.LocalVariables }}
     PostTargetToNuGet: ${{ variables.PostTargetToNuGet }}
-
