@@ -11,10 +11,6 @@ parameters:
 - name: LocalVariables
   type: string
 
-- name: PostTargetToNuGet
-  type: string
-  default: ''
-
 stages:
 - template: 'pull-request.yml'
   parameters:
