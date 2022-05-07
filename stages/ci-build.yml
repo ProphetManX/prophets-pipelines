@@ -14,7 +14,7 @@ parameters:
 
 stages:
 - stage: Build
-  displayName: 'CI Build'
+  displayName: 'CI'
   condition: ne(variables['Build.Reason'], 'PullRequest')
   dependsOn: []
 
