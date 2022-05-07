@@ -38,21 +38,21 @@ stages:
     - checkout: self
       submodules: true
 
-- task: PowerShell@2
-  inputs:
-    targetType: 'inline'
-    script: |
-      $changeFile = Get-Content CHANGELOG.md
-      $sb = [System.Text.StringBuilder]::new()
-      [void]$sb.AppendLine($changeFile[0])
-      for($i = 1; $i -lt $changeFile.Count; $i++){
-          if($changeFile[$i].StartsWith("# v")){
-              break
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: |
+          $changeFile = Get-Content CHANGELOG.md
+          $sb = [System.Text.StringBuilder]::new()
+          [void]$sb.AppendLine($changeFile[0])
+          for($i = 1; $i -lt $changeFile.Count; $i++){
+              if($changeFile[$i].StartsWith("# v")){
+                  break
+              }
+              [void]$sb.AppendLine($changeFile[$i])
           }
-          [void]$sb.AppendLine($changeFile[$i])
-      }
-      #Write-Output $sb.ToString()
-      Write-Output "##vso[task.setvariable variable=revisionDetails]$sb.ToString()"
+          #Write-Output $sb.ToString()
+          Write-Output "##vso[task.setvariable variable=revisionDetails]$sb.ToString()"
      
     - task: Assembly-Info-NetCore@3
       displayName: 'Set Assembly Info'
