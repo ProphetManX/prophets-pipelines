@@ -4,6 +4,7 @@ parameters:
   RepositoryName: ''
   VersionNumber: ''
   IsPreRelease: false
+  PostTargetToNuGet: ''
 
 
 steps:
@@ -17,8 +18,9 @@ steps:
     tagSource: 'userSpecifiedTag'
     tag: '${{ parameters.VersionNumber }}'
     title: '${{ parameters.VersionNumber }}'
-    releaseNotesFilePath: '$(build.artifactstagingdirectory)/${{ parameters.PackageType }}/changelog.md'
-    assets: '$(build.artifactstagingdirectory)/${{ parameters.PackageType }}/*.nupkg'
+    releaseNotesFilePath: '$(build.artifactstagingdirectory)/changelog/changelog.md'
+    ${{ if eq( parameters.PostTargetToNuGet, 'yes' )}}:
+      assets: '$(build.artifactstagingdirectory)/${{ parameters.PackageType }}/*.nupkg'
     isPreRelease: ${{ parameters.IsPreRelease }}
     changeLogCompareToRelease: 'lastFullRelease'
     changeLogType: 'commitBased'

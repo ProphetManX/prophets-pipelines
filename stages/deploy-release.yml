@@ -47,6 +47,14 @@ stages:
       runOnce:
         deploy:
           steps:
+          - task: DownloadBuildArtifacts@0
+              displayName: Download Changelog Artifact
+              inputs:
+                buildType: 'current'
+                downloadType: 'single'
+                artifactName: 'changelog'
+                downloadPath: '$(build.artifactstagingdirectory)'
+
           - ${{ if eq( parameters.PackageType, 'Beta') }}:
             - template: '../steps/create-github-release.yml'
               parameters: 
@@ -54,6 +62,7 @@ stages:
                 GitHubConnectionName: ${{ variables.GitHubConnectionName }}
                 RepositoryName: ${{ variables.RepoName }}
                 VersionNumber: ${{ variables.BetaVersion }}
+                PostTargetToNuGet: ${{ variables.PostTargetToNuGet }}
                 IsPreRelease: true
           
           - ${{ if eq( parameters.PackageType, 'Release') }}:
@@ -71,6 +80,7 @@ stages:
                 GitHubConnectionName: ${{ variables.GitHubConnectionName }}
                 RepositoryName: ${{ variables.RepoName }}
                 VersionNumber: ${{ variables.SemanticVersion }}
+                PostTargetToNuGet: ${{ variables.PostTargetToNuGet }}
 
           - ${{ if eq( variables.PostTargetToNuGet, 'yes' )}}:
             - task: DownloadBuildArtifacts@0

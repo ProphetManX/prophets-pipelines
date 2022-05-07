@@ -4,7 +4,6 @@ parameters:
   VersionVariable: ''
 
 steps:
-
 - task: DotNetCoreCLI@2
   displayName: 'Assemble ${{ parameters.OutputDir }} NuGet Package'
   inputs:
@@ -13,12 +12,6 @@ steps:
     packDirectory: '$(Build.ArtifactStagingDirectory)\${{ parameters.OutputDir }}'
     versioningScheme: 'byEnvVar'
     versionEnvVar: '${{ parameters.VersionVariable }}'
-
-- task: CopyFiles@2
-  displayName: 'Copy Changelog to ${{ parameters.OutputDir }}'
-  inputs:
-    Contents: 'CHANGELOG.md'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)\${{ parameters.OutputDir }}'
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish ${{ parameters.OutputDir }} Artifacts'

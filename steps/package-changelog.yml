@@ -1,0 +1,14 @@
+
+steps:
+- task: CopyFiles@2
+  displayName: 'Copy Changelog'
+  inputs:
+    Contents: 'CHANGELOG.md'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)\changelog'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Changelog'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)\changelog'
+    ArtifactName: 'changelog'
+    publishLocation: 'Container'
