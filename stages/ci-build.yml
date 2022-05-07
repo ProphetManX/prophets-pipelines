@@ -24,7 +24,6 @@ stages:
     
     variables:
     - name: revisionDetails
-      type: string
       value: ''
     - template: '${{ parameters.LocalVariables }}@self'
     - template: '../variables/versions.yml'
