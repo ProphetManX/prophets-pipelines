@@ -23,11 +23,11 @@ stages:
     displayName: 'Build, Test, and Package'
     
     variables:
-    - template: '${{ parameters.LocalVariables }}@self'
-    - template: '../variables/versions.yml'
     - name: revisionDetails
       type: string
       value: ''
+    - template: '${{ parameters.LocalVariables }}@self'
+    - template: '../variables/versions.yml'
     
     pool:
       ${{ if eq( parameters.PoolType, 'VM' )}}:
