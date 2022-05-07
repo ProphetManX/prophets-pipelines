@@ -58,6 +58,7 @@ stages:
 
           #Write-Output $sb.ToString()
           $releaseNotes = $sb.ToString()
+          Write-Host $releaseNotes
           Write-Output "##vso[task.setvariable variable=revisionDetails]$releaseNotes"
      
     - task: Assembly-Info-NetCore@3
