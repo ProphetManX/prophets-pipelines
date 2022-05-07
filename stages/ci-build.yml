@@ -81,18 +81,18 @@ stages:
         FailOnWarning: false
         DisableTelemetry: false
 
-      - task: CopyFiles@2
-        displayName: 'Copy proj'
-        inputs:
-          Contents: '${{ variables.TargetProject }}'
-          TargetFolder: '$(Build.ArtifactStagingDirectory)\proj'
+    - task: CopyFiles@2
+      displayName: 'Copy proj'
+      inputs:
+        Contents: '${{ variables.TargetProject }}'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)\proj'
 
-      - task: PublishBuildArtifacts@1
-        displayName: 'Publish Changelog'
-        inputs:
-          PathtoPublish: '$(Build.ArtifactStagingDirectory)\proj'
-          ArtifactName: 'proj'
-          publishLocation: 'Container'
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Changelog'
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)\proj'
+        ArtifactName: 'proj'
+        publishLocation: 'Container'
 
     - template: '../steps/restore-build-test.yml'
       parameters:  
