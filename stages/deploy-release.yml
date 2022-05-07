@@ -48,12 +48,12 @@ stages:
         deploy:
           steps:
           - task: DownloadBuildArtifacts@0
-              displayName: Download Changelog Artifact
-              inputs:
-                buildType: 'current'
-                downloadType: 'single'
-                artifactName: 'changelog'
-                downloadPath: '$(build.artifactstagingdirectory)'
+            displayName: Download Changelog Artifact
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
+              artifactName: 'changelog'
+              downloadPath: '$(build.artifactstagingdirectory)'
 
           - ${{ if eq( parameters.PackageType, 'Beta') }}:
             - template: '../steps/create-github-release.yml'
