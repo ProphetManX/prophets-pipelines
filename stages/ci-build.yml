@@ -80,7 +80,7 @@ stages:
         FileVersionNumber: '$(SemanticVersion).$(Build.BuildId)'
         InformationalVersion: '$(SemanticVersion)'
         PackageVersion: '$(SemanticVersion)'
-        PackageReleaseNotes: $[ replace(variables['revisionDetails'], "\\n", "\n") ]
+        PackageReleaseNotes: ${{ replace(variables['revisionDetails'], "\n", "&#xD;") }}
         LogLevel: 'verbose'
         FailOnWarning: false
         DisableTelemetry: false
