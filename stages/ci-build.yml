@@ -45,23 +45,23 @@ stages:
           $changeFile = Get-Content CHANGELOG.md
           $sb = [System.Text.StringBuilder]::new()
           [void]$sb.Append($changeFile[0])
-          [void]$sb.AppendLine(" |")
+          [void]$sb.Append("`n")
           for($i = 1; $i -lt $changeFile.Count; $i++){
               if($changeFile[$i].StartsWith("# v")){
                   break
               }
               [void]$sb.Append($changeFile[$i])
-              [void]$sb.AppendLine(" |")
+              [void]$sb.Append("`n")
           }
 
           [void]$sb.Append("this is a test")
-          [void]$sb.AppendLine(" |")
+          [void]$sb.Append("`n")
 
           [void]$sb.Append("blarg")
-          [void]$sb.AppendLine(" |")
+          [void]$sb.Append("`n")
 
           [void]$sb.Append("this is another test")
-          [void]$sb.AppendLine(" |")
+          [void]$sb.Append("`n")
 
           #Write-Output $sb.ToString()
           $releaseNotes = $sb.ToString()
