@@ -44,24 +44,25 @@ stages:
         script: |
           $changeFile = Get-Content CHANGELOG.md
           $sb = [System.Text.StringBuilder]::new()
+          [void]$sb.Append("| ")
           [void]$sb.Append($changeFile[0])
-          [void]$sb.Append("<br/>")
+          [void]$sb.Append("\n")
           for($i = 1; $i -lt $changeFile.Count; $i++){
               if($changeFile[$i].StartsWith("# v")){
                   break
               }
               [void]$sb.Append($changeFile[$i])
-              [void]$sb.Append("<br/>")
+              [void]$sb.Append("\n")
           }
 
           [void]$sb.Append("this is a test")
-          [void]$sb.Append("&#xD;")
+          [void]$sb.Append("\n")
 
           [void]$sb.Append("blarg")
-          [void]$sb.Append("&#xD;")
+          [void]$sb.Append("\n")
 
           [void]$sb.Append("this is another test")
-          [void]$sb.Append("&#xD;")
+          [void]$sb.Append("\n")
 
           #Write-Output $sb.ToString()
           $releaseNotes = $sb.ToString()
@@ -76,13 +77,6 @@ stages:
         InsertAttributes: true
         FileEncoding: 'auto'
         WriteBOM: false
-        PackageRequireLicenseAcceptance: true
-        Authors: '${{ variables.Authors }}'
-        Company: '${{ variables.Company }}'
-        Product: '${{ variables.Product }}'
-        RepositoryUrl: 'https://github.com/${{ variables.RepoName }}'
-        PackageIconUrl: '${{ variables.IconUrl }}'
-        RepositoryType: '${{ variables.RepoType }}'
         VersionNumber: '$(SemanticVersion).$(Build.BuildId)'
         FileVersionNumber: '$(SemanticVersion).$(Build.BuildId)'
         InformationalVersion: '$(SemanticVersion)'
