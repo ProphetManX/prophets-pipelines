@@ -77,11 +77,9 @@ stages:
         FileEncoding: 'auto'
         WriteBOM: false
         PackageRequireLicenseAcceptance: true
-        PackageId: '${{ variables.PackageId }}'
         Authors: '${{ variables.Authors }}'
         Company: '${{ variables.Company }}'
         Product: '${{ variables.Product }}'
-        PackageLicenseUrl: '${{ variables.LicenseUrl }}'
         RepositoryUrl: 'https://github.com/${{ variables.RepoName }}'
         PackageIconUrl: '${{ variables.IconUrl }}'
         RepositoryType: '${{ variables.RepoType }}'
