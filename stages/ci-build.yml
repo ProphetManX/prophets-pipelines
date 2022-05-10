@@ -44,7 +44,7 @@ stages:
         script: |
           $changeFile = Get-Content CHANGELOG.md
           $sb = [System.Text.StringBuilder]::new()
-          [void]$sb.Append("| ")
+          [void]$sb.Append("")
           [void]$sb.Append($changeFile[0])
           [void]$sb.Append("\n")
           for($i = 1; $i -lt $changeFile.Count; $i++){
@@ -64,7 +64,6 @@ stages:
           [void]$sb.Append("this is another test")
           [void]$sb.Append("\n")
 
-          #Write-Output $sb.ToString()
           $releaseNotes = $sb.ToString()
           Write-Host $releaseNotes
           Write-Output "##vso[task.setvariable variable=revisionDetails]$releaseNotes"
@@ -81,7 +80,7 @@ stages:
         FileVersionNumber: '$(SemanticVersion).$(Build.BuildId)'
         InformationalVersion: '$(SemanticVersion)'
         PackageVersion: '$(SemanticVersion)'
-        PackageReleaseNotes: '$(revisionDetails)'
+        PackageReleaseNotes: $[ replace(variables['revisionDetails'], "\\n", "\n") ]
         LogLevel: 'verbose'
         FailOnWarning: false
         DisableTelemetry: false
