@@ -39,6 +39,7 @@ stages:
       submodules: true
 
     - task: PowerShell@2
+      displayName: "Extract Release Notes from CHANGELOG"
       inputs:
         targetType: 'inline'
         script: |
