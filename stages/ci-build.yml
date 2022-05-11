@@ -38,61 +38,49 @@ stages:
     - checkout: self
       submodules: true
 
-    - task: PowerShell@2
-      displayName: "Extract Release Notes from CHANGELOG"
-      inputs:
-        targetType: 'inline'
-        script: |
-          $changeFile = Get-Content CHANGELOG.md
-          $sb = [System.Text.StringBuilder]::new()
-          [void]$sb.AppendLine()
-          [void]$sb.AppendLine($changeFile[0])
-          for($i = 1; $i -lt $changeFile.Count; $i++){
-              if($changeFile[$i].StartsWith("# v")){
-                  break
-              }
-              [void]$sb.AppendLine($changeFile[$i])
-          }
+    ${{ if ne( variables.TargetProject, '' )}}:
+      - task: PowerShell@2
+        displayName: "Extract Release Notes from CHANGELOG"
+        inputs:
+          targetType: 'inline'
+          script: |
+            $changeFile = Get-Content CHANGELOG.md
+            $sb = [System.Text.StringBuilder]::new()
+            [void]$sb.AppendLine()
+            [void]$sb.AppendLine($changeFile[0])
+            for($i = 1; $i -lt $changeFile.Count; $i++){
+                if($changeFile[$i].StartsWith("# v")){
+                    break
+                }
+                [void]$sb.AppendLine($changeFile[$i])
+            }
 
-          $projName = "${{ variables.TargetProject }}"
-          $projName = $projName.Replace("**/", "")
-          Write-Host $projName
+            $projName = "${{ variables.TargetProject }}"
+            $projName = $projName.Replace("**/", "")
+            Write-Host $projName
 
-          $projFile = (Get-ChildItem -Recurse -File) | where name -eq $projName
-          Write-Host $projFile
+            $projFile = (Get-ChildItem -Recurse -File) | where name -eq $projName
+            Write-Host $projFile
 
-          [XML]$projXml = Get-Content $projFile.FullName
-          $projXml.GetElementsByTagName("PackageReleaseNotes")[0].InnerText = $sb.ToString()
-          $projXml.Save($projFile.FullName)
-     
-    - task: Assembly-Info-NetCore@3
-      displayName: 'Set Assembly Info'
-      inputs:
-        Path: '$(Build.SourcesDirectory)'
-        FileNames: '${{ variables.TargetProject }}'
-        InsertAttributes: true
-        FileEncoding: 'auto'
-        WriteBOM: false
-        VersionNumber: '$(SemanticVersion).$(Build.BuildId)'
-        FileVersionNumber: '$(SemanticVersion).$(Build.BuildId)'
-        InformationalVersion: '$(SemanticVersion)'
-        PackageVersion: '$(SemanticVersion)'
-        LogLevel: 'verbose'
-        FailOnWarning: false
-        DisableTelemetry: false
-
-    - task: CopyFiles@2
-      displayName: 'Copy proj'
-      inputs:
-        Contents: '${{ variables.TargetProject }}'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)\proj'
-
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish Changelog'
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)\proj'
-        ArtifactName: 'proj'
-        publishLocation: 'Container'
+            [XML]$projXml = Get-Content $projFile.FullName
+            $projXml.GetElementsByTagName("PackageReleaseNotes")[0].InnerText = $sb.ToString()
+            $projXml.Save($projFile.FullName)
+      
+      - task: Assembly-Info-NetCore@3
+        displayName: 'Set Assembly Info'
+        inputs:
+          Path: '$(Build.SourcesDirectory)'
+          FileNames: '${{ variables.TargetProject }}'
+          InsertAttributes: true
+          FileEncoding: 'auto'
+          WriteBOM: false
+          VersionNumber: '$(SemanticVersion).$(Build.BuildId)'
+          FileVersionNumber: '$(SemanticVersion).$(Build.BuildId)'
+          InformationalVersion: '$(SemanticVersion)'
+          PackageVersion: '$(SemanticVersion)'
+          LogLevel: 'verbose'
+          FailOnWarning: false
+          DisableTelemetry: false
 
     - template: '../steps/restore-build-test.yml'
       parameters:  
