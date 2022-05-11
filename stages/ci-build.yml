@@ -38,7 +38,7 @@ stages:
     - checkout: self
       submodules: true
 
-    ${{ if ne( variables.TargetProject, '' )}}:
+    - ${{ if ne( variables.TargetProject, '' )}}:
       - task: PowerShell@2
         displayName: "Extract Release Notes from CHANGELOG"
         inputs:
@@ -54,18 +54,15 @@ stages:
                 }
                 [void]$sb.AppendLine($changeFile[$i])
             }
-
             $projName = "${{ variables.TargetProject }}"
             $projName = $projName.Replace("**/", "")
             Write-Host $projName
-
             $projFile = (Get-ChildItem -Recurse -File) | where name -eq $projName
             Write-Host $projFile
-
             [XML]$projXml = Get-Content $projFile.FullName
             $projXml.GetElementsByTagName("PackageReleaseNotes")[0].InnerText = $sb.ToString()
             $projXml.Save($projFile.FullName)
-      
+
       - task: Assembly-Info-NetCore@3
         displayName: 'Set Assembly Info'
         inputs:
