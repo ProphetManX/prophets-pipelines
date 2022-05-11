@@ -5,16 +5,10 @@ variables:
   Patch: 1
 
   # set these once and forget them per project/repo 
-  HasSqlProj: ''  #can be empty or ignored if unnecessary, but if "yes" then pipeline will find any *.sqlproj projects and build them 
-  PostTargetToNuGet: ''  #can be empty or ignored if unnecessary, but if "yes" then pipeline will build alpha, beta, and semantic NuGet release packages
-  TargetProject: '**/ProphetsWay.BaseDataAccess.csproj'
-  PackageId: 'ProphetsWay.BaseDataAccess'
-  Authors: 'G. Gordon Nasseri'
-  Company: 'ProphetsWay'
-  Product: 'BaseDataAccess'
-  RepoType: 'GitHub'
-  RepoName: 'ProphetManX/ProphetsWay.BaseDataAccess'
-  LicenseUrl: 'https://opensource.org/licenses/MIT'
-  IconUrl: 'http://2.gravatar.com/avatar/b0d9dde03970c4cedf0023a86d169d11'
-  NuGetFeedCredentialName: 'ProphetManX''s NuGet'
-  GitHubConnectionName: 'ProphetsWay@GitHub'
+  HasSqlProj: ''                                          #can be empty or ignored if unnecessary, but if "yes" then pipeline will find any *.sqlproj projects and build them 
+  PostTargetToNuGet: ''                                   #can be empty or ignored if unnecessary, but if "yes" then pipeline will build alpha, beta, and semantic NuGet release packages
+  TargetProject: '**/ProphetsWay.BaseDataAccess.csproj'   #can be empty or ignored if unnecessary, but can be wildcard path to the project that is the core of the solution
+  Product: 'BaseDataAccess'                               #must be listed, will be used in the pipeline to identify which "environment" the deployments are going to, for gatekeeping purposes
+  RepoName: 'ProphetManX/ProphetsWay.BaseDataAccess'      #must be listed so that the GitHub tagging can work properly
+  NuGetFeedCredentialName: 'ProphetManX''s NuGet'         #can be empty or ignored if unnecessary, but should be the name of the service connection to use to access/write/push to NuGet within DevOps
+  GitHubConnectionName: 'ProphetsWay@GitHub'              #can be empty or ignored if unnecessary, but should be the name of the service connection to use to access/write/push to GitHub within DevOps
