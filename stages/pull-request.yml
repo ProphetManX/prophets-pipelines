@@ -38,5 +38,6 @@ stages:
     - template: '../steps/restore-build-test.yml'
       parameters:  
         HasSqlProj: ${{ variables.HasSqlProj }}
+        LocalTestsOnly: ${{ variables.LocalTestsOnly }}
 
     

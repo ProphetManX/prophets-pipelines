@@ -1,6 +1,8 @@
 parameters:
 - name: HasSqlProj
   type: string
+- name: LocalTestsOnly
+  type: string
 
 steps:
 - ${{ if eq(parameters.HasSqlProj, 'yes')}}:
@@ -21,14 +23,15 @@ steps:
     command: 'build'
     projects: '**/*.csproj'
 
-- task: VSTest@2
-  displayName: 'Run Unit Tests'
-  inputs:
-    testSelector: 'testAssemblies'
-    testAssemblyVer2: |
-        **\*test*.dll
-        !**\*TestAdapter.dll
-        !**\obj\**
-    searchFolder: '$(System.DefaultWorkingDirectory)'
-    testFilterCriteria: 'Collection!="pipeline-skip"'
-    diagnosticsEnabled: true
+- ${{ if not(eq(parameters.LocalTestsOnly, 'yes')) }}:
+  - task: VSTest@2
+    displayName: 'Run Unit Tests'
+    inputs:
+      testSelector: 'testAssemblies'
+      testAssemblyVer2: |
+          **\*test*.dll
+          !**\*TestAdapter.dll
+          !**\obj\**
+      searchFolder: '$(System.DefaultWorkingDirectory)'
+      testFilterCriteria: 'Collection!="pipeline-skip"'
+      diagnosticsEnabled: true
