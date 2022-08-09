@@ -30,4 +30,5 @@ steps:
         !**\*TestAdapter.dll
         !**\obj\**
     searchFolder: '$(System.DefaultWorkingDirectory)'
+    testFilterCriteria: 'Collection!="pipeline-skip"'
     diagnosticsEnabled: true
