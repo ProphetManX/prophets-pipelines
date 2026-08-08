@@ -5,7 +5,7 @@
 > is administrative context, irrelevant to day-to-day coding sessions.
 
 **Built:** 2026-08-08 · **Owner:** G. Gordon Nasseri (ProphetManX)
-**Covers:** 12 custom agents, 2 prompts, and the `AGENTS.md` conventions system across 7 repos.
+**Covers:** 14 custom agents, 2 prompts, and the `AGENTS.md` conventions system across 7 repos.
 
 ---
 
@@ -37,11 +37,26 @@ cosmetic — the `name:` frontmatter field controls what appears in the UI.
 |---|---|---|---|---|
 | `tdd-a-interface-architect.agent.md` | Interface Architect | 0 · Design | read, search, edit | Opus 5 |
 | `tdd-a-contract-reviewer.agent.md` | Contract Reviewer | 1 · Critique | read, search | Opus 5 |
+| `sec-a-threat-modeler.agent.md` | Threat Modeler | 1b · Threat model | read, search, edit | Opus 5 |
 | `tdd-a-test-designer.agent.md` | Test Designer | 🔴 2 · Red | read, search, edit | Opus 5 |
 | `tdd-a-test-auditor.agent.md` | Test Auditor | 3 · Audit | read, search | Opus 5 |
 | `tdd-a-implementer.agent.md` | Implementer | 🟢 4 · Green | read, search, edit, execute | Sonnet 4.5 |
 | `tdd-a-refactorer.agent.md` | Refactorer | 🔵 5 · Blue | read, search, edit, execute | Sonnet 4.5 |
+| `sec-a-security-reviewer.agent.md` | Security Reviewer | 🔒 6 · Security | read, search, edit, execute | Opus 5 |
 | `tdd-a-lead.agent.md` | TDD Lead | orchestrator | read, search, agent, todo | Sonnet 4.5 |
+
+Phase 1b is conditional — run it when the work touches personal data, auth, payments, file handling,
+or anything internet-reachable. Phase 6 is a **release gate**, not a formality.
+
+### Security
+
+| File | Agent | Scope | Writes |
+|---|---|---|---|
+| `sec-a-threat-modeler.agent.md` | Threat Modeler | **Design-time.** Data classification, encryption decisions, trust boundaries, exposure surface, authorization rules, STRIDE | `docs/security/threat-model.md`, `docs/security/data-classification.md` |
+| `sec-a-security-reviewer.agent.md` | Security Reviewer | **Code-time.** OWASP Top 10, IDOR, injection, secrets, crypto misuse, log leakage, deserialization, dependency CVEs | `docs/security/security-review.md` |
+
+Both are read-only on source and write only under `docs/security/`. Neither applies fixes — findings
+route back through `Implementer`.
 
 ### Documentation Workflow
 
@@ -122,6 +137,39 @@ deliberately keyword-stuffed. A vague description means the agent never gets pic
 ---
 
 ## 3. Decisions and Why
+
+### Security: split design-time from code-time
+
+**Chosen:** Two agents — `Threat Modeler` (before/during design) and `Security Reviewer` (after code exists).
+**Rejected:** One combined security agent.
+
+Same principle as everywhere else: the thing that *defines* the standard should not be the thing that
+*grades* against it. The Threat Modeler writes `docs/security/threat-model.md`; the Security Reviewer
+audits code **against that document** rather than against standards it invents mid-review. When no
+threat model exists the reviewer says so explicitly and falls back to general practice.
+
+**Read-only on source, `execute` granted to the reviewer.** It needs
+`dotnet list package --vulnerable --include-transitive` to work from real dependency data rather than
+reading csproj files and guessing. Neither agent applies fixes — security fixes involve risk
+acceptance, which is the human's call, and a reviewer that patches its own findings is unreviewed.
+
+**Never print a discovered secret.** Report file, line, and kind only. The value would otherwise be
+echoed into chat logs and model context, turning a review into a second disclosure.
+
+**No exploit code.** Findings describe the attack in prose and cite the vulnerable line. Defensive
+analysis does not require a working proof of concept.
+
+### Workspace-specific security knowledge baked in
+
+These are hazards created by the ProphetsWay libraries themselves, and a generic security agent
+would miss all four:
+
+| Source | Hazard |
+|---|---|
+| `ProphetsWay.Hasher` | General-purpose hashes (MD5/SHA-*). **Unsuitable for passwords** regardless of salting — require Argon2id/scrypt/bcrypt/PBKDF2. MD5 and SHA-1 are broken for any adversarial use. |
+| `ProphetsWay.Logger` | Console/file/event destinations with **no redaction**. Anything logged is persisted verbatim — the most common PII leak. `FileDestination` takes a caller-supplied path (traversal risk). |
+| `ProphetsWay.Utilities.Serializer` | Deserializing untrusted input is a remote-code-execution class. |
+| `BaseDataAccess` / `EFTools` | `Get(new Company { Id })` carries **no caller identity** — textbook IDOR unless the layer above enforces ownership on every path. `IBaseSoftEntity` rows remain readable to any query that omits the soft-delete filter. `IBasePagedDao` needs a maximum page size. |
 
 ### Placement: user profile, not workspace
 
@@ -298,6 +346,5 @@ Considered and skipped — revisit if the need appears:
 
 - **Spec Author** — a separate markdown spec per interface. Folded into Interface Architect, since
   XML docs live with the code and can't drift from it.
-- **Security Reviewer** — security rules are embedded in the Implementer's standards instead.
 - **Changelog Author** — plausible next addition; every repo packs a `CHANGELOG.md` into its nupkg.
 - **Pipeline Auditor** — would compare each repo's yml against the shared templates.
