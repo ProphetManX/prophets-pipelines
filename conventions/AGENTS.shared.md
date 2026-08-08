@@ -119,7 +119,8 @@ supplies them at build time.
 ## Testing
 
 - **xUnit** — the test framework. Do not introduce NUnit or MSTest.
-- **FluentAssertions** — assertion style. Prefer `result.Should().Be(...)` over `Assert.Equal`.
+- **Shouldly** — assertion style. Prefer `result.ShouldBe(...)` over `Assert.Equal`.
+  FluentAssertions 8.x requires a paid commercial license; do not add it to any project.
 - **coverlet.collector** — coverage.
 - **Moq** — only where a test genuinely needs a mock; most of these libraries do not.
 - Test class names mirror the type under test: `HasherTests`, `FileDestinationTests`.

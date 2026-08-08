@@ -29,7 +29,7 @@ public static (Company Company, InsertAssertion Assert) Setup_CreateCompany_Test
 {
 	return (NewCompany, (Company co) =>
 	{
-		co.Id.Should().NotBe(default);
+		co.Id.ShouldNotBe(default);
 	}
 	);
 }
@@ -68,7 +68,7 @@ public void ShouldInsertCompany()
 - Test names start with `Should` and state the behavior: `ShouldInsertCompany`, `ShouldThrowWhenEntityIsNull`.
 - Test class is `<TypeUnderTest>Tests`, namespace is `<AssemblyName>.Tests`.
 - `[Collection("...")]` where tests share expensive or stateful fixtures.
-- **FluentAssertions** — `result.Should().Be(...)`, never `Assert.Equal`.
+- **Shouldly** — `result.ShouldBe(...)`, never `Assert.Equal`. Shouldly is the house assertion library; FluentAssertions 8.x requires a paid commercial license and is being migrated away from. Never add a FluentAssertions reference to a new or existing test project.
 - `[Theory]` + `[InlineData]` when the same behavior holds across several inputs.
 - Tabs, Allman braces.
 

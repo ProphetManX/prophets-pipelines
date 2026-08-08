@@ -27,13 +27,13 @@ For each test, construct the laziest implementation that passes it. Common escap
 | Cheat | Passes when |
 |---|---|
 | `return null;` | Test never asserts on the return value |
-| `return new List<T>();` | Test only asserts `Should().NotBeNull()` |
+| `return new List<T>();` | Test only asserts `ShouldNotBeNull()` |
 | `{ }` — empty body | Test only asserts that no exception was thrown |
 | Hardcode the expected value | Test uses one input and one expected output |
 | Ignore a parameter entirely | No test varies that parameter |
 | Persist nothing | Test asserts on the in-memory argument, never re-reads |
 
-That last one matters here. A DAO test that asserts `co.Id.Should().NotBe(default)` after `Insert` proves an id was assigned — it does **not** prove anything was stored. Check whether a follow-up `Get` confirms persistence.
+That last one matters here. A DAO test that asserts `co.Id.ShouldNotBe(default)` after `Insert` proves an id was assigned — it does **not** prove anything was stored. Check whether a follow-up `Get` confirms persistence.
 
 ### Weak Assertions
 - `NotBeNull()` where a value assertion is possible.

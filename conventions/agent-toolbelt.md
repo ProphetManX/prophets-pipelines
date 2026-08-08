@@ -392,12 +392,46 @@ outliers, contradicting the original stated intent that utilities share one `usi
 **Consequence:** only `ProphetsWay.Hasher` deviates (3 files). Fixing it is binary-breaking and
 requires a major version bump plus a CHANGELOG entry. **Do not do it without explicit instruction.**
 
+### Assertion library: Shouldly, not FluentAssertions
+
+**Chosen:** `Shouldly` — `result.ShouldBe(...)`.
+**Rejected:** `FluentAssertions` — `result.Should().Be(...)`.
+
+FluentAssertions 8.x requires a **paid commercial license**. Shouldly is permissively licensed, free
+for any use, and preserves the readable should-style syntax that was the whole reason FluentAssertions
+was adopted. The requirement — tests that read as specifications — has not changed; only the library
+that satisfies it.
+
+Mapping used consistently in every example across the toolbelt:
+
+| FluentAssertions | Shouldly |
+|---|---|
+| `.Should().Be(x)` | `.ShouldBe(x)` |
+| `.Should().NotBe(x)` | `.ShouldNotBe(x)` |
+| `.Should().BeTrue()` | `.ShouldBeTrue()` |
+| `.Should().NotBeNull()` | `.ShouldNotBeNull()` |
+| `.Should().Contain(x)` | `.ShouldContain(x)` |
+| `.Should().BeLessThanOrEqualTo(x)` | `.ShouldBeLessThanOrEqualTo(x)` |
+| `.Should().Be(expected, because)` | `.ShouldBe(expected, because)` |
+
+**The old convention was already fictional.** `ProphetsWay.EFTools.Tests` — the most modern test
+project in the workspace — references only `xunit`, `xunit.runner.visualstudio`,
+`Microsoft.NET.Test.Sdk`, and `coverlet.collector`. It has never referenced FluentAssertions. The
+written convention and the actual code had disagreed for a while, which is precisely the drift the
+conventions system exists to surface. Treat a documented convention with no code behind it as
+unverified until checked.
+
+**Documentation changed ahead of code, deliberately.** Prescribing Shouldly in the agents stops new
+tests being written against a license-encumbered library. Migrating existing test code and
+`PackageReference` entries is separate work — see Open Items.
+
 ### Other conventions settled
 
 | Decision | Value | Note |
 |---|---|---|
 | Org name | `Prophet's Way` for display, `ProphetsWay` codified | `<Company>` uses the display form |
 | Test project suffix | `.Tests` plural | Logger's `.Test` is the outlier |
+| Assertion library | `Shouldly` | FluentAssertions 8.x is paid-license; see above |
 | Target frameworks | `netstandard2.0;net48;net8.0;net9.0` | Write dotted (`net8.0`), not `net80` |
 | Solution layout | base name = contracts, suffix = implementation | Extended from the existing `.DataAccess` / `.DataAccess.NoDB` / `.DataAccess.EF` pattern |
 | Database projects | `Microsoft.Build.Sql` SDK | Legacy SSDT `.sqlproj` is debt |
@@ -474,6 +508,8 @@ Then confirm every agent appears in the picker. Flat only — do not create subf
 | 8 | Legacy SSDT `.sqlproj` × 2 | Migrate to `Microsoft.Build.Sql` |
 | 9 | Test dependency versions span `Microsoft.NET.Test.Sdk` 16.0.1 → 17.13.0 | Central package management would fix |
 | 10 | Verify `chat.useAgentsMdFile` is enabled | If off, no `AGENTS.md` auto-loads |
+| 11 | Migrate existing test code from FluentAssertions to Shouldly | **Docs are done; code is not.** The agents now prescribe Shouldly, but no `.cs` file or `PackageReference` has been changed. Audit every test project, swap the reference, apply the syntax mapping above. `ProphetsWay.EFTools.Tests` needs nothing — it never used FluentAssertions. |
+| 12 | `AGENTS.shared.md` still names FluentAssertions | Line 122 of the conventions master, mirrored into 6 repos at line 118. Outside `Toolbelt Keeper`'s lane — requires editing the master and running `/sync-agents-md`. |
 
 ---
 

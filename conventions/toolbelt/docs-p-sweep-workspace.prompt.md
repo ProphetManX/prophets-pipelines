@@ -43,8 +43,13 @@ These span repositories and no single-repo agent will catch them. Note any evide
 
 - `ProphetsWay.Example` exists both standalone and vendored inside `ProphetsWay.EFTools`. Track
   whether the two copies have diverged.
-- Test dependency versions range from `Microsoft.NET.Test.Sdk` 16.0.1 to 17.13.0, and
-  `FluentAssertions` 5.10.3 to 8.2.0. Note the spread.
+- Test dependency versions range from `Microsoft.NET.Test.Sdk` 16.0.1 to 17.13.0. Note the spread.
+- Any surviving `FluentAssertions` reference. The house assertion library is **Shouldly** —
+  FluentAssertions 8.x requires a paid commercial license, so a reference is a **migration target,
+  not a version to normalize**. Record which repos still carry one and at what version; do not
+  propose upgrading them. Note also that `ProphetsWay.EFTools.Tests` — the most modern test project
+  in the workspace — has never referenced any assertion library beyond xUnit's own, so the written
+  convention and the actual code have disagreed for some time.
 - Target framework sets that contradict the standard in `AGENTS.md`.
 - Packaging metadata that is present in one repo and an empty stub in another.
 - Anything that would be fixed once and for all by `Directory.Build.props`, `.editorconfig`, or
