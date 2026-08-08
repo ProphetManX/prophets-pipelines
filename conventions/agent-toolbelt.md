@@ -5,7 +5,7 @@
 > is administrative context, irrelevant to day-to-day coding sessions.
 
 **Built:** 2026-08-08 · **Owner:** G. Gordon Nasseri (ProphetManX)
-**Covers:** 22 custom agents, 2 prompts, and the `AGENTS.md` conventions system across 7 repos.
+**Covers:** 24 custom agents, 2 prompts, and the `AGENTS.md` conventions system across 7 repos.
 
 ---
 
@@ -65,6 +65,21 @@ after every single change. Never bumps versions, never changes namespaces.
 **Pipeline Auditor** is read-only by design — a `prophets-pipelines` template mistake breaks all seven
 consumers at runtime, not at edit time.
 
+### Cloud Infrastructure (`infra`)
+
+| File | Agent | Tools | Model | Writes / mutates |
+|---|---|---|---|---|
+| `infra-a-engineer.agent.md` | Azure Infrastructure Engineer | read, search, edit, execute | Opus 5 | Bicep, parameters, repo-local deployment YAML, infrastructure docs; Azure only after approval |
+| `infra-a-deployment-reviewer.agent.md` | Azure Deployment Reviewer | read, search, execute | Opus 5 | nothing; never deploys |
+
+**Azure Infrastructure Engineer** designs cost-conscious, repeatable Azure deployments using pinned
+Azure Verified Modules and a resource-group-scoped `solution.bicep` by default. It supports both
+manual Azure CLI deployments and Azure DevOps automation from the same artifact and parameters.
+
+**Azure Deployment Reviewer** independently checks Bicep resolution, `what-if`, cost, least privilege,
+customer isolation, recovery, and pipeline safety. It can execute non-mutating checks but cannot edit
+files or deploy resources.
+
 ### Security
 
 | File | Agent | Scope | Writes |
@@ -108,7 +123,7 @@ update — live file, mirror, docs — and audits for drift. Also holds the rest
 | `prophets-pipelines/conventions/AGENTS.shared.md` | **Master copy** of the shared conventions block |
 | `<repo>/AGENTS.md` × 6 | Generated shared block + per-repo section |
 | `prophets-pipelines/AGENTS.md` | Links to the master instead of inlining it |
-| `conventions/toolbelt/` | Mirrored copies of all 14 customization files |
+| `conventions/toolbelt/` | Mirrored copies of all 26 customization files |
 
 ---
 
@@ -118,13 +133,14 @@ These are the ideas the whole toolbelt rests on. Changing one changes everything
 
 ### Separation of authorship from verification
 
-The agent that *creates* something never *validates* it, and vice versa. Applied three times:
+The agent that *creates* something never *validates* it, and vice versa. Applied four times:
 
 | Creator | Validator | Why |
 |---|---|---|
 | Interface Architect | Contract Reviewer | An agent that designed an API is a weak critic of it |
 | Test Designer | Test Auditor | Same reasoning, one level down |
 | Test Designer | Implementer | **The critical one** — see below |
+| Azure Infrastructure Engineer | Azure Deployment Reviewer | Infrastructure mistakes spend money or alter live resources; the author cannot approve its own preview |
 
 ### The Implementer must not be able to edit tests
 
@@ -266,6 +282,40 @@ echoed into chat logs and model context, turning a review into a second disclosu
 
 **No exploit code.** Findings describe the attack in prose and cite the vulnerable line. Defensive
 analysis does not require a working proof of concept.
+
+### Azure infrastructure: author, review, then approve twice
+
+**Chosen:** `Azure Infrastructure Engineer` authors Bicep and deployment workflows;
+`Azure Deployment Reviewer` independently reviews them and never mutates files or Azure.
+**Rejected:** One agent that designs, reviews, approves, and deploys its own infrastructure.
+
+Infrastructure combines three unusually consequential failure modes: an incorrect deployment can
+destroy data, an oversized SKU can consume the subscription's credits, and a broad identity can cross
+customer boundaries. A compiler pass is necessary but not independent verification. The reviewer
+therefore owns the readiness verdict and exact `what-if` interpretation, while the human owns risk
+acceptance and deployment approval.
+
+**Two approvals for mutations.** First, the human approves the exact reviewed `what-if`. Second, the
+human approves the mutating Azure command. A previous general request to "deploy the app" is not
+approval for a later destructive or replacement change.
+
+**AVM and Bicep are the source path.** Module paths and versions are confirmed from the Azure Verified
+Modules registry, pinned, restored, and built. `solution.bicep` is the entry point for both Azure CLI
+and Azure DevOps; generated JSON is an artifact, never the maintained source.
+
+**Isolation unit:** one customer/deployment/environment per resource group by default, parameterized
+rather than copied. This limits management-plane blast radius but does not prove tenant isolation —
+the reviewer also traces data stores, identities, secrets, networks, pipeline scopes, and application
+authorization for cross-customer paths.
+
+**Cost is a gate, not a note.** Every plan carries a dated pricing source, assumptions, monthly floor
+and expected range, variable-cost drivers, budget alerts, and teardown consequences. "Free credits"
+are treated as an allowance; no resource is called free without checking current offer eligibility,
+region, and limits.
+
+**Repo-local automation first.** A deployment pipeline starts in the consuming application repo while
+the pattern is being proven. Moving it into shared `prophets-pipelines` templates requires a separate,
+explicit request that enumerates every affected consumer and migration requirement.
 
 ### Workspace-specific security knowledge baked in
 
