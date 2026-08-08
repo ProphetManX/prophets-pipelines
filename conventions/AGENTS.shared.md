@@ -213,9 +213,13 @@ the project header and sidecars are what change.
   | Agent | May write |
   |---|---|
   | `Interface Architect` | Interfaces and their supporting types — never tests, never implementations |
+  | `API Designer` | HTTP contracts and `docs/api/` — never implementations |
   | `Test Designer` | `*Tests.cs` only |
   | `Implementer` | Implementation `.cs` only — **never** a test file |
   | `Refactorer` | Implementation `.cs` only, behavior-preserving — **never** a test file |
+  | `Modernizer` | `.csproj` / `.sqlproj` build and packaging config — never versions, never namespaces |
+  | `Changelog Author` | `CHANGELOG.md` only |
+  | `Threat Modeler`, `Security Reviewer` | `docs/security/` only — read-only on source |
 
   If an agent edits a test to make it pass, the workflow has failed. Report it rather than
   accepting the green build.

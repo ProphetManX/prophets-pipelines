@@ -5,7 +5,7 @@
 > is administrative context, irrelevant to day-to-day coding sessions.
 
 **Built:** 2026-08-08 · **Owner:** G. Gordon Nasseri (ProphetManX)
-**Covers:** 14 custom agents, 2 prompts, and the `AGENTS.md` conventions system across 7 repos.
+**Covers:** 22 custom agents, 2 prompts, and the `AGENTS.md` conventions system across 7 repos.
 
 ---
 
@@ -36,17 +36,34 @@ cosmetic — the `name:` frontmatter field controls what appears in the UI.
 | File | Agent | Phase | Tools | Model |
 |---|---|---|---|---|
 | `tdd-a-interface-architect.agent.md` | Interface Architect | 0 · Design | read, search, edit | Opus 5 |
+| `tdd-a-api-designer.agent.md` | API Designer | 0 · Design (HTTP) | read, search, edit | Opus 5 |
 | `tdd-a-contract-reviewer.agent.md` | Contract Reviewer | 1 · Critique | read, search | Opus 5 |
 | `sec-a-threat-modeler.agent.md` | Threat Modeler | 1b · Threat model | read, search, edit | Opus 5 |
 | `tdd-a-test-designer.agent.md` | Test Designer | 🔴 2 · Red | read, search, edit | Opus 5 |
 | `tdd-a-test-auditor.agent.md` | Test Auditor | 3 · Audit | read, search | Opus 5 |
 | `tdd-a-implementer.agent.md` | Implementer | 🟢 4 · Green | read, search, edit, execute | Sonnet 4.5 |
+| `tdd-a-code-reviewer.agent.md` | Code Reviewer | 4b · Review | read, search, execute | Opus 5 |
 | `tdd-a-refactorer.agent.md` | Refactorer | 🔵 5 · Blue | read, search, edit, execute | Sonnet 4.5 |
 | `sec-a-security-reviewer.agent.md` | Security Reviewer | 🔒 6 · Security | read, search, edit, execute | Opus 5 |
 | `tdd-a-lead.agent.md` | TDD Lead | orchestrator | read, search, agent, todo | Sonnet 4.5 |
 
+Use `API Designer` at phase 0 instead of — or alongside — `Interface Architect` when the surface is HTTP.
 Phase 1b is conditional — run it when the work touches personal data, auth, payments, file handling,
 or anything internet-reachable. Phase 6 is a **release gate**, not a formality.
+
+### Build & Release Maintenance (`ops`)
+
+| File | Agent | Tools | Model | Writes |
+|---|---|---|---|---|
+| `ops-a-modernizer.agent.md` | Modernizer | read, search, edit, execute | Opus 5 | `.csproj` / `.sqlproj` |
+| `ops-a-pipeline-auditor.agent.md` | Pipeline Auditor | read, search | Opus 5 | nothing |
+
+**Modernizer** trims EOL TFMs, fills packaging metadata, removes `LangVersion` pins, and migrates
+legacy SSDT `.sqlproj` to `Microsoft.Build.Sql`. Plan-then-approve, one repo at a time, build + test
+after every single change. Never bumps versions, never changes namespaces.
+
+**Pipeline Auditor** is read-only by design — a `prophets-pipelines` template mistake breaks all seven
+consumers at runtime, not at edit time.
 
 ### Security
 
@@ -65,6 +82,7 @@ route back through `Implementer`.
 | `docs-a-repo-analyst.agent.md` | Repo Analyst | read, search, edit | Sonnet 4.5 |
 | `docs-a-purpose-refiner.agent.md` | Purpose Refiner | read, search, edit | Opus 5 |
 | `docs-a-readme-author.agent.md` | README Author | read, search, edit | Sonnet 4.5 |
+| `docs-a-changelog-author.agent.md` | Changelog Author | read, search, edit, execute | Sonnet 4.5 |
 | `docs-a-lead.agent.md` | Repo Docs Lead | read, search, agent, todo | Sonnet 4.5 |
 | `docs-p-sweep-workspace.prompt.md` | `/sweep-workspace` | inherits | — |
 | `docs-p-sync-agents-md.prompt.md` | `/sync-agents-md` | read, search, edit | Sonnet 4.5 |
@@ -73,10 +91,15 @@ route back through `Implementer`.
 
 | File | Agent | Tools | Model |
 |---|---|---|---|
+| `meta-a-start-here.agent.md` | Start Here | read, search, agent, todo | Sonnet 4.5 |
 | `meta-a-toolbelt-keeper.agent.md` | Toolbelt Keeper | read, search, edit, execute | Opus 5 |
 
-Creates, changes, and deletes agents and prompts. Performs the full three-step update — live file,
-mirror, docs — and audits for drift between locations. Also holds the restore procedure.
+**Start Here** is the session front door — an *advisor*, not an orchestrator. It recommends the right
+agent and gives the exact invocation to type, and handles trivial tasks directly. It deliberately does
+not drive the two leads; see *Routing, not nested orchestration* below.
+
+**Toolbelt Keeper** creates, changes, and deletes agents and prompts. Performs the full three-step
+update — live file, mirror, docs — and audits for drift. Also holds the restore procedure.
 
 ### Conventions System
 
@@ -137,6 +160,91 @@ deliberately keyword-stuffed. A vague description means the agent never gets pic
 ---
 
 ## 3. Decisions and Why
+
+### Requirements are written for agents, not only humans
+
+`Solution Architect` runs a **Downstream Readiness Check** before finishing: does the requirements
+document actually contain what `Interface Architect`, `Test Designer`, `Threat Modeler`, and
+`API Designer` each need? Any gap becomes an explicit Open Question rather than a silence.
+
+This exists because subagents start with empty context. A vague requirement does not produce a
+question downstream — it produces a **guess**, and the guess becomes a false requirement that nobody
+notices until it ships. Acceptance criteria must be testable as written: "loads in under two seconds
+with 500 students," never "fast."
+
+Layers are scoped top-down — Core, then DataAccess, then Api/Web/Win. When a lower layer contradicts
+the one above, the agent stops and fixes the higher layer first rather than working around it.
+
+### Session continuity is a file, not memory
+
+`Session Wrap-Up` writes `docs/session-handoff.md`; `Start Here` reads it as step 0 of every session.
+That closes the loop for the intended workflow — an hour an evening, resuming cold the next day.
+
+The handoff holds **working state only**. Durable content is pushed to its permanent home:
+decisions to `docs/architecture.md`, requirements to `<Project>/docs/requirements.md`, terms to
+`docs/glossary.md`. Anything left only in the handoff dies the next time it is rewritten.
+
+Its acceptance test is explicit: *could an agent with no memory of the session read this and start
+working productively in under two minutes?* "Continue the DAL work" fails; naming the exact agent,
+invocation, and blocking question passes.
+
+`Session Wrap-Up` verifies accomplishments against `git diff` rather than against the conversation —
+something discussed but never written down is a loose end, not progress. It never commits.
+
+### Four review agents, not one
+
+`Contract Reviewer`, `Test Auditor`, `Code Reviewer`, and `Security Reviewer` all review — but each has
+a single question and is told explicitly to stay out of the others' territory:
+
+| Agent | Question |
+|---|---|
+| Contract Reviewer | Is this the right **interface**? |
+| Test Auditor | Do these **tests** actually constrain anything? |
+| Code Reviewer | Is this **code** correct and clear, including where tests are silent? |
+| Security Reviewer | Can this be **attacked**? |
+
+One combined reviewer produces a long undifferentiated list where the important finding is buried.
+Separate agents each produce a ranked list against one standard.
+
+`Code Reviewer` closed a real hole: before it existed, nothing asked whether the implementation was
+*good* — only whether tests passed and whether it was secure.
+
+### Modernizer may edit `.csproj`; Pipeline Auditor may not edit `.yml`
+
+Both touch build configuration, and the asymmetry is deliberate. A bad `.csproj` change breaks **one**
+repo and is caught by the build the agent is required to run after every step. A bad `prophets-pipelines`
+template change breaks **all seven** consumers, has no test suite, and fails at pipeline runtime rather
+than at edit time. So Modernizer edits under plan-approve-verify discipline; Pipeline Auditor only reports.
+
+### Changelog Author never touches the version
+
+It reads `Major`/`Minor`/`Patch` from `app-variables.yml` and writes an entry at that version. When the
+changes imply a **different** bump — a removed public member under a minor version, say — it writes the
+entry, flags the mismatch loudly, and changes nothing. Publishing a breaking change under a minor
+version silently breaks consumers on restore, so surfacing that is the agent's highest-value output.
+
+House changelog format is `# vX.Y.Z` headings with prose, newest first — **not** Keep a Changelog.
+The agent is told not to impose that format.
+
+### Routing, not nested orchestration
+
+**Chosen:** `Start Here` recommends an agent and gives the exact invocation to type.
+**Rejected:** A top-level orchestrator that invokes `TDD Lead`, which in turn invokes `Implementer`.
+
+Two reasons. First, **nested subagent depth is unverified** — VS Code exposes
+`chat.subagents.allowInvocationsFromSubagents`, which implies nesting is constrained in some way,
+and nobody has tested a two-level chain here. Second, the leads' value is the **human checkpoint at
+every phase transition**; a router that drives a lead which drives specialists puts two layers between
+the human and the work, which is precisely what the checkpoints exist to prevent.
+
+`handoffs:` frontmatter (buttons that switch agents with a pre-filled prompt) is a plausible upgrade
+for `Start Here` and would sidestep nesting entirely. **Untested** — the `handoffs.agent` field wants
+an "agent identifier" and it is unconfirmed whether that means the display name or the filename.
+
+### Orchestrators cannot call each other
+
+`TDD Lead` and `Repo Docs Lead` do not list one another in `agents:`. This is deliberate — circular
+handoffs are a listed anti-pattern — and it is why a separate front door was needed at all.
 
 ### Security: split design-time from code-time
 
@@ -324,6 +432,23 @@ Then confirm every agent appears in the picker. Flat only — do not create subf
 **Use the `Toolbelt Keeper` agent.** It performs all of the below and keeps the mirror and this
 document in sync. Doing it by hand is how drift starts.
 
+### How many is too many?
+
+The limit is **description distinctness**, not a count. Every agent's `description` is loaded so the
+default agent can decide delegation; two agents with overlapping descriptions get picked between
+semi-randomly. Eight overlapping agents are worse than twenty-four distinct ones.
+
+Signals you have gone too far:
+
+1. You cannot remember what an agent does without opening the file
+2. Two agents would both plausibly handle the same request
+3. One has not been used in a month
+
+The four reviewers stay distinct only because each carries an explicit *"not your job"* table naming
+the agent that owns the adjacent ground. Any new reviewer needs the same. Past roughly 30 agents,
+expect delegation accuracy to degrade — the fix then is merging near-duplicates, not adding a second
+router.
+
 The steps it follows, for reference:
 
 1. **Pick the primitive.** Agent = a persona with tool restrictions or context isolation.
@@ -346,5 +471,10 @@ Considered and skipped — revisit if the need appears:
 
 - **Spec Author** — a separate markdown spec per interface. Folded into Interface Architect, since
   XML docs live with the code and can't drift from it.
-- **Changelog Author** — plausible next addition; every repo packs a `CHANGELOG.md` into its nupkg.
-- **Pipeline Auditor** — would compare each repo's yml against the shared templates.
+- **Master "do everything" agent** — would need every tool, which destroys the restriction model.
+  The restrictions are the only thing stopping the Implementer from editing tests.
+- **Performance analyst** — premature; no measured problem exists.
+- **Accessibility reviewer** — relevant once a `.Web` UI exists, not before.
+- **Runtime security testing** — `Security Reviewer` is **static analysis only**. Authentication
+  bypasses, session handling, and infrastructure misconfiguration need a runtime tool or a human
+  pen test before real user data sits behind a public web interface.

@@ -2,7 +2,7 @@
 name: 'Repo Docs Lead'
 description: 'Use to run the full documentation workflow on a repository: analyze what it does, refine its purpose and NuGet extraction opportunities, then write the README. Orchestrates the repo-analyst, purpose-refiner, and readme-author subagents with owner checkpoints between phases. Trigger phrases: document this repo end to end, full repo review, analyze and write the readme, make this repo presentable, onboard this project.'
 tools: [read, search, agent, todo]
-agents: [Repo Analyst, Purpose Refiner, README Author]
+agents: [Repo Analyst, Purpose Refiner, README Author, Changelog Author]
 model: ['Claude Sonnet 4.5 (copilot)', 'GPT-5 (copilot)']
 argument-hint: 'Repo/folder to run the full documentation workflow on'
 ---
