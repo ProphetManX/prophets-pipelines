@@ -5,7 +5,7 @@
 > is administrative context, irrelevant to day-to-day coding sessions.
 
 **Built:** 2026-08-08 · **Owner:** G. Gordon Nasseri (ProphetManX)
-**Covers:** 24 custom agents, 2 prompts, and the `AGENTS.md` conventions system across 7 repos.
+**Covers:** 25 custom agents, 2 prompts, and the `AGENTS.md` conventions system across 7 repos.
 
 ---
 
@@ -35,6 +35,9 @@ cosmetic — the `name:` frontmatter field controls what appears in the UI.
 
 | File | Agent | Phase | Tools | Model |
 |---|---|---|---|---|
+| `docs-a-repo-analyst.agent.md` | Repo Analyst | -3 · Orient (rare) | read, search, edit | Sonnet 4.5 |
+| `ops-a-modernizer.agent.md` | Modernizer | -2 · Modernize (conditional) | read, search, edit, execute | Opus 5 |
+| `ops-a-scaffolder.agent.md` | Project Scaffolder | -1 · Scaffold (conditional) | read, search, edit, execute | Opus 5 |
 | `tdd-a-interface-architect.agent.md` | Interface Architect | 0 · Design | read, search, edit | Opus 5 |
 | `tdd-a-api-designer.agent.md` | API Designer | 0 · Design (HTTP) | read, search, edit | Opus 5 |
 | `tdd-a-contract-reviewer.agent.md` | Contract Reviewer | 1 · Critique | read, search | Opus 5 |
@@ -45,7 +48,14 @@ cosmetic — the `name:` frontmatter field controls what appears in the UI.
 | `tdd-a-code-reviewer.agent.md` | Code Reviewer | 4b · Review | read, search, execute | Opus 5 |
 | `tdd-a-refactorer.agent.md` | Refactorer | 🔵 5 · Blue | read, search, edit, execute | Sonnet 4.5 |
 | `sec-a-security-reviewer.agent.md` | Security Reviewer | 🔒 6 · Security | read, search, edit, execute | Opus 5 |
-| `tdd-a-lead.agent.md` | TDD Lead | orchestrator | read, search, agent, todo | Sonnet 4.5 |
+| `docs-a-changelog-author.agent.md` | Changelog Author | 7 · Changelog (conditional) | read, search, edit, execute | Sonnet 4.5 |
+| `docs-a-readme-author.agent.md` | README Author | 8 · Docs (conditional) | read, search, edit | Sonnet 4.5 |
+| `tdd-a-lead.agent.md` | TDD Lead | orchestrator | execute/runTask, execute/runTests, execute/testFailure, read, search, agent, todo (+ `vscodeTasks`/`vscodeGeneral` duplicates, + GitHub PR tools) | Sonnet 4.5 |
+
+Phases -3, -2, -1, 7, and 8 **bracket** the loop and are conditional — see *TDD Lead brackets the loop*
+below. `Modernizer` and `Project Scaffolder` are `ops` agents shared with standalone use;
+`Repo Analyst`, `Changelog Author`, and `README Author` are shared with `Repo Docs Lead`. Leaf agents
+may have more than one parent.
 
 Use `API Designer` at phase 0 instead of — or alongside — `Interface Architect` when the surface is HTTP.
 Phase 1b is conditional — run it when the work touches personal data, auth, payments, file handling,
@@ -56,11 +66,17 @@ or anything internet-reachable. Phase 6 is a **release gate**, not a formality.
 | File | Agent | Tools | Model | Writes |
 |---|---|---|---|---|
 | `ops-a-modernizer.agent.md` | Modernizer | read, search, edit, execute | Opus 5 | `.csproj` / `.sqlproj` |
+| `ops-a-scaffolder.agent.md` | Project Scaffolder | read, search, edit, execute | Opus 5 | **New** projects and `.sln` entries |
 | `ops-a-pipeline-auditor.agent.md` | Pipeline Auditor | read, search | Opus 5 | nothing |
 
 **Modernizer** trims EOL TFMs, fills packaging metadata, removes `LangVersion` pins, and migrates
 legacy SSDT `.sqlproj` to `Microsoft.Build.Sql`. Plan-then-approve, one repo at a time, build + test
 after every single change. Never bumps versions, never changes namespaces.
+
+**Project Scaffolder** creates new projects — correct TFMs, packaging metadata, naming, namespace,
+and reference graph from the first commit. **Structure, not behavior:** no interfaces, no tests, no
+implementations, at most an empty namespace stub. It never touches an existing project's build
+configuration; that is `Modernizer`'s job and the split is deliberate — see below.
 
 **Pipeline Auditor** is read-only by design — a `prophets-pipelines` template mistake breaks all seven
 consumers at runtime, not at edit time.
@@ -425,6 +441,80 @@ unverified until checked.
 tests being written against a license-encumbered library. Migrating existing test code and
 `PackageReference` entries is separate work — see Open Items.
 
+### TDD Lead brackets the loop; no top-level Orchestrator
+
+**Chosen:** Extend `TDD Lead` with five conditional phases — `Repo Analyst` at -3, `Modernizer` at -2,
+`Project Scaffolder` at -1, `Changelog Author` at 7, `README Author` at 8.
+**Rejected:** A new `Orchestrator` agent able to delegate to every agent in the roster.
+
+An Orchestrator that drives `TDD Lead` is **two-level nesting** — already rejected under *Routing, not
+nested orchestration*, still unverified, and it puts two layers between the human and the checkpoints
+that are the whole point of a lead. An Orchestrator that instead calls leaf agents directly is just
+`TDD Lead` with a longer list, and now two agents plausibly answer "build this feature." The ceiling
+on this roster is **description distinctness**, not headcount. `Start Here` already covers routing.
+
+Adding leaf agents to a lead is not nesting, so this carries none of that risk.
+
+**Sequencing is load-bearing.** `Modernizer` and `Project Scaffolder` both require a **green baseline**
+they cannot distinguish from the cycle's own breakage — and phases 2–5 are *deliberately red*. So both
+run only before phase 0 or after phase 6, never interleaved. `TDD Lead` is instructed to refuse a
+mid-cycle request and explain why.
+
+Modernize **before** scaffolding: a new `net8.0;net9.0` project dropped into a solution still on
+`net461` creates reference breakage.
+
+**The -2 → 7 link is the real win.** Dropping a TFM strands every consumer on it. `Modernizer` is
+required to say who it strands and get approval — but nothing carried that to the CHANGELOG, so the
+break could ship silently. `TDD Lead` now passes it forward explicitly, because subagents start with
+empty context and `Changelog Author` cannot see what `Modernizer` did.
+
+**Source comments are not published documentation.** XML docs on the public surface are written at
+phase 0 and maintained inside the loop — they never leave the code. `CHANGELOG.md` and `README.md`
+are phases 7 and 8, and no subagent inside the loop may touch either. `README Author` is permitted
+to edit `CHANGELOG.md` by its own charter, so phase 8 explicitly tells it not to; phase 7 owns that
+file and a second pass would duplicate the entry.
+
+### Repo Analyst is in the loop but almost never runs
+
+**Chosen:** `Repo Analyst` at phase -3, gated on `AGENTS.md` being missing, stale, or contradicted.
+**Rejected:** A standing phase 0 codebase review before every cycle.
+
+It is the obvious-looking placement and it is wrong. `AGENTS.md` already carries purpose, layout, key
+types, and known deviations, and **every subagent reads it at step 0** — so on a healthy repo the
+analyst re-derives what the orchestrator already has, at the cost of reading every source file in the
+solution. Its output is a documentation artifact, not a design input: `Interface Architect` does not
+consume `docs/repo-profile.md`.
+
+It earns its place in the roster for the case it is actually good at — an unfamiliar or undocumented
+repo, where it runs **once** and the profile is reused by every later cycle. `ProphetsWay.BPA`, which
+has no `AGENTS.md`, is the live example.
+
+When it reports `AGENTS.md` as *wrong* rather than merely incomplete, that is a checkpoint. Every
+other agent trusts that file.
+
+**Phase 8 is a refresh, not the documentation workflow.** A full analyze → refine → rewrite pass on a
+neglected repo stays with `Repo Docs Lead`. `TDD Lead` is told to recommend it and stop, so the two
+orchestrators do not converge on the same job — which is what makes them stay distinct in the
+delegation surface.
+
+### Scaffolding is a separate agent from modernizing
+
+**Chosen:** A new `Project Scaffolder`.
+**Rejected:** Widening `Modernizer` to also create projects.
+
+They look adjacent — both write `.csproj` — but the charters are incompatible. `Modernizer`'s work
+queue *is* the `AGENTS.md` **Known Deviations** table, and it must record a green `dotnet build`
+baseline before touching anything. A project that does not exist yet has no deviations row and no
+baseline. Asked to scaffold, it would either refuse per its own constraints or improvise outside its
+charter — an agent with `edit` on `.csproj` and `.sln` guessing at an unspecified job.
+
+The risk profiles differ too: creating a file against a template is low-stakes and verified by a build;
+mutating shipped build config breaks consumers silently at restore time.
+
+**Who validates the Scaffolder?** `Modernizer` — it audits an existing csproj against the same house
+standard the Scaffolder built to, and it is a different agent than the author. Separation of authorship
+from verification holds without inventing a fifth reviewer.
+
 ### Other conventions settled
 
 | Decision | Value | Note |
@@ -510,6 +600,8 @@ Then confirm every agent appears in the picker. Flat only — do not create subf
 | 10 | Verify `chat.useAgentsMdFile` is enabled | If off, no `AGENTS.md` auto-loads |
 | 11 | Migrate existing test code from FluentAssertions to Shouldly | **Docs are done; code is not.** The agents now prescribe Shouldly, but no `.cs` file or `PackageReference` has been changed. Audit every test project, swap the reference, apply the syntax mapping above. `ProphetsWay.EFTools.Tests` needs nothing — it never used FluentAssertions. |
 | 12 | `AGENTS.shared.md` still names FluentAssertions | Line 122 of the conventions master, mirrored into 6 repos at line 118. Outside `Toolbelt Keeper`'s lane — requires editing the master and running `/sync-agents-md`. |
+| 13 | `TDD Lead` declares every execute tool under two namespaces | `execute/runTests` **and** `vscodeGeneral/runTests`, `execute/runTask` **and** `vscodeTasks/runTask`. Belt-and-braces from an earlier debugging session. It works, so it was left alone rather than trimmed on a guess — an unrecognized tool name fails **silently**. Verify which namespace is canonical in Chat view → **Diagnostics**, then trim. |
+| 14 | Terminal auto-approve lives only in `settings.json` | `chat.tools.terminal.autoApprove` allows `dotnet build/test/restore`, `dotnet list package`, and read-only `git`; denies `dotnet nuget/tool/publish/pack`, mutating git, all `az`, network fetch/eval, and file deletion. **Not mirrored** — the restore procedure rebuilds all 25 agents and none of this. |
 
 ---
 
