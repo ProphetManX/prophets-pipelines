@@ -1,7 +1,7 @@
 ---
 name: 'sweep-workspace'
 description: 'Walk every ProphetsWay repo in the workspace and run the analyze -> refine -> document workflow one repo at a time, checkpointing between each. The on-demand substitute for background crawling.'
-agent: 'Repo Docs Lead'
+agent: 'Vanguard'
 argument-hint: 'Optionally limit to specific repos, or say "audit only" for a read-only pass'
 ---
 
@@ -28,8 +28,15 @@ Read that repo's `AGENTS.md` **first**. It records purpose, layout, and a list o
 deviations. Do not re-report a documented deviation as a new discovery — the value of this sweep is
 finding what is *not* already written down.
 
-Then run the standard three phases: `repo-analyst`, `purpose-refiner`, `readme-author`, checkpointing
-with the user between each.
+This is a **documentation sweep, not a build cycle.** Run only these agents, checkpointing with the
+user between each: `Repo Analyst` → `Purpose Refiner` → `README Author`, plus `Changelog Author`
+where a repo's changelog is behind its released version. Do not open a TDD cycle, do not scaffold,
+and do not let `Modernizer` edit anything — recon mode only, so the debt is reported rather than paid
+down mid-sweep.
+
+Use the artifact ledger to decide which of those actually need to run per repo. A repo whose
+`docs/repo-profile.md`, `docs/purpose-and-scope.md`, and `README.md` are all current gets one
+all-clear line and no delegations at all.
 
 ## Between Repos
 

@@ -4,8 +4,13 @@
 > building, changing, or debugging agent customizations. Do not add it to `AGENTS.md` — it
 > is administrative context, irrelevant to day-to-day coding sessions.
 
-**Built:** 2026-08-08 · **Owner:** G. Gordon Nasseri (ProphetManX)
-**Covers:** 25 custom agents, 2 prompts, and the `AGENTS.md` conventions system across 7 repos.
+**Built:** 2026-08-08 · **Revised:** 2026-08-12 · **Owner:** G. Gordon Nasseri (ProphetManX)
+**Covers:** 25 custom agents, 2 prompts, and the `AGENTS.md` conventions system across 8 repos.
+
+> **2026-08-12 — `Vanguard` is now the single front door.** One lead covers all project work, from
+> resuming yesterday's session to shipping. `Start Here` and `Repo Docs Lead` were retired into it;
+> `Session Wrap-Up` became `Session Scribe`; `Commit Author` was added. `TDD Lead` is retained
+> temporarily as a fallback — see Open Items.
 
 ---
 
@@ -31,7 +36,47 @@ agent files by hand.
 Filenames use `<domain>-<type>-<name>` so they alpha-sort into workflow groups. The filename is
 cosmetic — the `name:` frontmatter field controls what appears in the UI.
 
-### TDD Workflow
+### The Front Door
+
+| File | Agent | Tools | Model |
+|---|---|---|---|
+| `proj-a-vanguard.agent.md` | **Vanguard** | read, search, agent, todo, runTask/runTests/testFailure, GitHub PR tools — **no edit** | Opus 5 |
+| `proj-a-session-scribe.agent.md` | Session Scribe | read, search, edit, execute | Sonnet 4.5 |
+| `proj-a-solution-architect.agent.md` | Solution Architect | read, search, edit | Opus 5 |
+
+`Vanguard` is the only agent the owner needs to start a session with. It orients, proposes a route,
+delegates every phase, and synthesizes a **Direction Check** at each gate. It holds 22 subagents and
+deliberately excludes `TDD Lead` and `Toolbelt Keeper` — orchestrators do not call orchestrators.
+
+### The Stage Model
+
+| Stage | Phases | Runs when |
+|---|---|---|
+| **0 · Orient** | Session Scribe (resume) | **every session, unprompted** |
+| **1 · Ground** | Repo Analyst, Purpose Refiner, Modernizer (recon) | first visit to a repo, or a new major effort |
+| **2 · Shape** | Solution Architect, Project Scaffolder, Interface Architect, API Designer, Contract Reviewer, Threat Modeler | new feature or project |
+| **3 · Build** | 🔴 Test Designer → Test Auditor → 🟢 Implementer → Code Reviewer → 🔵 Refactorer | always; the only looping stage |
+| **4 · Land** | Security Reviewer, Commit Author, PR triage, Changelog Author, README Author, Pipeline Auditor, Azure agents | before shipping |
+
+Stages 1, 2, and 4 are single-pass and individually skippable. Stage 3 is the only loop, and it runs
+uninterrupted between checkpoints. Checkpoints land at **stage gates and each green Stage 3 lap** —
+not at every phase.
+
+### The Artifact Ledger
+
+Every agent has one declared output. `Session Scribe` reports the state of each at Stage 0, and the
+state dictates the route with no questions asked:
+
+| State | Consequence |
+|---|---|
+| **missing** | that agent RUNs |
+| **stale** — artifact's last commit predates the last commit touching source | FLAG, owner decides |
+| **current** | SKIP, one line in an all-clear block |
+| **n/a** | does not apply to this repo |
+
+This is what replaced fourteen phase-by-phase permission prompts with a single route approval.
+
+### Phase Reference — also the legacy `TDD Lead` roster
 
 | File | Agent | Phase | Tools | Model |
 |---|---|---|---|---|
@@ -52,10 +97,9 @@ cosmetic — the `name:` frontmatter field controls what appears in the UI.
 | `docs-a-readme-author.agent.md` | README Author | 8 · Docs (conditional) | read, search, edit | Sonnet 4.5 |
 | `tdd-a-lead.agent.md` | TDD Lead | orchestrator | execute/runTask, execute/runTests, execute/testFailure, read, search, agent, todo (+ `vscodeTasks`/`vscodeGeneral` duplicates, + GitHub PR tools) | Sonnet 4.5 |
 
-Phases -3, -2, -1, 7, and 8 **bracket** the loop and are conditional — see *TDD Lead brackets the loop*
-below. `Modernizer` and `Project Scaffolder` are `ops` agents shared with standalone use;
-`Repo Analyst`, `Changelog Author`, and `README Author` are shared with `Repo Docs Lead`. Leaf agents
-may have more than one parent.
+The phase numbering above is `TDD Lead`'s. Under `Vanguard` these map to stages: -3/-2/-1 → Stage 1,
+0/1/1b → Stage 2, 2–5 → Stage 3, 6/7/8 → Stage 4. `Modernizer` and `Project Scaffolder` are `ops`
+agents shared with standalone use. Leaf agents may have more than one parent.
 
 Use `API Designer` at phase 0 instead of — or alongside — `Interface Architect` when the surface is HTTP.
 Phase 1b is conditional — run it when the work touches personal data, auth, payments, file handling,
@@ -69,14 +113,18 @@ or anything internet-reachable. Phase 6 is a **release gate**, not a formality.
 | `ops-a-scaffolder.agent.md` | Project Scaffolder | read, search, edit, execute | Opus 5 | **New** projects and `.sln` entries |
 | `ops-a-pipeline-auditor.agent.md` | Pipeline Auditor | read, search | Opus 5 | nothing |
 
-**Modernizer** trims EOL TFMs, fills packaging metadata, removes `LangVersion` pins, and migrates
-legacy SSDT `.sqlproj` to `Microsoft.Build.Sql`. Plan-then-approve, one repo at a time, build + test
-after every single change. Never bumps versions, never changes namespaces.
+**Modernizer** has **two modes**. `recon` is read-only — EOL TFMs, outdated and deprecated packages,
+stale project references, empty packaging metadata — and needs no approval, which is what lets
+`Vanguard` call it automatically at Stage 1. `modernize` edits under plan-approve-verify discipline:
+one repo at a time, build + test after every single change. Never bumps versions, never changes
+namespaces. **Territory split:** Modernizer owns `--outdated` and `--deprecated`; `Security Reviewer`
+owns `--vulnerable`.
 
 **Project Scaffolder** creates new projects — correct TFMs, packaging metadata, naming, namespace,
-and reference graph from the first commit. **Structure, not behavior:** no interfaces, no tests, no
-implementations, at most an empty namespace stub. It never touches an existing project's build
-configuration; that is `Modernizer`'s job and the split is deliberate — see below.
+and reference graph from the first commit — **and creates the `.sln` itself when a repository has
+none**. **Structure, not behavior:** no interfaces, no tests, no implementations, at most an empty
+namespace stub. It never touches an existing project's build configuration; that is `Modernizer`'s
+job and the split is deliberate — see below.
 
 **Pipeline Auditor** is read-only by design — a `prophets-pipelines` template mistake breaks all seven
 consumers at runtime, not at edit time.
@@ -114,23 +162,27 @@ route back through `Implementer`.
 | `docs-a-purpose-refiner.agent.md` | Purpose Refiner | read, search, edit | Opus 5 |
 | `docs-a-readme-author.agent.md` | README Author | read, search, edit | Sonnet 4.5 |
 | `docs-a-changelog-author.agent.md` | Changelog Author | read, search, edit, execute | Sonnet 4.5 |
-| `docs-a-lead.agent.md` | Repo Docs Lead | read, search, agent, todo | Sonnet 4.5 |
-| `docs-p-sweep-workspace.prompt.md` | `/sweep-workspace` | inherits | — |
+| `docs-a-commit-author.agent.md` | Commit Author | read, search, execute | Sonnet 4.5 |
+| `docs-p-sweep-workspace.prompt.md` | `/sweep-workspace` — runs as `Vanguard` | inherits | — |
 | `docs-p-sync-agents-md.prompt.md` | `/sync-agents-md` | read, search, edit | Sonnet 4.5 |
+
+**Repo Analyst** additionally owns the **per-repo section of `AGENTS.md`** — everything below the
+generated shared block. It must never hand-edit the block itself. Every other agent reads that file
+at step 0, so a repo without one leaves the whole roster blind.
+
+**Commit Author** writes commit messages and PR bodies from the diff. It **writes no files** — output
+is text to paste — and it never runs a mutating git command.
 
 ### Meta
 
 | File | Agent | Tools | Model |
 |---|---|---|---|
-| `meta-a-start-here.agent.md` | Start Here | read, search, agent, todo | Sonnet 4.5 |
 | `meta-a-toolbelt-keeper.agent.md` | Toolbelt Keeper | read, search, edit, execute | Opus 5 |
 
-**Start Here** is the session front door — an *advisor*, not an orchestrator. It recommends the right
-agent and gives the exact invocation to type, and handles trivial tasks directly. It deliberately does
-not drive the two leads; see *Routing, not nested orchestration* below.
-
 **Toolbelt Keeper** creates, changes, and deletes agents and prompts. Performs the full three-step
-update — live file, mirror, docs — and audits for drift. Also holds the restore procedure.
+update — live file, mirror, docs — and audits for drift. Also holds the restore procedure. It is the
+only agent `Vanguard` does not cover, and that is on purpose: changing the toolbelt is a separate
+session from using it.
 
 ### Conventions System
 
@@ -139,7 +191,7 @@ update — live file, mirror, docs — and audits for drift. Also holds the rest
 | `prophets-pipelines/conventions/AGENTS.shared.md` | **Master copy** of the shared conventions block |
 | `<repo>/AGENTS.md` × 6 | Generated shared block + per-repo section |
 | `prophets-pipelines/AGENTS.md` | Links to the master instead of inlining it |
-| `conventions/toolbelt/` | Mirrored copies of all 26 customization files |
+| `conventions/toolbelt/` | Mirrored copies of all 27 customization files |
 
 ---
 
@@ -175,8 +227,10 @@ accepting the green build.*
 
 ### Read-only by default
 
-Every agent's tool list is the minimum for its job. Orchestrators (`TDD Lead`, `Repo Docs Lead`)
+Every agent's tool list is the minimum for its job. Orchestrators (`Vanguard`, `TDD Lead`)
 have **no edit tool at all** — if they feel the urge to write, they are in the wrong role.
+`Vanguard` also holds no general terminal, only test/task runners and read-only GitHub tools; the
+artifact ledger's `git log` work is delegated to `Session Scribe` rather than widening the lead.
 
 ### Subagents start with empty context
 
@@ -209,19 +263,115 @@ the one above, the agent stops and fixes the higher layer first rather than work
 
 ### Session continuity is a file, not memory
 
-`Session Wrap-Up` writes `docs/session-handoff.md`; `Start Here` reads it as step 0 of every session.
-That closes the loop for the intended workflow — an hour an evening, resuming cold the next day.
+`Session Scribe` owns a **single workspace-level** handoff at `prophets-pipelines/docs/session-handoff.md`;
+`Vanguard` reads it as Stage 0 of every session, unprompted. A per-repo handoff was rejected — a
+session crosses several of the eight roots in an evening, and a per-repo file guarantees the wrong
+one gets read.
+
+**Three states, and the state machine is the point:**
+
+| Status | Written by | On resume |
+|---|---|---|
+| `live` | auto-checkpoint at stage gates and green laps | Recap, but say plainly it is lower fidelity and reconcile against git |
+| `fresh` | explicit sign-off | Full recap; durable content already filed |
+| `consumed` | stamped when resumed | **Fresh start.** Never replayed. |
+
+`consumed` is the whole reason the machine exists: coming back after forgetting to wrap up should
+never hand you a days-old plan you have already moved past. There is deliberately **no age cutoff** —
+a long break should still resume where it left off. Only *having already resumed* invalidates a handoff.
+
+The `live` state exists because a closed window is more common than a clean sign-off. Checkpoints run
+at **stage gates and each green Stage 3 lap only** — checkpointing every phase would add a delegation
+to every step of the loop the owner spends the most time in.
 
 The handoff holds **working state only**. Durable content is pushed to its permanent home:
 decisions to `docs/architecture.md`, requirements to `<Project>/docs/requirements.md`, terms to
-`docs/glossary.md`. Anything left only in the handoff dies the next time it is rewritten.
+`docs/glossary.md`. Anything left only in the handoff dies the next time it is rewritten. Filing
+those is `wrapup`'s job and needs the owner in the room, which is why `checkpoint` does not attempt it.
 
 Its acceptance test is explicit: *could an agent with no memory of the session read this and start
 working productively in under two minutes?* "Continue the DAL work" fails; naming the exact agent,
 invocation, and blocking question passes.
 
-`Session Wrap-Up` verifies accomplishments against `git diff` rather than against the conversation —
+`Session Scribe` verifies accomplishments against `git diff` rather than against the conversation —
 something discussed but never written down is a loose end, not progress. It never commits.
+
+### One lead, four stages, and a ledger instead of fourteen prompts
+
+**Chosen:** `Vanguard` — a single lead covering resume, ground, shape, build, land, and sign-off.
+**Rejected:** the previous split of `Start Here` (router) + `TDD Lead` + `Repo Docs Lead`.
+
+Three entry points meant deciding *which* front door before doing any work, and `Start Here` had the
+`agent` tool with **no `agents:` allowlist** — so the "advisor, not orchestrator" rule was prose with
+nothing enforcing it. Folding all three into one lead removes the decision and closes the hole.
+
+This is **not** the rejected top-level Orchestrator. That proposal put a router *above* `TDD Lead`,
+which is two-level nesting. `Vanguard` calls leaf agents directly — exactly one level — and explicitly
+excludes `TDD Lead` and `Toolbelt Keeper` from its `agents:` list.
+
+**The stage model replaced the linear phase list.** Fourteen sequential phases each needing approval
+made a two-minute fix feel like a project. Four stages, of which only Stage 3 loops, with **one route
+approval up front**, gets the same rigor at a fraction of the ceremony.
+
+**The artifact ledger is what makes the route automatic.** Every agent has one declared output;
+missing means that agent runs, stale gets flagged, current is skipped silently. The owner is asked
+nothing. On a healthy repo Stage 1 collapses to a single all-clear line — and that silence is the
+feature. It also means a neglected repo *self-diagnoses* rather than relying on anyone remembering
+what was never done.
+
+The ledger scan lives in `Session Scribe`, not `Vanguard`, because it needs `git log` and the lead
+holds no general terminal. One `resume` call returns recap, delta, and ledger together.
+
+### Commit and PR prose is a fourth documentation audience
+
+**Chosen:** a new `Commit Author`.
+**Rejected:** extending `Changelog Author` to cover commits and PRs.
+
+They look adjacent — both read a diff and classify changes — but the readers are different and that
+drives everything: a commit message is for the owner bisecting in six months, a PR body is for a
+reviewer deciding whether to approve, a changelog is for a consumer deciding whether to upgrade.
+One agent serving all three writes upgrade guidance in commit messages.
+
+`Commit Author` **writes no files** and may run only read-only git. That is the cleanest possible
+restriction — it cannot commit because it produces text, not actions.
+
+`Vanguard` invokes it automatically at each stage gate and each green Stage 3 lap, which is where the
+owner's commit checkpoints already were.
+
+### PR review triage: the lead fetches, the reviewer judges
+
+**Chosen:** `Vanguard` fetches PR comments with its GitHub tools and passes each **verbatim** to
+`Code Reviewer` for a merit verdict, then routes the valid ones back through Stage 3.
+**Rejected:** `Vanguard` judging the comments itself.
+
+The lead may have proposed the design being criticized, so it is the wrong judge — same principle as
+everywhere else. `Code Reviewer` did not write the code, is read-only, and already owns "is this code
+correct." No new tools were needed on it.
+
+**Every comment must be presented with its verdict.** A silently dropped comment is indistinguishable
+from a dismissed one, and the risk case is specifically a comment criticizing the lead's own plan.
+
+The GitHub PR extension ships a generic `address-pr-comments` skill that edits code directly and has
+no concept of the Implementer-cannot-edit-tests rule. Routing through `Vanguard` is the reason to
+keep ours; both will appear in the picker.
+
+### Purpose Refiner became a gate, not a tool
+
+It now answers **"does this planned work belong in this library?"** *before* the work starts — in
+scope / widens the scope / out of scope / cannot tell. Catching a scope violation at design time
+costs a conversation; catching it after implementation costs a deprecation.
+
+The `cannot tell` verdict is deliberate. A purpose too vague to judge against is itself the finding,
+and the fix is to settle the purpose before writing anything.
+
+### Repo Analyst owns the per-repo AGENTS.md section
+
+Nobody did, and it was a real hole: `/sync-agents-md` regenerates the shared block, but the per-repo
+section below it had no author. Every subagent reads that file at step 0, so a repo without one —
+`ProphetsWay.BPA` — leaves the entire roster working blind.
+
+It may write only *below* the `END SHARED BLOCK` marker. Hand-editing the block is silently
+overwritten by the next sync.
 
 ### Four review agents, not one
 
@@ -260,6 +410,10 @@ The agent is told not to impose that format.
 
 ### Routing, not nested orchestration
 
+> **Superseded 2026-08-12** by *One lead, four stages* above. `Start Here` is retired; `Vanguard`
+> replaces it and calls leaf agents directly. The nesting analysis below still holds and is why
+> `Vanguard` does not call `TDD Lead`.
+
 **Chosen:** `Start Here` recommends an agent and gives the exact invocation to type.
 **Rejected:** A top-level orchestrator that invokes `TDD Lead`, which in turn invokes `Implementer`.
 
@@ -275,8 +429,9 @@ an "agent identifier" and it is unconfirmed whether that means the display name 
 
 ### Orchestrators cannot call each other
 
-`TDD Lead` and `Repo Docs Lead` do not list one another in `agents:`. This is deliberate — circular
-handoffs are a listed anti-pattern — and it is why a separate front door was needed at all.
+`Vanguard` lists neither `TDD Lead` nor `Toolbelt Keeper` in `agents:`, and `TDD Lead` lists neither
+`Vanguard` nor `Toolbelt Keeper`. Circular handoffs are a listed anti-pattern, and calling a lead
+from a lead is the two-level nesting rejected above.
 
 ### Security: split design-time from code-time
 
@@ -452,6 +607,8 @@ nested orchestration*, still unverified, and it puts two layers between the huma
 that are the whole point of a lead. An Orchestrator that instead calls leaf agents directly is just
 `TDD Lead` with a longer list, and now two agents plausibly answer "build this feature." The ceiling
 on this roster is **description distinctness**, not headcount. `Start Here` already covers routing.
+*(2026-08-12: this decision was itself superseded — `Vanguard` is now that lead-with-a-longer-list,
+and the roster was consolidated rather than grown. The nesting reasoning still stands.)*
 
 Adding leaf agents to a lead is not nesting, so this carries none of that risk.
 
@@ -602,6 +759,10 @@ Then confirm every agent appears in the picker. Flat only — do not create subf
 | 12 | `AGENTS.shared.md` still names FluentAssertions | Line 122 of the conventions master, mirrored into 6 repos at line 118. Outside `Toolbelt Keeper`'s lane — requires editing the master and running `/sync-agents-md`. |
 | 13 | `TDD Lead` declares every execute tool under two namespaces | `execute/runTests` **and** `vscodeGeneral/runTests`, `execute/runTask` **and** `vscodeTasks/runTask`. Belt-and-braces from an earlier debugging session. It works, so it was left alone rather than trimmed on a guess — an unrecognized tool name fails **silently**. Verify which namespace is canonical in Chat view → **Diagnostics**, then trim. |
 | 14 | Terminal auto-approve lives only in `settings.json` | `chat.tools.terminal.autoApprove` allows `dotnet build/test/restore`, `dotnet list package`, and read-only `git`; denies `dotnet nuget/tool/publish/pack`, mutating git, all `az`, network fetch/eval, and file deletion. **Not mirrored** — the restore procedure rebuilds all 25 agents and none of this. |
+| 15 | **Retire `TDD Lead` — review by 2026-08-26** | Kept only as a fallback while `Vanguard` is shaken out. It duplicates `Vanguard`'s coverage, so two agents plausibly answer "build this feature" — the exact description-overlap failure the roster is supposed to avoid. **Decide at the review date; do not let it linger.** Deleting it is one `Toolbelt Keeper` invocation. |
+| 16 | Verify `Vanguard`'s Stage 0 actually fires | The behavior depends on instructions running on the first turn, not on a session hook — no such hook exists. Confirm it orients before answering a direct build request. |
+| 17 | `ProphetsWay.BPA` has no `AGENTS.md` and no solution | Empty stub repo by design. First real Stage 1 + Stage 2 test: `Repo Analyst` writes the per-repo section, `Solution Architect` scopes it, `Project Scaffolder` creates the `.sln`. Not started. |
+| 18 | Handoff file does not exist yet | `prophets-pipelines/docs/session-handoff.md` is created by the first `Session Scribe` wrapup. Until then every session is a fresh start, which is correct. |
 
 ---
 
@@ -621,6 +782,8 @@ Signals you have gone too far:
 1. You cannot remember what an agent does without opening the file
 2. Two agents would both plausibly handle the same request
 3. One has not been used in a month
+
+**`TDD Lead` currently trips signal 2 against `Vanguard`** — knowingly and temporarily. See Open Item 15.
 
 The four reviewers stay distinct only because each carries an explicit *"not your job"* table naming
 the agent that owns the adjacent ground. Any new reviewer needs the same. Past roughly 30 agents,

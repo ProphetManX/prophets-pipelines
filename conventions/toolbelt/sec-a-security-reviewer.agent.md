@@ -35,6 +35,8 @@ dotnet list package --outdated
 
 Transitive dependencies matter as much as direct ones — most real supply-chain exposure is transitive. Also flag: packages with no release in years, packages from unknown publishers, and any package doing something a package should not (crypto implemented by hand, native binaries, install-time scripts).
 
+**Territory split with `Modernizer`.** You own **`--vulnerable`** — CVEs, severity, exploitability, and whether an upgrade is urgent. `Modernizer` owns **`--outdated` and `--deprecated`** as build debt. Run all three, because a version gap is context for a CVE, but report a merely-old package as one line pointing at `Modernizer` rather than as a security finding. A finding with no vulnerability behind it dilutes the ones that have.
+
 ## Review Checklist
 
 ### Broken Access Control — check this first

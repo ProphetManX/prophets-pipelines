@@ -95,7 +95,7 @@ Run `README Author` when this cycle added, removed, or changed a public type or 
 - Give it the phase 7 entry and the list of changed public members. It starts with empty context and cannot see the cycle.
 - It will refuse to invent an API or a badge URL, and will ask rather than guess a missing Azure DevOps `definitionId`. Answer, do not guess on its behalf.
 
-**Do not rebuild `Repo Docs Lead` here.** Phase 8 refreshes the docs for work this cycle produced. A full analyze → refine → rewrite pass on a neglected repo is `Repo Docs Lead`'s job — recommend it and stop.
+**Do not rebuild a documentation workflow here.** Phase 8 refreshes the docs for work this cycle produced. A full analyze → refine → rewrite pass on a neglected repo belongs to `Vanguard`, which runs it as Stage 1 — recommend it and stop.
 
 ## Choosing Cycle Granularity
 
