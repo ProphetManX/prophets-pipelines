@@ -60,22 +60,52 @@ The rule is **family-dependent**. Do not "correct" one family to match the other
 
 ## Target Frameworks
 
-Standard set for new and modernized libraries:
-
 ```xml
-<TargetFrameworks>netstandard2.0;net48;net8.0;net9.0</TargetFrameworks>
+<!-- default for a published library -->
+<TargetFrameworks>netstandard2.0;net10.0</TargetFrameworks>
+
+<!-- only when a framework-conditional dependency or API requires it -->
+<TargetFrameworks>netstandard2.0;net48;net10.0</TargetFrameworks>
+
+<!-- test projects — netstandard2.0 is not a valid test target -->
+<TargetFrameworks>net48;net10.0</TargetFrameworks>
 ```
 
-- `netstandard2.0` — maximum reach for older consumers
-- `net48` — final .NET Framework release, for legacy consumers
-- `net8.0` / `net9.0` — current LTS and current
+.NET ships every November: **even-numbered = LTS (3 years), odd-numbered = STS (18 months)**.
+.NET 10 is the current LTS (Nov 2025 → ~Nov 2028). **.NET 8 and .NET 9 both go end of life on
+10 November 2026** — `net8.0`/`net9.0` are now debt, as are `netcoreapp*`, `net5.0`–`net7.0`,
+and anything below `net48`.
 
-Do not add a TFM without a consumer who needs it. Every extra target multiplies build time and
-holds the whole library back to the oldest target's language features. TFMs below `net48`,
-plus `netcoreapp*`, `net5.0`, `net6.0`, and `net7.0`, are end-of-life — treat them as debt.
-
-Write monikers in canonical dotted form (`net8.0`, not `net80`). The undotted form parses, but
-it is non-standard and inconsistent across the repos.
+1. **LTS only.** Never target an STS release in a published library — an 18-month window means
+   re-cutting the list every year and stranding someone each time. Never target a preview.
+2. **`netstandard2.0` is permanent.** It is an API contract, not a runtime, so it cannot expire.
+   It is the reach floor: consumable by .NET Framework 4.6.1+ (painless from 4.7.2 up) and by every
+   .NET Core/5+ runtime. It is also the last .NET Standard version Framework supports —
+   `netstandard2.1` deliberately excluded it.
+3. **`net48` is conditional, not default.** `netstandard2.0` already reaches .NET Framework 4.8, so
+   an explicit `net48` target earns its place only when the repo has a framework-conditional
+   *dependency* or needs an API `netstandard2.0` does not expose. `ProphetsWay.EFTools` qualifies —
+   its EF6 branch is keyed on `net4*`. Most repos do not. Justify it per repo.
+   (.NET Framework 4.8 is the final Framework version; it ships as a Windows component and inherits
+   the OS lifecycle, so it has no standalone EOL date.)
+4. **Carry exactly one modern TFM** unless something concrete requires two. Every extra target
+   multiplies build time.
+5. **Test projects name runtimes directly**, since `netstandard2.0` cannot be a test target. A
+   `net48` test target is how .NET Framework behavior is *verified*, which is distinct from a
+   library merely *supporting* it: `Activator.CreateInstance<T>()` wraps a throwing constructor on
+   .NET Framework and does not on .NET Core, so `ProphetsWay.Example.Tests` must keep `net48` or its
+   exception-passthrough regression guard stops guarding anything.
+6. **Canonical dotted monikers** — `net10.0`, never `net100`. The undotted form parses, but it is
+   non-standard and inconsistent across the repos.
+7. **`LangVersion`:** `netstandard2.0` defaults to C# 7.3, and that constraint applies to all shared
+   code in a multi-targeted project. This is why nullable reference types do not work in these
+   libraries regardless of what a csproj claims.
+8. **Dropping `net8.0`/`net9.0` is not a breaking change** while `netstandard2.0` remains — those
+   consumers still install and still resolve an asset.
+9. **Adding a TFM is a MINOR bump, never a patch.** A new target silently repoints existing
+   consumers to a *different assembly* — a .NET 10 consumer that resolved the `netstandard2.0` asset
+   starts binding the `net10.0` one, a different compilation with different BCL bindings and no
+   netstandard shims. A patch must be safe to take without reading the notes.
 
 ## Packaging Metadata
 
