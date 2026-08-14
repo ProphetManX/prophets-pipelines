@@ -87,7 +87,7 @@ This is what replaced fourteen phase-by-phase permission prompts with a single r
 | `tdd-a-api-designer.agent.md` | API Designer | 0 · Design (HTTP) | read, search, edit | Opus 5 |
 | `tdd-a-contract-reviewer.agent.md` | Contract Reviewer | 1 · Critique | read, search, edit (feature-request append only) | Opus 5 |
 | `sec-a-threat-modeler.agent.md` | Threat Modeler | 1b · Threat model | read, search, edit | Opus 5 |
-| `tdd-a-test-designer.agent.md` | Test Designer | 🔴 2 · Red | read, search, edit | Opus 5 |
+| `tdd-a-test-designer.agent.md` | Test Designer | 🔴 2 · Red | read, search, edit, execute | Opus 5 |
 | `tdd-a-test-auditor.agent.md` | Test Auditor | 3 · Audit | read, search, edit (feature-request append only) | Opus 5 |
 | `tdd-a-implementer.agent.md` | Implementer | 🟢 4 · Green | read, search, edit, execute | Sonnet 4.5 |
 | `tdd-a-code-reviewer.agent.md` | Code Reviewer | 4b · Review | read, search, edit (feature-request append only), execute | Opus 5 |
@@ -228,6 +228,14 @@ the Test Designer. The Implementer never fixes a test itself.
 
 *If an agent ever edits a test to make it pass, the workflow has failed — report it rather than
 accepting the green build.*
+
+### Test Designer runs the red phase without negotiating with the result
+
+`Test Designer` has terminal access so red is observed rather than predicted. It runs the narrowest
+test command after writing tests and reports the command, exit code, counts, and exact failure. Because
+it owns test files, its guard is explicit: it never weakens, loosens, or deletes an assertion to match
+observed behavior. Unexpected red or green is the finding; it reports and stops. `Test Auditor` remains
+the independent validator of whether those tests meaningfully constrain the implementation.
 
 ### Read-only by default
 
