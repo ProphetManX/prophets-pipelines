@@ -15,6 +15,7 @@ steps:
     displayName: 'Build Database Projects'
     inputs:
       solution: '**/*.sqlproj'
+      configuration: 'Release'
 
 # dotnet core inherintly restores when a build is run
 - task: DotNetCoreCLI@2
@@ -22,16 +23,14 @@ steps:
   inputs:
     command: 'build'
     projects: '**/*.csproj'
+    arguments: '--configuration Release'
 
+# dotnet test runs each target framework as its own invocation; VSTest could only ever run one
 - ${{ if not(eq(parameters.LocalTestsOnly, 'yes')) }}:
-  - task: VSTest@2
+  - task: DotNetCoreCLI@2
     displayName: 'Run Unit Tests'
     inputs:
-      testSelector: 'testAssemblies'
-      testAssemblyVer2: |
-          **\*test*.dll
-          !**\*TestAdapter.dll
-          !**\obj\**
-      searchFolder: '$(System.DefaultWorkingDirectory)'
-      testFilterCriteria: 'Collection!="pipeline-skip"'
-      diagnosticsEnabled: true
+      command: 'test'
+      projects: '**/*Test*.csproj'
+      arguments: '--no-build --configuration Release --filter "Requires!=LocalDb"'
+      publishTestResults: true

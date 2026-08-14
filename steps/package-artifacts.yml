@@ -12,6 +12,8 @@ steps:
     packDirectory: '$(Build.ArtifactStagingDirectory)\${{ parameters.OutputDir }}'
     versioningScheme: 'byEnvVar'
     versionEnvVar: '${{ parameters.VersionVariable }}'
+    configuration: 'Release'
+    nobuild: true
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish ${{ parameters.OutputDir }} Artifacts'

@@ -118,7 +118,7 @@ are optional — but they become mandatory the moment publishing is on the table
 <Authors>G. Gordon Nasseri</Authors>
 <Company>Prophet's Way</Company>
 <Description>...</Description>
-<RepositoryType>GitHub</RepositoryType>
+<RepositoryType>git</RepositoryType>
 <RepositoryUrl>https://github.com/ProphetManX/ProphetsWay.Thing</RepositoryUrl>
 <PackageLicenseExpression>MIT</PackageLicenseExpression>
 <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>

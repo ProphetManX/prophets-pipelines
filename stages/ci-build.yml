@@ -44,7 +44,16 @@ stages:
         inputs:
           targetType: 'inline'
           script: |
-            $changeFile = Get-Content CHANGELOG.md
+            if(-not (Test-Path CHANGELOG.md)){
+                Write-Host "##vso[task.logissue type=error]CHANGELOG.md was not found at the repository root. It is required whenever TargetProject is set in app-variables.yml."
+                exit 1
+            }
+            # @() so .Count is meaningful for 0, 1, and n
+            $changeFile = @(Get-Content CHANGELOG.md)
+            if($changeFile.Count -eq 0){
+                Write-Host "##vso[task.logissue type=error]CHANGELOG.md is empty, so the release notes would be blank. Add a '# v<version>' section for this build."
+                exit 1
+            }
             $sb = [System.Text.StringBuilder]::new()
             [void]$sb.AppendLine()
             [void]$sb.AppendLine($changeFile[0])
@@ -57,11 +66,30 @@ stages:
             $projName = "${{ variables.TargetProject }}"
             $projName = $projName.Replace("**/", "")
             Write-Host $projName
-            $projFile = (Get-ChildItem -Recurse -File) | where name -eq $projName
+            $projFile = @((Get-ChildItem -Recurse -File) | where name -eq $projName)
+            if($projFile.Count -eq 0){
+                Write-Host "##vso[task.logissue type=error]No project file named '$projName' was found in the repository. Correct the TargetProject variable in app-variables.yml."
+                exit 1
+            }
+            if($projFile.Count -gt 1){
+                Write-Host "##vso[task.logissue type=error]$($projFile.Count) project files named '$projName' were found ($($projFile.FullName -join '; ')). TargetProject in app-variables.yml must resolve to exactly one project."
+                exit 1
+            }
             Write-Host $projFile
-            [XML]$projXml = Get-Content $projFile.FullName
-            $projXml.GetElementsByTagName("PackageReleaseNotes")[0].InnerText = $sb.ToString()
-            $projXml.Save($projFile.FullName)
+            [XML]$projXml = Get-Content $projFile[0].FullName
+            $notes = $projXml.GetElementsByTagName("PackageReleaseNotes")[0]
+            if($null -eq $notes){
+                $groups = $projXml.GetElementsByTagName("PropertyGroup")
+                if($groups.Count -eq 0){
+                    Write-Host "##vso[task.logissue type=error]'$projName' contains no PropertyGroup, so PackageReleaseNotes cannot be added. Confirm TargetProject in app-variables.yml names a valid MSBuild project."
+                    exit 1
+                }
+                $group = $groups[0]
+                # msbuild ignores an element stamped with xmlns="", so inherit the namespace of the group it lands in
+                $notes = $group.AppendChild($projXml.CreateElement("PackageReleaseNotes", $group.NamespaceURI))
+            }
+            $notes.InnerText = $sb.ToString()
+            $projXml.Save($projFile[0].FullName)
 
       - task: Assembly-Info-NetCore@3
         displayName: 'Set Assembly Info'
