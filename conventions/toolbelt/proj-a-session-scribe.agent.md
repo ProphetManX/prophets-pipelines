@@ -77,6 +77,7 @@ Every agent has a declared output. `Vanguard` builds its route from the state of
 | `docs/repo-profile.md` | Repo Analyst | every repo |
 | `docs/purpose-and-scope.md` | Purpose Refiner | every repo |
 | `docs/nuget-extraction-proposal.md` | Purpose Refiner | published libraries |
+| `docs/feature-requests.md` | Purpose Refiner | every repo once a request has been captured |
 | `docs/architecture.md` | Solution Architect | multi-project solutions |
 | `<Project>/docs/requirements.md` | Solution Architect | multi-project solutions |
 | `docs/api/` | API Designer | HTTP surfaces only |

@@ -4,8 +4,8 @@
 > building, changing, or debugging agent customizations. Do not add it to `AGENTS.md` — it
 > is administrative context, irrelevant to day-to-day coding sessions.
 
-**Built:** 2026-08-08 · **Revised:** 2026-08-12 · **Owner:** G. Gordon Nasseri (ProphetManX)
-**Covers:** 25 custom agents, 2 prompts, and the `AGENTS.md` conventions system across 8 repos.
+**Built:** 2026-08-08 · **Revised:** 2026-08-13 · **Owner:** G. Gordon Nasseri (ProphetManX)
+**Covers:** 26 custom agents, 2 prompts, and the `AGENTS.md` conventions system across 8 repos.
 
 > **2026-08-12 — `Vanguard` is now the single front door.** One lead covers all project work, from
 > resuming yesterday's session to shipping. `Start Here` and `Repo Docs Lead` were retired into it;
@@ -40,12 +40,12 @@ cosmetic — the `name:` frontmatter field controls what appears in the UI.
 
 | File | Agent | Tools | Model |
 |---|---|---|---|
-| `proj-a-vanguard.agent.md` | **Vanguard** | read, search, agent, todo, runTask/runTests/testFailure, GitHub PR tools — **no edit** | Opus 5 |
+| `proj-a-vanguard.agent.md` | **Vanguard** | read, search, edit (feature-request append only), agent, todo, runTask/runTests/testFailure, GitHub PR tools | Opus 5 |
 | `proj-a-session-scribe.agent.md` | Session Scribe | read, search, edit, execute | Sonnet 4.5 |
 | `proj-a-solution-architect.agent.md` | Solution Architect | read, search, edit | Opus 5 |
 
 `Vanguard` is the only agent the owner needs to start a session with. It orients, proposes a route,
-delegates every phase, and synthesizes a **Direction Check** at each gate. It holds 22 subagents and
+delegates every phase, and synthesizes a **Direction Check** at each gate. It holds 23 subagents and
 deliberately excludes `TDD Lead` and `Toolbelt Keeper` — orchestrators do not call orchestrators.
 
 ### The Stage Model
@@ -56,7 +56,7 @@ deliberately excludes `TDD Lead` and `Toolbelt Keeper` — orchestrators do not 
 | **1 · Ground** | Repo Analyst, Purpose Refiner, Modernizer (recon) | first visit to a repo, or a new major effort |
 | **2 · Shape** | Solution Architect, Project Scaffolder, Interface Architect, API Designer, Contract Reviewer, Threat Modeler | new feature or project |
 | **3 · Build** | 🔴 Test Designer → Test Auditor → 🟢 Implementer → Code Reviewer → 🔵 Refactorer | always; the only looping stage |
-| **4 · Land** | Security Reviewer, Commit Author, PR triage, Changelog Author, README Author, Pipeline Auditor, Azure agents | before shipping |
+| **4 · Land** | Security Reviewer, Commit Author, PR triage, Changelog Author, README Author, Pipeline Engineer/Auditor, Azure agents | before shipping |
 
 Stages 1, 2, and 4 are single-pass and individually skippable. Stage 3 is the only loop, and it runs
 uninterrupted between checkpoints. Checkpoints land at **stage gates and each green Stage 3 lap** —
@@ -85,17 +85,17 @@ This is what replaced fourteen phase-by-phase permission prompts with a single r
 | `ops-a-scaffolder.agent.md` | Project Scaffolder | -1 · Scaffold (conditional) | read, search, edit, execute | Opus 5 |
 | `tdd-a-interface-architect.agent.md` | Interface Architect | 0 · Design | read, search, edit | Opus 5 |
 | `tdd-a-api-designer.agent.md` | API Designer | 0 · Design (HTTP) | read, search, edit | Opus 5 |
-| `tdd-a-contract-reviewer.agent.md` | Contract Reviewer | 1 · Critique | read, search | Opus 5 |
+| `tdd-a-contract-reviewer.agent.md` | Contract Reviewer | 1 · Critique | read, search, edit (feature-request append only) | Opus 5 |
 | `sec-a-threat-modeler.agent.md` | Threat Modeler | 1b · Threat model | read, search, edit | Opus 5 |
 | `tdd-a-test-designer.agent.md` | Test Designer | 🔴 2 · Red | read, search, edit | Opus 5 |
-| `tdd-a-test-auditor.agent.md` | Test Auditor | 3 · Audit | read, search | Opus 5 |
+| `tdd-a-test-auditor.agent.md` | Test Auditor | 3 · Audit | read, search, edit (feature-request append only) | Opus 5 |
 | `tdd-a-implementer.agent.md` | Implementer | 🟢 4 · Green | read, search, edit, execute | Sonnet 4.5 |
-| `tdd-a-code-reviewer.agent.md` | Code Reviewer | 4b · Review | read, search, execute | Opus 5 |
+| `tdd-a-code-reviewer.agent.md` | Code Reviewer | 4b · Review | read, search, edit (feature-request append only), execute | Opus 5 |
 | `tdd-a-refactorer.agent.md` | Refactorer | 🔵 5 · Blue | read, search, edit, execute | Sonnet 4.5 |
 | `sec-a-security-reviewer.agent.md` | Security Reviewer | 🔒 6 · Security | read, search, edit, execute | Opus 5 |
 | `docs-a-changelog-author.agent.md` | Changelog Author | 7 · Changelog (conditional) | read, search, edit, execute | Sonnet 4.5 |
 | `docs-a-readme-author.agent.md` | README Author | 8 · Docs (conditional) | read, search, edit | Sonnet 4.5 |
-| `tdd-a-lead.agent.md` | TDD Lead | orchestrator | execute/runTask, execute/runTests, execute/testFailure, read, search, agent, todo (+ `vscodeTasks`/`vscodeGeneral` duplicates, + GitHub PR tools) | Sonnet 4.5 |
+| `tdd-a-lead.agent.md` | TDD Lead | orchestrator | execute/runTask, execute/runTests, execute/testFailure, read, edit (feature-request append only), search, agent, todo (+ `vscodeTasks`/`vscodeGeneral` duplicates, + GitHub PR tools) | Sonnet 4.5 |
 
 The phase numbering above is `TDD Lead`'s. Under `Vanguard` these map to stages: -3/-2/-1 → Stage 1,
 0/1/1b → Stage 2, 2–5 → Stage 3, 6/7/8 → Stage 4. `Modernizer` and `Project Scaffolder` are `ops`
@@ -111,7 +111,8 @@ or anything internet-reachable. Phase 6 is a **release gate**, not a formality.
 |---|---|---|---|---|
 | `ops-a-modernizer.agent.md` | Modernizer | read, search, edit, execute | Opus 5 | `.csproj` / `.sqlproj` |
 | `ops-a-scaffolder.agent.md` | Project Scaffolder | read, search, edit, execute | Opus 5 | **New** projects and `.sln` entries |
-| `ops-a-pipeline-auditor.agent.md` | Pipeline Auditor | read, search | Opus 5 | nothing |
+| `ops-a-pipeline-engineer.agent.md` | Pipeline Engineer | read, search, edit, execute, agent | Opus 5 | `.yml` / `.yaml` only |
+| `ops-a-pipeline-auditor.agent.md` | Pipeline Auditor | read, search, edit | Opus 5 | `docs/feature-requests.md` append only; never YAML |
 
 **Modernizer** has **two modes**. `recon` is read-only — EOL TFMs, outdated and deprecated packages,
 stale project references, empty packaging metadata — and needs no approval, which is what lets
@@ -126,15 +127,17 @@ none**. **Structure, not behavior:** no interfaces, no tests, no implementations
 namespace stub. It never touches an existing project's build configuration; that is `Modernizer`'s
 job and the split is deliberate — see below.
 
-**Pipeline Auditor** is read-only by design — a `prophets-pipelines` template mistake breaks all seven
-consumers at runtime, not at edit time.
+**Pipeline Engineer** owns coherent cross-repo Azure DevOps YAML changes. It reads the whole template
+chain and every consumer before editing, never changes version variables, states blast radius, and
+stops for `Modernizer` when project files must change. **Pipeline Auditor** remains the independent,
+read-only gate: Auditor diagnoses and proposes; Engineer applies; Auditor reviews the result.
 
 ### Cloud Infrastructure (`infra`)
 
 | File | Agent | Tools | Model | Writes / mutates |
 |---|---|---|---|---|
 | `infra-a-engineer.agent.md` | Azure Infrastructure Engineer | read, search, edit, execute | Opus 5 | Bicep, parameters, repo-local deployment YAML, infrastructure docs; Azure only after approval |
-| `infra-a-deployment-reviewer.agent.md` | Azure Deployment Reviewer | read, search, execute | Opus 5 | nothing; never deploys |
+| `infra-a-deployment-reviewer.agent.md` | Azure Deployment Reviewer | read, search, edit, execute | Opus 5 | `docs/feature-requests.md` append only; never deploys |
 
 **Azure Infrastructure Engineer** designs cost-conscious, repeatable Azure deployments using pinned
 Azure Verified Modules and a resource-group-scoped `solution.bicep` by default. It supports both
@@ -162,7 +165,7 @@ route back through `Implementer`.
 | `docs-a-purpose-refiner.agent.md` | Purpose Refiner | read, search, edit | Opus 5 |
 | `docs-a-readme-author.agent.md` | README Author | read, search, edit | Sonnet 4.5 |
 | `docs-a-changelog-author.agent.md` | Changelog Author | read, search, edit, execute | Sonnet 4.5 |
-| `docs-a-commit-author.agent.md` | Commit Author | read, search, execute | Sonnet 4.5 |
+| `docs-a-commit-author.agent.md` | Commit Author | read, search, edit (feature-request append only), execute | Sonnet 4.5 |
 | `docs-p-sweep-workspace.prompt.md` | `/sweep-workspace` — runs as `Vanguard` | inherits | — |
 | `docs-p-sync-agents-md.prompt.md` | `/sync-agents-md` | read, search, edit | Sonnet 4.5 |
 
@@ -170,8 +173,9 @@ route back through `Implementer`.
 generated shared block. It must never hand-edit the block itself. Every other agent reads that file
 at step 0, so a repo without one leaves the whole roster blind.
 
-**Commit Author** writes commit messages and PR bodies from the diff. It **writes no files** — output
-is text to paste — and it never runs a mutating git command.
+**Commit Author** writes commit messages and PR bodies from the diff. Its prose output is text to
+paste, it never runs a mutating git command, and its only file-write exception is appending a
+deduplicated `Proposed` entry to `docs/feature-requests.md`.
 
 ### Meta
 
@@ -191,7 +195,7 @@ session from using it.
 | `prophets-pipelines/conventions/AGENTS.shared.md` | **Master copy** of the shared conventions block |
 | `<repo>/AGENTS.md` × 6 | Generated shared block + per-repo section |
 | `prophets-pipelines/AGENTS.md` | Links to the master instead of inlining it |
-| `conventions/toolbelt/` | Mirrored copies of all 27 customization files |
+| `conventions/toolbelt/` | Mirrored copies of all 28 customization files |
 
 ---
 
@@ -227,8 +231,9 @@ accepting the green build.*
 
 ### Read-only by default
 
-Every agent's tool list is the minimum for its job. Orchestrators (`Vanguard`, `TDD Lead`)
-have **no edit tool at all** — if they feel the urge to write, they are in the wrong role.
+Every agent's tool list is the minimum for its job. Orchestrators (`Vanguard`, `TDD Lead`) may edit
+only to append a deduplicated `Proposed` entry to `docs/feature-requests.md`; every authored project
+artifact remains delegated. This narrow exception implements shared capture without making leads builders.
 `Vanguard` also holds no general terminal, only test/task runners and read-only GitHub tools; the
 artifact ledger's `git log` work is delegated to `Session Scribe` rather than widening the lead.
 
@@ -332,8 +337,9 @@ drives everything: a commit message is for the owner bisecting in six months, a 
 reviewer deciding whether to approve, a changelog is for a consumer deciding whether to upgrade.
 One agent serving all three writes upgrade guidance in commit messages.
 
-`Commit Author` **writes no files** and may run only read-only git. That is the cleanest possible
-restriction — it cannot commit because it produces text, not actions.
+`Commit Author` writes no release or project artifact and may run only read-only git. Its sole file
+write is shared feature-request capture; it still cannot commit because commit and PR prose are text,
+not actions.
 
 `Vanguard` invokes it automatically at each stage gate and each green Stage 3 lap, which is where the
 owner's commit checkpoints already were.
@@ -364,6 +370,12 @@ costs a conversation; catching it after implementation costs a deprecation.
 The `cannot tell` verdict is deliberate. A purpose too vague to judge against is itself the finding,
 and the fix is to settle the purpose before writing anything.
 
+It also owns the **single-owner triage** side of `docs/feature-requests.md`. Any agent or the owner may
+append a deduplicated `Proposed` entry so findings are not lost, but only Purpose Refiner may change
+status. Entries are never deleted or renumbered because their reasoning and stable numbers are durable
+assets. At every Stage 1 run it re-verifies every entry against current source and reports pending
+candidates for the release; this closes the prior gap where request claims could rot without an owner.
+
 ### Repo Analyst owns the per-repo AGENTS.md section
 
 Nobody did, and it was a real hole: `/sync-agents-md` regenerates the shared block, but the per-repo
@@ -391,12 +403,14 @@ Separate agents each produce a ranked list against one standard.
 `Code Reviewer` closed a real hole: before it existed, nothing asked whether the implementation was
 *good* — only whether tests passed and whether it was secure.
 
-### Modernizer may edit `.csproj`; Pipeline Auditor may not edit `.yml`
+### Pipeline authorship and review are separate
 
-Both touch build configuration, and the asymmetry is deliberate. A bad `.csproj` change breaks **one**
-repo and is caught by the build the agent is required to run after every step. A bad `prophets-pipelines`
-template change breaks **all seven** consumers, has no test suite, and fails at pipeline runtime rather
-than at edit time. So Modernizer edits under plan-approve-verify discipline; Pipeline Auditor only reports.
+`Pipeline Engineer` authors `.yml` / `.yaml`; `Pipeline Auditor` independently diagnoses and reviews.
+A bad `prophets-pipelines` change breaks **all seven** consumers, has no test suite, and fails at pipeline
+runtime rather than at edit time, so combining those roles would make the author its own only gate.
+Engineer must state blast radius, update the complete consumer set, and report what only a real run can
+verify. Auditor remains unable to edit YAML. `Modernizer` still owns `.csproj` / `.sqlproj`; Engineer stops
+when a pipeline fix requires either.
 
 ### Changelog Author never touches the version
 
