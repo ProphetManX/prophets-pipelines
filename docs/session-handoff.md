@@ -1,9 +1,9 @@
 ---
-written: 2026-08-14T00:20:00
+written: 2026-08-15T22:15:00
 head:
-  prophets-pipelines: 5df6e21
+  prophets-pipelines: 13313d1
   ProphetsWay.BaseDataAccess: cce91be
-  ProphetsWay.Example: 105b3be
+  ProphetsWay.Example: fd23854
   ProphetsWay.EFTools: f95caa5
   ProphetsWay.Logger: 86568fd
   ProphetsWay.Utilities: 5095e5e
@@ -14,204 +14,227 @@ status: fresh
 
 # Session Handoff
 
-Every claim below was verified against `git` at write time. Where the owner's sign-off notes and the
-repository disagreed, the repository won and the discrepancy is called out.
+Every claim below was verified against the working tree at write time. Where the owner's sign-off
+notes and the repository disagreed, **the repository won** and the discrepancy is called out. Two
+such discrepancies exist this session — see **Corrections** immediately below.
+
+## 🚩 Corrections to the Sign-Off Notes
+
+**1. PR #20 is _not_ merged.** The sign-off could not say either way; git can.
+`ProphetsWay.Example` is on branch **`net10-support`** at **`fd23854`**, in sync with
+`origin/net10-support`. `main` is still at `105b3be` (tagged `3.0.0`). Both commits exist and are
+pushed — the owner committed and pushed, but did **not** merge. **Merging PR #20 is task 1
+tomorrow**, and the pipeline rework is still correctly sequenced behind it.
+
+The two commits, verified by `git log 105b3be..HEAD --stat`:
+
+| Commit | Message | Files |
+|---|---|---|
+| `bb378a3` | Retarget to netstandard2.0;net10.0 and add the docs index | `AGENTS.md`, 3 × `.csproj`, `app-variables.yml`, publish profile, `docs/repo-profile.md`, `docs/feature-requests.md`, `docs/purpose-and-scope.md` |
+| `fd23854` | Document v3.1.0 and correct the README's stale and false claims | `CHANGELOG.md`, `README.md`, `docs/feature-requests.md` |
+
+The Markdown-only second commit is exactly as `Commit Author` scoped it. Example's working tree is
+**clean** — nothing from this session is left unstaged there.
+
+**2. The two `.markdownlint.jsonc` files do not exist.** The sign-off records them as created in
+`prophets-pipelines/conventions/` and `ProphetsWay.Example/`. Verified absent:
+
+- A recursive, `-Force` search for `.markdownlint*` across all of `c:\Projects\ProphetManX` returns
+  **nothing**.
+- The same search under the prompts folder returns nothing.
+- `ProphetsWay.Workspace.code-workspace` contains **no** `markdownlint` or `MD0` reference.
+- `git status --untracked-files=all conventions/` in `prophets-pipelines` is **empty**.
+
+They were either never written to disk or were discarded. **The lint investigation's _findings_
+survive below and are worth keeping; its _artifacts_ do not exist.** Anyone acting on this tomorrow
+is starting the config from scratch, not editing an existing file.
 
 ## Where We Are
 
-**`ProphetsWay.BaseDataAccess` 3.1.0 is shipped.** PR #39 **merged** — squash commit `cce91be`,
-*"retarget the library to netstandard2.0 and net10.0 (#39)"*, on `main`, pushed, and tagged
-**`3.1.0`** and **`3.1.0-495.Beta`** on the remote. The working tree is clean. The `net-10-update`
-branch no longer exists locally.
+**`ProphetsWay.Example` 3.1.0 is complete and pushed, but not merged.** The full pass ran — Stage 1
+(`Modernizer` → `Purpose Refiner` → `Repo Analyst`), no Stage 2, no Stage 3, Stage 4
+(`Changelog Author`, `README Author`) — and Azure DevOps build **`3.1.0.496`** passed on the PR with
+both checks green and zero approvals required.
 
-**The shared pipeline is fixed and released.** `prophets-pipelines` `5df6e21` replaced `VSTest@2`
-with `dotnet test`, so every TFM leg now actually runs. That commit is on `main` and pushed.
+That build also **closed the SDK risk** flagged at checkpoint: `windows-latest` carries the .NET 10
+SDK, and the `HasSqlProj` → `VSBuild@1` path built the SDK-style `.sqlproj` successfully. No
+`UseDotNet@2` task or `global.json` is needed for now.
 
-The next repo is **`ProphetsWay.Example`**, and its retarget is now a live CI problem rather than a
-cosmetic one — see **Next Session**.
-
-## 🚨 The Headline Finding — `net48` test legs were never running in CI
-
-`VSTest@2` resolves a **single** `/Framework` per run and silently skips assemblies built for any
-other TFM, while still reporting the build green. Confirmed empirically: the BaseDataAccess PR build
-reported **115 tests where 230 existed**. Exactly one leg ran, so the `net48`
-`Activator.CreateInstance<T>()` regression guard had never executed.
-
-Fixed by `DotNetCoreCLI@2 command: test`, which invokes each target framework separately.
-
-**The consequence that outlives the fix:** any "green" build on any repo, on any date before
-`5df6e21`, covered one TFM leg. Do not treat historical CI green as evidence of multi-TFM health.
+Next repo in the owner's order is **`ProphetsWay.EFTools`**, then **`ProphetsWay.Logger`**.
 
 ## Current Focus
 
-Nothing in flight. The session closed at a clean boundary: BaseDataAccess shipped, pipeline shipped.
+Nothing is mid-flight. The session closed at a clean boundary: Example is committed and pushed,
+awaiting a merge that is a single owner action.
 
 ## Next Session — Start Here
 
-Owner's stated order: **Example → EFTools → Logger.**
+The exact invocation for the first real work item is in row 3.
 
 | # | Task | Agent | Why it's next |
 |---|---|---|---|
-| 1 | **`ProphetsWay.Example` — retarget.** Tests `net48;net8.0;net9.0` → `net48;net10.0`; both DAL projects `netstandard2.0;net48;net8.0;net9.0` → `netstandard2.0;net10.0` | `Modernizer` | **Urgent, not cosmetic.** With `dotnet test` the pipeline now attempts all three legs where VSTest ran one, requiring .NET 8 *and* 9 runtimes on the agent. This is a live CI failure waiting on the next build. |
-| 2 | `ProphetsWay.Example` — `docs/repo-profile.md` refresh, `docs/purpose-and-scope.md` **create** | `Repo Analyst`, `Purpose Refiner` | Follows the BaseDataAccess pattern. `purpose-and-scope.md` does not exist here; `repo-profile.md` does. |
-| 3 | `ProphetsWay.Example` — README | `README Author` | Teaching artifact. Lead with the swap-the-DAL demonstration, not a project listing. |
-| 4 | Fix the stale "TFM reference" claim in `ProphetsWay.Example/AGENTS.md` | `Repo Analyst` | It still tells a future agent to copy Example's TFM list, which is now the superseded one. Actively harmful guidance. |
-| 5 | `ProphetsWay.EFTools` — take up as a **modernization project**, not a pointer bump | `Modernizer` + owner | Submodule pinned at `967fd26` (2025-04-23, pre-3.0.0). `<RepositoryType>GitHub</RepositoryType>` still there. TFMs `net461;net471;net48;net80;net90`. |
-| 6 | `ProphetsWay.Logger` — discard the 7 modified `.cs` files, then work through interactively | owner | See hazards. **One of the seven is a test file.** |
-| 7 | Commit the `AGENTS.md` files sitting untracked in five repos | owner | Verified propagated and current — just never added to git. |
+| 1 | **Merge PR #20** (`net10-support` → `main`), then tag. Build `3.1.0.496` is already green. | owner | Everything below is sequenced behind it. |
+| 2 | **Run `/sync-agents-md`.** `conventions/AGENTS.shared.md` changed tonight (see *Decisions Made*), so the generated block in all six consuming repos is now out of date. | owner / sync prompt | A stale shared block is silently wrong in six places. |
+| 3 | **`ProphetsWay.EFTools` — full pass.** First: `git -C ProphetsWay.EFTools/ProphetsWay.Example checkout -- .` to discard the dirty submodule working tree. Then `@Vanguard begin a full pass on ProphetsWay.EFTools` — it is a modernization project, not a pointer bump. | `Vanguard` → Stage 1 | Largest remaining piece; see the dossier below. |
+| 4 | **`HasSqlProj` pipeline rework** as its own cross-repo change set. The sequence is a behavior change, not a rename — now recorded permanently in `prophets-pipelines/AGENTS.md`. Sweep up the two unrelated defects (Known Gaps 5 and 6) in the same set. | `Pipeline Engineer` → `Pipeline Auditor` | Deferred until #20 merged because no consumer pins a template ref. |
+| 5 | **`ProphetsWay.Logger`** — discard the 7 modified `.cs` files **first**, then work through interactively. | owner, then `Vanguard` | One of the seven is a test file. |
+| 6 | Optional: the markdownlint config decision, and Example's small genuine lint-defect list. | owner | Neither blocks anything. |
 
-### Differences to expect in `ProphetsWay.Example` — recorded so tomorrow does not rediscover them
+### EFTools dossier — so tomorrow does not rediscover it
 
-1. **Example is not published.** No packaging-metadata pass. Its `<PackageId />`, `<RepositoryType />`
-   etc. are **deliberately empty and must stay empty** — recorded as a correct non-deviation in its
-   `AGENTS.md`. Verified: both DAL csprojs carry `<RepositoryType />` as an empty stub.
-2. **EFTools pins Example as a submodule** at a pre-3.0.0 commit. Moving Example does not break
-   EFTools, but it widens the gap to close when EFTools is taken up.
-3. `docs/purpose-and-scope.md` **does not exist**; `docs/repo-profile.md` does. Verified on disk.
-4. Example partitions its suite by a **`Scope` trait** (`Contract` / `Characterization` /
-   `Dispatcher`). The new pipeline filter deliberately uses **`Requires`** to avoid colliding with it.
-5. Example's README angle differs — teaching artifact, not library.
+- **README is stale by roughly three years** and is almost entirely inherited claims. Given decision
+  4 below, **treat every sentence as unverified** and open the artifact behind it.
+- `docs/repo-profile.md`, `docs/purpose-and-scope.md`, `docs/feature-requests.md` — **all missing**.
+- `AGENTS.md` exists but is **untracked**.
+- TFMs are `net461;net471;net48;net80;net90` — no `netstandard2.0`, undotted monikers, two EOL
+  targets. Dual EF6 / EF Core support is keyed on `$(TargetFramework.StartsWith('net4'))`, so
+  dropping `net4x` would delete the whole EF6 conditional branch. Weigh that deliberately.
+- **Submodule pinned at `967fd26`** (verified via `git submodule status`) — pre-3.0.0, and 3.1.0 puts
+  it two minor versions behind. **FR 9 in Example records that the database schema is complete**, so
+  advancing the pointer carries **no schema prerequisite**. Verified independently tonight: all seven
+  tables exist under `ProphetsWay.Example.Database/dbo/Tables/`, `Departments.sql` and
+  `CompanyResources.sql` among them.
+- `.gitmodules` carries a **stray `[submodule "Submod"]` block** with only `branch = main` — no
+  `path`, no `url`. Verified. Harmless today, but it is malformed and should go.
+- **FR 4** (ambient `TransactionScope`) was routed here from Example — a test against an in-memory
+  store could never fail, so it only means something against a real EF context.
+- `docs/architecture.md` / `requirements.md` may apply here — EFTools is the one library repo where
+  the multi-project-application test is arguably met. Owner's call.
 
 ## Open Questions — Blocking
 
-None. Every question that blocked work last session is resolved or has been converted into a task.
+None.
 
 ## Open Questions — Non-Blocking
 
 | # | Question | Notes |
 |---|---|---|
-| 1 | Where does `[Trait("Requires", "LocalDb")]` need applying? | **Verified: the trait exists nowhere in the workspace — zero occurrences across all repos.** The new pipeline filter `--filter "Requires!=LocalDb"` therefore currently excludes nothing. Most likely home is EFTools, whose `app-variables.yml` sets `LocalTestsOnly: 'yes'`. Until the trait is applied the filter is inert — harmless, but not yet doing the job it was written for. |
-| 2 | Entry 8 (Source Link) rests on an unverified premise | `Microsoft.SourceLink.*` with `PrivateAssets="all"` may **not** create a package dependency, and SDK 8+ has Source Link built in. Re-check before the deferral hardens into a rule. Recorded in the entry itself. |
-| 3 | `ProphetsWay.BPA` has **no `AGENTS.md`** | Verified. The sync prompt forbids creating one. Does BPA join the convention set or stay outside it? |
-| 4 | `ProphetsWay.Utilities` and `ProphetsWay.Hasher` are on **`master`**, not `main` | Not worth fixing on its own, but it will bite any script that assumes `main`. |
-| 5 | The agent roster in `%APPDATA%\Code\User\prompts` is **not version controlled** | Verified: no `.git`. The only versioned copies are the mirrors in `prophets-pipelines/conventions/toolbelt/`, which are tracked and current. Sync direction is prompts → toolbelt; nothing enforces it. |
+| 1 | **`MD022` and `MD012` were disabled but flagged for reconsideration** | `MD022` is **not** cosmetic — a heading with no preceding blank line stops rendering as a heading on strict parsers. `MD012` had previously been assessed as "should fix", and disabling it reverses that. Unresolved. Moot until a config file actually exists again. |
+| 2 | Where does the markdownlint config live? | **Recommendation, not yet acted on:** the `.code-workspace` `settings` block, with **no sync built**. The only consumer is one editor extension on one machine; agents do not lint and there is no CI markdown step. `docs-p-sync-agents-md.prompt.md` **cannot** do it as written — it is scoped to `AGENTS.md` and explicitly forbids editing anything else. |
+| 3 | Is the 446-warning count trustworthy as a workspace figure? | Effectively all 446 were in `ProphetsWay.Example/README.md`; every document the agents wrote is clean. **Caveat:** markdownlint in VS Code may analyze only *open* files, so other repos' "zero" is unproven. |
+| 4 | `ProphetsWay.BPA` has **no `AGENTS.md`** | Verified again tonight — the repo is clean and carries none. The sync prompt forbids creating one. Does BPA join the convention set? |
+| 5 | `ProphetsWay.Utilities` and `ProphetsWay.Hasher` are on **`master`**, not `main` | Verified. Will bite any script assuming `main`. |
+| 6 | The agent roster in `%APPDATA%\Code\User\prompts` is **not version controlled** | The only versioned copies are the mirrors in `prophets-pipelines/conventions/toolbelt/`. Sync direction is prompts → toolbelt; nothing enforces it. **I edited both copies tonight** to keep them in step. |
+| 7 | Entry 8 (Source Link) rests on an unverified premise | `Microsoft.SourceLink.*` with `PrivateAssets="all"` may not create a package dependency, and SDK 8+ has Source Link built in. Re-check before the deferral hardens into a rule. |
+| 8 | `[Trait("Requires", "LocalDb")]` exists **nowhere** in the workspace | The pipeline filter `--filter "Requires!=LocalDb"` therefore currently excludes nothing. Most likely home is EFTools, whose `app-variables.yml` sets `LocalTestsOnly: 'yes'`. Harmless but inert. |
 
 ## In Flight
 
-**Nothing.** Every workstream this session reached a committed, pushed, terminal state. The only
-loose material in the workspace is uncommitted files belonging to prior sessions or to work the
-owner intends to discard — see below.
+| Item | State | Where |
+|---|---|---|
+| **PR #20 — Example 3.1.0** | Committed, pushed, **CI green (`3.1.0.496`)**, **not merged** | `ProphetsWay.Example` branch `net10-support` @ `fd23854` |
+| **Durable decisions filed tonight** | Written, **uncommitted** | `prophets-pipelines` — see *Uncommitted Changes* |
+| **Shared block regeneration** | **Owed.** `AGENTS.shared.md` changed; the six generated copies have not | Run `/sync-agents-md` |
+| **Markdownlint config** | **Investigated, no artifact exists.** Findings preserved below | nowhere on disk |
+| **Pipeline rework** | Audited read-only; premise corrected and now filed. No `.yml` touched | sequenced after the merge |
 
 ## Uncommitted Changes
 
-Verified with `git status --porcelain` per repo at write time.
+Verified with `git status --porcelain` in all eight repos at write time.
 
 | Repo | Files | Description |
 |---|---|---|
-| `prophets-pipelines` | `M docs/session-handoff.md` | This file. Everything else in the repo is committed and pushed. |
-| `ProphetsWay.BaseDataAccess` | **none — clean** | 3.1.0 fully landed. |
-| `ProphetsWay.Example` | `M AGENTS.md` (+54/−15) | Shared-block sync output. Expected, wanted, needs committing. |
-| `ProphetsWay.EFTools` | `?? AGENTS.md` | Sync output, **untracked** — needs `git add`, not just commit. |
-| `ProphetsWay.EFTools` | `M ProphetsWay.Example` (submodule) | 🚩 The pointer still reads the committed `967fd26`; the dirty marker is a **modified `ProphetsWay.Example.DataAccess.csproj` *inside* the submodule**, which `AGENTS.md` forbids. **Discard from inside the submodule.** |
-| `ProphetsWay.Logger` | `?? AGENTS.md` | Sync output, untracked. |
-| `ProphetsWay.Logger` | **7 modified `.cs` files (+107/−40)** | Abandoned refactor the owner intends to **discard**. ⚠️ **One of them is a test file — `ProphetsWay.Logger.Test/FileDestinationTests.cs` (+25).** Do not salvage; do not let a later agent read it as intended behavior. |
-| `ProphetsWay.Utilities` | `?? AGENTS.md` | Sync output, untracked. |
-| `ProphetsWay.Hasher` | `?? AGENTS.md` | Sync output, untracked. |
-| `ProphetsWay.BPA` | **none — clean** | No `AGENTS.md` exists here at all. |
+| `prophets-pipelines` | `M AGENTS.md`, `M conventions/AGENTS.shared.md`, `M conventions/agent-toolbelt.md`, `M conventions/toolbelt/proj-a-session-scribe.agent.md`, `M docs/session-handoff.md` | **Tonight's durable filing plus this file.** All deliberate. ⚠️ The `AGENTS.shared.md` change makes `/sync-agents-md` a prerequisite for the next session. |
+| `ProphetsWay.Example` | **none — clean** | On `net10-support`, in sync with origin. Session output is fully committed. |
+| `ProphetsWay.BaseDataAccess` | **none — clean** | 3.1.0 fully landed at `cce91be`. |
+| `ProphetsWay.EFTools` | `?? AGENTS.md` · `M ProphetsWay.Example` (submodule) | 🚩 Submodule still dirty — the marker is `ProphetsWay.Example.DataAccess/ProphetsWay.Example.DataAccess.csproj` modified **inside** the submodule, which `AGENTS.md` forbids. **Discard from inside it before any EFTools work.** The pointer itself is unchanged at `967fd26`. |
+| `ProphetsWay.Logger` | `?? AGENTS.md` + **7 modified `.cs`** | Abandoned refactor, to be **discarded before work reaches Logger**. ⚠️ One is a test file. Full list: `ProphetsWay.Logger.Test/FileDestinationTests.cs`, `Generics/Logger.cs`, `Logger.cs`, `LoggerDestinations/EventDestination.cs`, `LoggerDestinations/FileDestination.cs`, `LoggerDestinations/GenericEventDestination.cs`, `LoggingDestinationCore.cs`. Any agent reading these as current intent draws the wrong conclusion. |
+| `ProphetsWay.Utilities` | `?? AGENTS.md` | Sync output, untracked. On `master`. |
+| `ProphetsWay.Hasher` | `?? AGENTS.md` | Sync output, untracked. On `master`. |
+| `ProphetsWay.BPA` | **none — clean** | No `AGENTS.md` here at all. |
+
+**Four untracked `AGENTS.md` files** — EFTools, Logger, Utilities, Hasher. Verified propagated and
+current; they were simply never `git add`ed. **They will be rewritten by task 2**, so add them after
+the sync rather than before.
 
 **Nothing was committed, staged, or pushed by this wrapup.** All of the above is the owner's call.
 
-### Corrections to the checkpoint's uncommitted list
-
-- The `M ProphetsWay.EFTools.sln` entry — 70 lines registering a `V3Probe` project under `%TEMP%` —
-  **is gone.** It was reverted during the session. Do not go looking for it.
-- `ProphetsWay.BaseDataAccess` was listed as three dirty files. All three shipped in PR #39.
-
 ## Decisions Made This Session
 
-| # | Decision | Rationale | Filed at — **verified present** |
-|---|---|---|---|
-| 1 | **Entry 7, rollback-failure observability — REJECTED.** Not deferred. | Owner: implementers should build their own error handling around it. Reopening needs a new argument. | ✅ `ProphetsWay.BaseDataAccess/docs/feature-requests.md` § 7, status `Rejected`. Committed. |
-| 2 | **Entry 6, transaction split — OPEN, rewritten to the owner's design.** | He **rejected** the original motivation ("non-transactional stores are forced to lie") — he cannot think of a real database implementation that would not want transactions. He **accepted the shape**: a separate `IBaseAccessWithTransactions`; `BaseDataAccess` would not implement it and would stop declaring three abstract members; a consumer's DAL implements them as interface members rather than overrides. Still v4, still binary-breaking. | ✅ same file § 6, *"Scheduled for a possible v4"*, with the rejected and accepted motivations recorded separately. Committed. **Supersedes the checkpoint's "SHELVED" wording — it is not shelved.** |
-| 3 | **Entry 1, conformance kit — DEFERRED, explicitly not rejected.** | Revisit after EFTools is updated, possibly after BPA. **Sibling package only** (`ProphetsWay.BaseDataAccess.Conformance`) — never inside the contracts package, which would destroy its zero-package-reference property. | ✅ same file § 1. Committed. |
-| 4 | **Entry 8, Source Link — DEFERRED.** | No project dependency for now. The unverified counter-premise is recorded in the entry rather than lost. | ✅ same file § 8. Committed. |
-| 5 | **Entry 9, improve the `DataAccessConventionException` message — NEW, `Proposed`.** | Behaviour change, so **3.2.0 at the earliest**. ⚠️ **Mandatory sequencing: `Test Designer` updates the three `ShouldContain` assertions first, then `Implementer` changes the message.** Reversing that order is exactly the failure mode where an agent edits a test to make an implementation pass. | ✅ same file § 9 + Release Eligibility table. Committed. |
-| 6 | **`feature-requests.md` ownership model — implemented.** Shared append; **only `Purpose Refiner` changes status**; nothing deleted; never renumbered. | A proposal (entry 6) had outlived its evidence and nobody noticed. | ✅ `AGENTS.shared.md` → Rules for Agents, propagated to all six sibling `AGENTS.md`. |
-| 7 | **`Pipeline Engineer` agent created**; **`Test Designer`** gained terminal access plus a rule never to weaken an assertion to make a test agree with observed behaviour. | No agent in the roster could write pipeline YAML — that gap blocked the headline fix for a full session. | ✅ `conventions/toolbelt/ops-a-pipeline-engineer.agent.md` and `tdd-a-test-designer.agent.md`, both tracked in git. |
-| 8 | **`<RepositoryType>` is `git`, not `GitHub`, everywhere published.** | `GitHub` is not a valid repository type value. | ✅ `conventions/AGENTS.shared.md` line 121, committed in `5df6e21`. **Verified propagated** — all six sibling `AGENTS.md` files carry `<RepositoryType>git</RepositoryType>`, regenerated 2026-08-13 23:43. |
-| 9 | **Build once and promote.** `dotnet pack` no longer implies a build. | The pipeline previously compiled four times and shipped three separately-compiled binary sets. | ✅ `steps/package-artifacts.yml` — `configuration: 'Release'`, `nobuild: true`. Committed. |
+All five are now **filed in permanent homes**, not just recorded here.
 
-### ⚠️ Consequence worth stating plainly
-
-`--configuration Release` was absent from both build and pack until `5df6e21`. **Every NuGet package
-published from this pipeline before that commit was a Debug build.** BaseDataAccess `3.1.0` /
-`3.1.0-495.Beta` is the first Release-configuration package. If any prior release needs to be
-described or re-cut, that is the reason.
-
-## What Shipped — verified against git
-
-**`prophets-pipelines` @ `5df6e21`** — one commit, four files:
-
-| File | Change |
-|---|---|
-| `steps/restore-build-test.yml` | `VSTest@2` → `DotNetCoreCLI@2 command: test`; added `--configuration Release` and `--no-build`; replaced the dead `testFilterCriteria: 'Collection!="pipeline-skip"'` (`Collection` is not a property the xunit adapter surfaces) with `--filter "Requires!=LocalDb"`. The build step also now passes `--configuration Release`. |
-| `steps/package-artifacts.yml` | `configuration: 'Release'`, `nobuild: true`. |
-| `stages/ci-build.yml` | Release-notes script hardened — five unguarded assumptions, notably `GetElementsByTagName("PackageReleaseNotes")[0]` with no null guard, and a multi-match `Get-ChildItem` that could concatenate two csproj files into malformed XML. |
-| `conventions/AGENTS.shared.md` | `<RepositoryType>` `GitHub` → `git`. **Confirmed applied** — it was pending at checkpoint; it landed in this commit. |
-
-**`ProphetsWay.BaseDataAccess` 3.1.0 @ `cce91be`** — merged, pushed, tagged:
-
-- `docs/repo-profile.md` created; `docs/purpose-and-scope.md` refreshed with a scope-gate section and
-  a re-verification that **no NuGet extraction candidate clears the bar** — so
-  `docs/nuget-extraction-proposal.md` deliberately does not exist. That is a recorded decision, not a
-  ledger gap; do not report it as missing.
-- XML `<remarks>` corrected in four files — `IBaseIdEntity.cs`, `DataAccessConventionException.cs`,
-  `BaseDataAccess.cs`, `IBaseDataAccess.cs`. `IBaseIdEntity<T>` falsely claimed that implementing the
-  interface *"satisfies the fallback"*; an **explicit** implementation compiles to a non-public,
-  interface-qualified property, so neither the `{TypeName}Id` nor the `Id` lookup finds it. The docs
-  were also silent on the identifier property needing to be **public** while stressing that a
-  non-public *setter* is fine. **Documentation only — no behaviour change.**
-- One characterization test added (`Wraith` entity) pinning that behaviour. Suite **115 → 116 per
-  TFM, 232 executions**, verified in Debug and Release.
-- csproj: `<PackageProjectUrl>` and `<Copyright>` populated; `<RepositoryType>` `GitHub` → `git`.
-- README, CHANGELOG, `AGENTS.md`, repo-profile, purpose-and-scope all corrected to 116/232.
-- `app-variables.yml` reads `Major: '3' / Minor: '1' / Patch: '0'`. Library TFMs
-  `netstandard2.0;net10.0`; tests `net48;net10.0`.
-
-> Local tags are behind the remote — `3.1.0` and `3.1.0-495.Beta` exist on `origin` but are not
-> fetched locally. `git fetch --tags` when convenient.
-
-## Hazards for Next Session
-
-| # | Hazard | Detail |
+| # | Decision | Filed in |
 |---|---|---|
-| 1 | **`ProphetsWay.Logger` CI will go red on its next build** | Four of its eleven test TFMs — `netcoreapp2.1`, `netcoreapp3.1`, `net50`, `net60` — have no runtime on `windows-latest`. `VSTest@2` hid this by running one leg. **Known and accepted.** Fix by trimming the TFM list (`Modernizer`) — **never** by reverting the template. |
-| 2 | **`ProphetsWay.Example` CI is the same failure, sooner** | `net48;net8.0;net9.0` in the test project needs .NET 8 *and* 9 runtimes on the agent. This is why task 1 is first. |
-| 3 | **`/sync-agents-md` exited code 1** | It was run from the `ProphetsWay.BaseDataAccess` directory rather than `prophets-pipelines`. **Verified: the shared block did propagate anyway** — all six sibling `AGENTS.md` files were regenerated at 2026-08-13 23:43 and all carry the `RepositoryType` correction. The exit code is a **prompt/working-directory bug worth fixing**, not stale content. Run it from `prophets-pipelines` next time. |
-| 4 | **The `ProphetsWay.Example` submodule inside EFTools is dirty** | A csproj modified *inside* the submodule, which `AGENTS.md` forbids. Discard it from within the submodule before touching EFTools. |
-| 5 | **`[Trait("Requires", "LocalDb")]` exists nowhere** | Zero occurrences workspace-wide. The new filter excludes nothing until it is applied. |
-| 6 | **Logger's uncommitted diff includes a test file** | `FileDestinationTests.cs`, +25. An agent that reads it as current intent will draw the wrong conclusion about Logger's behaviour. |
+| 1 | **`docs/architecture.md` and per-project `docs/requirements.md` are `n/a` for a utility or reference library.** Their architecture lives in `AGENTS.md`, the README, and XML `<remarks>`. They apply to multi-project **application** solutions — BPA certainly, EFTools possibly. | `conventions/AGENTS.shared.md` → Repo Layout; and the artifact ledger in **both** copies of `proj-a-session-scribe.agent.md`, which previously listed both unconditionally |
+| 2 | **When a hygiene fix has a teaching cost, genericize rather than delete** — and record the declined option in the feature-request entry so it is not re-proposed later as unfinished work. Established by FR 6. | `conventions/AGENTS.shared.md` → Rules for Agents |
+| 3 | **`HasSqlProj` must not be renamed to `HasLegacySqlProj`.** The pipeline never builds the `.sln` (`projects: '**/*.csproj'`), so `HasSqlProj` is the *only* thing building any `.sqlproj` in CI — the SDK-style one included. Correct sequence: change the build mechanism to reach the `.sqlproj`, prove it in Example's CI, *then* retire the variable. Behavior change, not a rename. | `prophets-pipelines/AGENTS.md` → new subsection under the variable contract, plus the contract table row |
+| 4 | **A documentation agent affirming an inherited claim is not the same as verifying it.** Three false README claims survived multiple passes because nobody opened the artifact. Before restating any claim as accurate, open the file — and say which one you opened. | `conventions/AGENTS.shared.md` → Rules for Agents |
+| 5 | **For mechanical rules, prefer config over agent instructions.** A linter cannot forget; `AGENTS.shared.md` costs context on every request in seven repos. Reserve the block for judgment rules. Corollary: before building a sync for a config file, ask who consumes it. | `conventions/agent-toolbelt.md` |
 
-## Punch List — verified read-only survey
+Also filed: the two pipeline defects found read-only by `Pipeline Auditor` are now **Known Gaps 5
+and 6** in `prophets-pipelines/AGENTS.md` — `steps/create-github-release.yml` hardcodes
+`gitHubConnection` and ignores its own parameter; `local/local-pipeline.yml` passes
+`PostTargetToNuGet:` to a template declaring no such parameter, so **the reference copy new repos
+start from fails at compile.**
 
-`<RepositoryType>` across every non-`bin`/`obj` csproj:
+### What the session produced in `ProphetsWay.Example` — verified against the commits
 
-| Project | Value | Action |
-|---|---|---|
-| `ProphetsWay.BaseDataAccess` | `git` | ✅ done |
-| `ProphetsWay.EFTools` | **`GitHub`** | ❌ fix — published |
-| `ProphetsWay.Logger` | **`GitHub`** | ❌ fix — published |
-| `ProphetsWay.Hasher` | `<RepositoryType />` | ❌ empty stub — published; needs the full metadata pass |
-| `ProphetsWay.Utilities` | `<RepositoryType />` | ❌ empty stub — publication status unclear; settle purpose first |
-| `ProphetsWay.Example.DataAccess`, `.NoDB` | `<RepositoryType />` | ✅ **leave empty — deliberate.** Not published. |
+- **`Changelog Author`** wrote the v3.1.0 entry and independently confirmed MINOR by classification:
+  adding `net10.0` repoints consumers to a differently-compiled asset; dropping `net8.0`/`net9.0`
+  strands nobody while `netstandard2.0` remains.
+- **`README Author`** corrected three stale build facts, rewrote the EFTools claim as **pending
+  rather than false** (a submodule can only lag, never drift), added a VS onboarding note (FR 7), a
+  version marker under the badge, and a "Further reading" block routing to `docs/`.
+- **`Purpose Refiner`** set FR 6 to `Done`, propagated that to `purpose-and-scope.md`, corrected its
+  own now-obsolete "stale claims" table, and filed **FR 9** — seed data for `Resources`,
+  `Departments`, `CompanyResources`; status **Deferred on timing rather than merit**, revisit
+  alongside FR 5.
+- **Three false README claims caught and fixed** — the substance behind decision 4:
+  1. "The database project lacks `Departments` and `CompanyResources` tables." **False** — both exist
+     and are correctly shaped. `README Author` had reported the bullet as "still accurate" without
+     opening the folder; `Purpose Refiner` caught it. Independently re-verified tonight.
+  2. "Every showcase DAL fails with `DataAccessConventionException`." **False** — five of seven do;
+     `ThrowingDal` and `EntityFailureDal` propagate their own `ShowcaseFailureException` unwrapped.
+  3. `EntityFailureDal` was **missing entirely** from the showcase table, despite carrying the
+     entities that pin the `Activator.CreateInstance<T>()` .NET Framework divergence.
 
-Guidance now lives in `conventions/AGENTS.shared.md` and is propagated to every repo.
+  Also corrected: the seeding claim now names the four tables actually seeded — verified on disk as
+  Companies, Jobs, Transactions, Users — linking the rest to FR 9.
+- **`Commit Author`** produced the second commit message and caught two internal inconsistencies,
+  both fixed before commit: the changelog said "entries 1–8" while the same commit added entry 9, and
+  FR 9's index row was unbolded.
 
 ## Deliberately Deferred
 
 | Item | Why | Revisit when |
 |---|---|---|
-| **xunit v3 migration** | Trivial in code — 0 source lines, 3 csproj lines, proven on a scratch probe (9/9 both TFMs, traits and coverage working). It was blocked by the `VSTest@2` glob: xunit v3 needs `<OutputType>Exe</OutputType>` and on `net48` emits no `.dll`. **That blocker is now removed** by the move to `dotnet test`. The deferral is now a scheduling choice, not a technical one. ⚠️ **Do not lose this:** `Microsoft.NET.Test.Sdk` is still required under xunit v3 unless you opt into `TestingPlatformDotnetTestSupport` — without it, `dotnet test` quietly degrades to a build and **exits 0 having run nothing**. | After Example and EFTools are modernized |
-| `net48` in the BaseDataAccess **test** project | Deliberately retained against the general "trim targets" instinct. It is the only leg verifying .NET Framework exception-wrapping, and as of `5df6e21` it actually runs. | Never, while that code path exists |
-| Entry 1 — conformance kit (`ProphetsWay.BaseDataAccess.Conformance`) | Sibling package only — never inside the contracts package. | After EFTools is updated; possibly after BPA |
-| Entry 8 — Source Link / `.snupkg` | Owner declined a project dependency for now; the premise is flagged for re-checking in the entry. | Next packaging pass |
-| Entry 9 — exception message | Behaviour change; 3.2.0 earliest; **test assertions must move first**. | 3.2.0 |
+| **FR 9 — seed data for `Resources`, `Departments`, `CompanyResources`** | Deferred on **timing, not merit**. Schema is complete; only the `PostBuildScripts` seeds are absent. | Alongside FR 5 (advancing the EFTools submodule) |
+| **xunit v3 migration** | 0 source lines, 3 csproj lines, proven on a scratch probe. The `VSTest@2` blocker is **gone** since `5df6e21`, so this is now a scheduling choice. ⚠️ **Do not lose this:** `Microsoft.NET.Test.Sdk` is still required under xunit v3 unless you opt into `TestingPlatformDotnetTestSupport` — without it `dotnet test` quietly degrades to a build and **exits 0 having run nothing**. | After Example and EFTools are modernized |
+| `net48` in the BaseDataAccess and Example **test** projects | Deliberately retained against the "trim targets" instinct. Only leg verifying .NET Framework exception-wrapping, and as of `5df6e21` it actually runs. | Never, while that code path exists |
+| Conformance kit (`ProphetsWay.BaseDataAccess.Conformance`) | Sibling package only — never inside the contracts package. | After EFTools is updated; possibly after BPA |
+| Source Link / `.snupkg` | Owner declined a project dependency for now; the premise is flagged for re-checking. | Next packaging pass |
+| Markdownlint config placement | Investigated fully, no artifact exists. `MD022`/`MD012` still unresolved. | Owner's choice; nothing blocks on it |
 | `ProphetsWay.BPA` joining the conventions set | No `AGENTS.md`; the sync prompt forbids creating one. | Owner decides |
-| Example's `<NullableContextOptions>` spelling | Inert either way at C# 7.3 while `netstandard2.0` is in the TFM list. Cosmetic, but misleading in a repo meant to be read. | The Example docs pass |
-| `GitHubConnectionName` threaded through the templates and then ignored | `create-github-release.yml` hardcodes the connection. Dead parameter. | Next pipeline pass |
-| No consumer pins a `ref` of `prophets-pipelines` | All seven track the default branch, so a breaking template change hits everyone at once. `5df6e21` is the proof of the risk. | Owner decides |
+| No consumer pins a `ref` of `prophets-pipelines` | All seven track the default branch, so a breaking template change hits everyone at once. | Owner decides |
+
+## Markdown Linting — investigated, then set aside
+
+Recorded so it is not rediscovered. **Findings only — no config file exists on disk.**
+
+- **446 warnings, effectively all in `ProphetsWay.Example/README.md`.** Every document the agents
+  wrote is clean.
+- **No `.markdownlint.*` config existed anywhere** — the 446 were VS Code defaults nobody chose. Still
+  true as of tonight.
+- Rules the owner settled on disabling, should a config be recreated: `MD010` (code_blocks only —
+  tabs are the house standard in `.cs` samples), `MD049`, `MD060`, plus `MD013` at 120, `MD009`,
+  `MD022`, `MD012`, `MD025`.
+- `MD025` off **is** well-founded — `CHANGELOG.md` is a stack of `# vX.Y.Z` H1s by design.
+- **`MD022` and `MD012` are the two flagged for reconsideration** — see Non-Blocking question 1.
+- Genuine defects deliberately left **enabled**: `MD040`, `MD001`, `MD031`, `MD036`.
 
 ## Recent Sessions
+
+### 2026-08-15
+
+Completed the **`ProphetsWay.Example` 3.1.0** pass end to end — Stage 1 (`Modernizer` →
+`Purpose Refiner` → `Repo Analyst`) and Stage 4 (`Changelog Author`, `README Author`), no Stage 2 or
+3. PR #20 opened and **built green (`3.1.0.496`)**, confirming `windows-latest` carries the .NET 10
+SDK and that `HasSqlProj` → `VSBuild@1` builds the SDK-style `.sqlproj`. **Not merged.** Caught three
+false README claims that had survived multiple documentation passes because no agent opened the
+artifact behind them — the session's most transferable lesson, now a rule in `AGENTS.shared.md`.
+Filed FR 9 (seed data, Deferred) and closed FR 6. Investigated 446 markdownlint warnings and set the
+work aside; **the two config files the sign-off believed existed do not.** Filed five durable
+decisions into permanent homes, which leaves `/sync-agents-md` owed.
 
 ### 2026-08-13 → 08-14
 
@@ -233,4 +256,3 @@ standard in `conventions/AGENTS.shared.md` — LTS-only, nine rules — and appl
 BaseDataAccess as 3.1.0 (`net-10-update` pushed, PR #39 open, CI green). Assessed xunit v3 and
 deferred it on discovering that the shared `VSTest@2` glob would silently drop the `net48` test leg.
 Closed by running `/sync-agents-md` into all six consuming repos.
-

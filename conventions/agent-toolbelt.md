@@ -309,6 +309,16 @@ invocation, and blocking question passes.
 `Session Scribe` verifies accomplishments against `git diff` rather than against the conversation —
 something discussed but never written down is a loose end, not progress. It never commits.
 
+### For mechanical rules, prefer config over agent instructions
+
+A rule a tool can enforce belongs in that tool's config, not in `AGENTS.shared.md`. A linter cannot
+forget and cannot be talked out of it, whereas the shared block is loaded into context on every
+request in seven repos and is paid for whether or not it is relevant. Reserve the block for judgment
+rules — the ones no tool can check.
+
+The corollary is a scope test: before building a sync for a config file, ask who actually consumes
+it. A setting read only by one editor extension on one machine does not need distribution.
+
 ### One lead, four stages, and a ledger instead of fourteen prompts
 
 **Chosen:** `Vanguard` — a single lead covering resume, ground, shape, build, land, and sign-off.

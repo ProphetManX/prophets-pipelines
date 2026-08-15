@@ -55,7 +55,7 @@ Templates read these from a consumer's `app-variables.yml`:
 | `Product` | Library name without the `ProphetsWay.` prefix |
 | `RepoName` | `ProphetManX/ProphetsWay.<Library>` |
 | `PostTargetToNuGet` | `'yes'` builds alpha/beta/release NuGet packages |
-| `HasSqlProj` | `'yes'` builds any `*.sqlproj` |
+| `HasSqlProj` | `'yes'` builds any `*.sqlproj` — **including SDK-style ones**; see below |
 | `LocalTestsOnly` | `'yes'` skips tests in CI because they need a local database |
 | `NuGetFeedCredentialName` | Service connection name |
 | `GitHubConnectionName` | Service connection name |
@@ -63,6 +63,18 @@ Templates read these from a consumer's `app-variables.yml`:
 **Renaming or removing a variable here breaks every consuming repo silently** — pipelines fail at
 runtime, not at edit time. Any change to this contract must be applied to all seven repos in the
 same change set. Enumerate the affected repos before proposing one.
+
+#### `HasSqlProj` must not be renamed to `HasLegacySqlProj`
+
+The shared build step is `projects: '**/*.csproj'` — **the pipeline never builds the `.sln`**, so a
+`.sqlproj` is unreachable by the ordinary build. `HasSqlProj` gates `NuGetCommand@2` + `VSBuild@1`,
+which makes it the **only** thing that builds any `.sqlproj` in CI, SDK-style ones included. It is
+an active path, not a legacy one, and a local `dotnet build` succeeding does not transfer to CI.
+
+The correct sequence when this is resumed is a **behavior change, not a rename**: change the build
+mechanism to reach the `.sqlproj` (build the `.sln`, or a glob covering both project types) → prove
+it in `ProphetsWay.Example`'s CI → *then* retire `HasSqlProj` entirely. **No consumer pins a
+template `ref`**, so a merge here is live for every in-flight build.
 
 ### Rules for Agents
 
@@ -81,3 +93,5 @@ same change set. Enumerate the affected repos before proposing one.
 | 2 | `ProphetsWay.Hasher` does not consume these templates | It still uses standalone `azure-pipelines.yml` + `version-variables.yml`. |
 | 3 | `ProphetsWay.Utilities` has no pipeline at all | It consumes nothing from this repo. |
 | 4 | No versioning on the templates themselves | Consumers presumably track `main`, so a breaking template change hits everyone at once with no opt-in. Consider tagging releases and having consumers pin a ref. |
+| 5 | `steps/create-github-release.yml` hardcodes `gitHubConnection` | It ignores its own parameter. Found by `Pipeline Auditor`, unfixed. |
+| 6 | `local/local-pipeline.yml` passes an undeclared parameter | It passes `PostTargetToNuGet:` to a template that declares no such parameter — **the reference copy new repos start from fails at compile.** Found by `Pipeline Auditor`, unfixed. |
