@@ -1,10 +1,10 @@
 ---
-written: 2026-08-15T23:35:00
+written: 2026-08-16T00:41:00
 head:
-  prophets-pipelines: 6569a59
+  prophets-pipelines: 16e99a3
   ProphetsWay.BaseDataAccess: cce91be
-  ProphetsWay.Example: d845863
-  ProphetsWay.EFTools: 947fcbf
+  ProphetsWay.Example: 749dd20
+  ProphetsWay.EFTools: 56e6a66
   ProphetsWay.Logger: 86568fd
   ProphetsWay.Utilities: 5095e5e
   ProphetsWay.Hasher: d1410ca
@@ -68,18 +68,106 @@ SDK, and the `HasSqlProj` → `VSBuild@1` path built the SDK-style `.sqlproj` su
 `UseDotNet@2` task or `global.json` is needed for now.
 
 The previous handoff was **consumed** by a `resume` at the top of this session; this entry is a
-`checkpoint` written over it. Next repo in the owner's order is **`ProphetsWay.EFTools`**, then
-**`ProphetsWay.Logger`**.
+`checkpoint` written over it. **The date has rolled to 2026-08-16.** Next repo in the owner's order
+is **`ProphetsWay.EFTools`**, then **`ProphetsWay.Logger`**.
 
 **Current session — `ProphetsWay.EFTools` 3.x.** The owner switched to the **`Vanguard`** lead
 mid-effort and ordered a **full independent verification** of the prior agent's work before Stage 3.
-That verification **withdrew the "Stage 2 closed" claim**. See **Current Focus**.
+That verification withdrew the "Stage 2 closed" claim at the time; **Stage 2 is now genuinely closed
+at Revision 7, 142 obligations, zero blocked.** See **Current Focus**.
 
 ## Current Focus
 
-**`ProphetsWay.EFTools` 3.x pass — Stage 2 is CLOSEABLE. Next move is Stage 3.**
+**`ProphetsWay.EFTools` 3.x pass — Stage 2 is CLOSED. Next move is Stage 3.**
 
-### ✅ Since the 21:50 checkpoint — this is the current picture
+### ✅ Since the 23:35 checkpoint — 2026-08-16, the date has rolled
+
+**Branches moved.** `ProphetsWay.EFTools` is on **`3.0.0-first-pass` @ `56e6a66`**;
+`ProphetsWay.Example` is **no longer on `main`** — it is on a new branch
+**`3.1.1-eftool-findings` @ `749dd20`**, pushed. `prophets-pipelines` is on `main` @ `16e99a3`.
+Most of the previous checkpoint's uncommitted list has since been committed; what remains dirty is
+listed under **Uncommitted Changes** and is much smaller than it was.
+
+#### `ProphetsWay.EFTools` — Stage 2 closed
+
+- **`docs/api-contract.md` is Revision 7**, closing **F1–F8** from the focused `Contract Reviewer`
+  delta review of Revision 6 (verdict **PASS WITH FINDINGS**). Next Session row 2 at the last
+  checkpoint — **now done.**
+- **The most consequential fix:** Revision 6 was written while the Example retrait was still pending,
+  and the retrait landed before Revision 6 was finished — leaving a note **inside a test obligation**
+  instructing the author to *"expect that one Example test to fail."* That would have had
+  `Test Designer` treat a **red Example test as expected**. Removed.
+- Also fixed: the **`Restore` sample** — the document's only worked custom write — still detached on
+  the **success path only**, teaching copiers the exact shape **OD-7 retracted**.
+- **142 obligations, zero blocked. Stage 2 is closed.**
+- **`docs/feature-requests.md` appended to** (the lead's one authorized write): new **entry 12** —
+  `RootNonIdDao.EnsureBeginTransaction` **silently no-ops against a pre-existing transaction**,
+  status `Proposed`, recommending **no 2.2.x patch** and naming it in the 3.0.0 notes as **Fixed**.
+- **The leaked `DbContext` did *not* get a new entry.** Dedupe found it belonged as an **extension to
+  entry 3**, which now carries the **shipped-defect framing** and records that **`ContextOwnership`
+  (A9) supersedes its open question Q2.** Next Session row 7 — **now done**, both halves.
+
+#### `ProphetsWay.Example` — substantial, all runner-verified
+
+- **`Interface Architect` added two DAL-wide cross-cutting rules to `IExampleDataAccess`** — an
+  **IDENTIFIER RULE** and a **ROW COUNT RULE** — closing findings **A** and **B** (~18 `Contract`
+  assertions that traced to no stated rule). DAL-wide was chosen over per-interface because
+  **`BaseDataAccessTests` asserts through `IBaseDataAccess`'s generic members**, which per-DAO rules
+  would only reach by an inference the reader has to construct. Both rules state explicitly that
+  **`IBaseDao<T>` is correct and unchanged** and that **this DAL is electing the convention for
+  itself**.
+- **`Test Auditor` audited both retraits** (Next Session row 3 — **now done**): mechanically clean,
+  nothing dropped or loosened, every delegate invoked, the **xUnit trait-accumulation justification
+  verified as true**. **But it found a critical hole the first retrait opened** — a DAL whose
+  `Update` **cascades into the reachable graph** passed all 138 `Contract` tests, because the only
+  pre-call navigation edit in the suite sat **inside a rolled-back transaction**. That is precisely
+  the behavior **EFTools' OD-6 rejected**, and it would have shipped green.
+- **`Test Designer` closed it.** New `Contract` tests
+  **`ShouldNotWriteRelatedRowsWhenUpdateIsGivenAnEditedNavigationGraph`** and
+  **`ShouldNotAdoptTheInstanceHandedToCustomUserFunctionality`**;
+  **`ShouldCallCustomUserFunctionality` retraited `Characterization`** — it asserted
+  `Should.NotThrow` against an interface stating no such promise; the auditor's verdict was that it
+  had been *"written to the count, not to the contract."* Three weak assertions strengthened,
+  including **priming `Whatever` with a committed non-default value** so a rollback that clears the
+  row cannot pass; one test renamed for over-claiming.
+- **The cascade test was only writable because the ROW COUNT RULE landed first.** Before it, **no
+  stated rule forbade the cascade** — which is exactly why the earlier retrait could only **demote**
+  and not **replace**.
+- **`Repo Analyst` settled the 138-vs-137 conflict — 138 was right;** 137 assumed a demotion where
+  **both retraits were splits**. It corrected stale counts across `AGENTS.md`, `README.md`,
+  `docs/repo-profile.md` and `docs/purpose-and-scope.md` (Next Session row 6 — **now done, and
+  superseded past the 161/322 figure it was written against**), **deliberately left `CHANGELOG.md`
+  alone as shipped history**, and added the FR 12 convention to `AGENTS.md`: **a `Scope=Contract`
+  assertion must trace to a stated rule** — stated once, with **its lack of any enforcement
+  mechanism stated plainly**.
+
+#### 🔢 Authoritative suite state — runner-verified on both legs, exit code 0
+
+**`164 tests / 328 executions — Contract 139 / Characterization 5 / Dispatcher 20`.**
+The partition reconciles on **`net10.0` and `net48`**. **`NoDB` passes everything with no
+implementation file touched.**
+
+**Every earlier figure is superseded** — 160/320, 161/322, 162/324, and **every 138/4/20 or
+138/3/20 triple anywhere below this line**. Do not carry an older count forward from the retained
+history.
+
+#### 🟡 Two owner decisions now open — neither blocking
+
+| # | Decision needed |
+|---|---|
+| **1** | **Client-supplied `Guid` keys diverge.** `NoDB/Daos/ResourceDao.Insert` does `item.Id = Guid.NewGuid()` **unconditionally**, destroying a caller-supplied `Guid`. EFTools' `docs/api-contract.md` says a client-generated key **"is used as supplied."** `Interface Architect` could state neither: *"overwritten"* makes **EFTools 3.x non-conforming before it is written**; *"used as supplied"* turns **`NoDB` red today**. So the IDENTIFIER RULE specifies **only the default-identifier case** and names the pre-assigned case as a **permitted divergence**. Closing it is a **one-line change to `ResourceDao`** *or* to the **EFTools design**. |
+| **2** | **Nothing states that `Delete` is a hard delete** on the five previously-silent interfaces. `freshQueryCo.ShouldBeNull()` after `Delete` is asserted under **`Contract`** in all five delete tests **plus `ShouldDeleteGenericTypes`** — **six more assertions tracing to no stated rule.** Same defect class as findings A and B. `Interface Architect` **declined to invent the requirement without authorization.** |
+
+#### ⚠️ Also open, non-blocking
+
+- **`ProphetsWay.Example/docs/feature-requests.md` FR 11 still reads `Outstanding`** and still
+  projects the **superseded 137/3/20 → 136/4/20 arithmetic**. **Only `Purpose Refiner` may change
+  it** — confirmed unmodified in the working tree.
+- **`Test Auditor` is recommended over the newest tests** before anything is built on them.
+
+---
+
+### 🕰️ Superseded — the picture at the 23:35 checkpoint
 
 **`ProphetsWay.EFTools/docs/api-contract.md` went Revision 4 → Revision 6.** ⚠️ **It is now a
 *tracked* file, modified — not untracked.** It was committed at `947fcbf`; the Revision 6 delta is
@@ -282,17 +370,22 @@ Revision 6, and obligations stand at **142 with zero blocked groups**.
 
 | # | Task | Agent | Why it's next |
 |---|---|---|---|
-| 1 | **Stage 3: author the red suite from the 142 obligations** in `ProphetsWay.EFTools/docs/api-contract.md`. | `Test Designer` | **Stage 2 is closeable and Stage 3 is ungated.** The submodule advance already landed, so the baseline is legible. Expect **`CS0534` on `BaseEFDataAccess`'s missing `Dispose`** — that is the first red, **not** a regression. |
-| 2 | **A fourth `Contract Reviewer` pass over the Revision 6 delta.** | `Contract Reviewer` | Recommended by `Interface Architect`, not yet run. **Every revision so far has introduced new contradictions** — cheap insurance, and it can run alongside row 1. |
-| 3 | **`Test Auditor` over the `ProphetsWay.Example` test change.** | `Test Auditor` | Recommended, not yet run. The trait re-partition is subtle and the suite is the workspace's executable specification. |
-| 4 | **Owner authorizes the second mis-scope retrait** — `UserDaoTests.ShouldGetCustomFunctionality` (see Non-Blocking question 9). | owner → `Test Designer` | Same class of decision as **OD-6**. The suite is currently **inconsistent with itself**. |
-| 5 | **Route the SQLite-vs-`NoDB` scope question** (Non-Blocking question 10) to `Purpose Refiner`. | `Purpose Refiner` | It goes to **the heart of what `ProphetsWay.Example` exists to prove**. Not yet routed. |
-| 6 | **Refresh the two stale Example docs** — `AGENTS.md` and `docs/repo-profile.md` line 41 — to **161 / 322 / Contract 138, Characterization 3, Dispatcher 20**. | `Repo Analyst` | Both were flagged, neither was `Test Designer`'s to fix. |
-| 7 | **Append two `Proposed` feature-request entries** to `ProphetsWay.EFTools/docs/feature-requests.md`: the **`RootNonIdDao.EnsureBeginTransaction` silent no-op**, and the **`BaseEFDataAccess` leaked `DbContext`** — framed as a **shipped 2.2.0 defect**, therefore relevant to `Changelog Author` as **Fixed**, not Changed. | any agent may append; `Purpose Refiner` triages | Two source defects `Repo Analyst` found. **Still recorded only here.** |
-| 8 | **File OD-1 … OD-7** to `ProphetsWay.EFTools/docs/purpose-and-scope.md`. | `Purpose Refiner` | A checkpoint does not file durable content. D1–D9 are filed; **all seven ODs are not**. |
-| 6 | **`HasSqlProj` pipeline rework** as its own cross-repo change set — a behavior change, not a rename. Sweep up Known Gaps 5 and 6 in the same set. | `Pipeline Engineer` → `Pipeline Auditor` | No consumer pins a template ref, so it goes live for everyone at once. |
-| 7 | **`ProphetsWay.Logger`** — discard the 7 modified `.cs` files **first**, then work through interactively. | owner, then `Vanguard` | One of the seven is a test file. |
-| 8 | Optional: the markdownlint config decision, and Example's small genuine lint-defect list. | owner | Neither blocks anything. |
+| 1 | **Stage 3 in `ProphetsWay.EFTools`: author the red suite from the 142 obligations** in `docs/api-contract.md` **Revision 7**. **Lap size is being proposed to the owner, not assumed** — settle it before the first lap. | `Test Designer` | **Stage 2 is closed and Stage 3 is ungated.** The submodule is already at Example 3.1.0, so **`CS0534` on `BaseEFDataAccess`'s missing `Dispose` is the expected first red** — not a regression. |
+| 2 | **Owner decision — client-supplied `Guid` keys.** Either `NoDB/Daos/ResourceDao.Insert` stops overwriting a pre-assigned `Guid`, **or** the EFTools contract stops promising *"used as supplied."* One line either way. | owner → `Test Designer` or `Interface Architect` | The IDENTIFIER RULE currently **names this as a permitted divergence** rather than specifying it. Non-blocking, but it decides an EFTools obligation. |
+| 3 | **Owner decision — is `Delete` a hard delete** on the five previously-silent interfaces? **Six `Contract` assertions currently trace to no stated rule.** | owner → `Interface Architect` | Same defect class as findings A and B, which are now closed. `Interface Architect` **declined to invent the requirement.** |
+| 4 | **`Test Auditor` over the newest `ProphetsWay.Example` tests** — the two new `Contract` facts, the `ShouldCallCustomUserFunctionality` retrait, and the three strengthened assertions. | `Test Auditor` | **Recommended by the auditor itself** before anything is built on them. The previous audit is what caught the cascade hole. |
+| 5 | **FR 11 in `ProphetsWay.Example/docs/feature-requests.md`** still reads `Outstanding` and still carries the **superseded 137/3/20 → 136/4/20 arithmetic**. | `Purpose Refiner` **only** | Nobody else may change a request's status. It is now numerically wrong as well as stale. |
+| 6 | **Route the SQLite-vs-`NoDB` scope question** (Non-Blocking question 10) to `Purpose Refiner`. | `Purpose Refiner` | It goes to **the heart of what `ProphetsWay.Example` exists to prove**. Still not routed. |
+| 7 | **File OD-1 … OD-7** to `ProphetsWay.EFTools/docs/purpose-and-scope.md`. | `Purpose Refiner` | A checkpoint does not file durable content. D1–D9 are filed; **all seven ODs are still not**. |
+| 8 | **`HasSqlProj` pipeline rework** as its own cross-repo change set — a behavior change, not a rename. Sweep up Known Gaps 5 and 6 in the same set. | `Pipeline Engineer` → `Pipeline Auditor` | No consumer pins a template ref, so it goes live for everyone at once. |
+| 9 | **`ProphetsWay.Logger`** — discard the 7 modified `.cs` files **first**, then work through interactively. | owner, then `Vanguard` | One of the seven is a test file. |
+| 10 | Optional: the markdownlint config decision, and Example's small genuine lint-defect list. | owner | Neither blocks anything. |
+
+**Closed since the last checkpoint** — do not re-schedule: the fourth `Contract Reviewer` pass (ran,
+findings F1–F8 closed in Revision 7); `Test Auditor` over the first Example test change (ran, found
+the cascade hole); the second mis-scope retrait (**done — `ShouldCallCustomUserFunctionality` is now
+`Characterization`**); the two stale Example docs (**refreshed, and superseded again by 164/328**);
+both EFTools feature-request entries (**entry 12 added; the leaked `DbContext` folded into entry 3**).
 
 **`ProphetsWay.EFTools/README.md` is stale — last commit 2022-08-14.** Stage 4 work; not scheduled yet.
 
@@ -354,7 +447,7 @@ The `Update` cascade collision that Revision 5 raised is likewise settled — **
 | 6 | The agent roster in `%APPDATA%\Code\User\prompts` is **not version controlled** | The only versioned copies are the mirrors in `prophets-pipelines/conventions/toolbelt/`. Sync direction is prompts → toolbelt; nothing enforces it. **I edited both copies tonight** to keep them in step. |
 | 7 | Entry 8 (Source Link) rests on an unverified premise | `Microsoft.SourceLink.*` with `PrivateAssets="all"` may not create a package dependency, and SDK 8+ has Source Link built in. Re-check before the deferral hardens into a rule. |
 | 8 | `[Trait("Requires", "LocalDb")]` exists **nowhere** in the workspace | The pipeline filter `--filter "Requires!=LocalDb"` therefore currently excludes nothing. Most likely home is EFTools, whose `app-variables.yml` sets `LocalTestsOnly: 'yes'`. Harmless but inert. |
-| 9 | **A second mis-scoped test — found and deliberately left alone** | `ProphetsWay.Example.Tests/UserDaoTests.cs`, `ShouldGetCustomFunctionality`, asserts `co2.Whatever.ShouldBe("custom functionality triggered")` — a **`private const` in the NoDB implementation** — under a **blanket class-level `Contract` trait**. `IUserDao`'s own `<remarks>` **explicitly declines to specify that behaviour**, and the counterpart `CompanyDaoTests.ShouldGetCustomCompanyFunction` **is** correctly marked `Characterization`, so **the suite is inconsistent with itself**. Needs the same owner authorization as **OD-6**. → Next Session row 4. |
+| 9 | ~~**A second mis-scoped test**~~ — ✅ **CLOSED 2026-08-16.** `UserDaoTests.ShouldCallCustomUserFunctionality` is now **`Characterization`**. `Test Auditor`'s verdict: it had been *"written to the count, not to the contract"* — it asserted `Should.NotThrow` against an interface stating no such promise. Its replacement, **`ShouldNotAdoptTheInstanceHandedToCustomUserFunctionality`**, is a real `Contract` test | Retained for the record only. |
 | 10 | **Should `ProphetsWay.Example.DataAccess.NoDB` be replaced by a SQLite-backed implementation?** | Raised by the owner, prompted by quirks surfacing from the in-memory store. **A scope question, not a technical one** — it goes to the heart of what the repo exists to prove. `Purpose Refiner`'s call; **not yet routed**. → Next Session row 5. |
 
 ## In Flight
@@ -363,32 +456,36 @@ The `Update` cascade collision that Revision 5 raised is likewise settled — **
 |---|---|---|
 | **PR #20 — Example 3.1.0** | ✅ **Merged, tagged `3.1.0`, published.** Closed. | `ProphetsWay.Example` `origin/main` @ `d845863` |
 | **Example local clone** | ✅ **On `main` @ `d845863`.** Closed. | `ProphetsWay.Example` |
-| **Example test change** | 🟢 **First non-Markdown change of the effort.** `SnapshotDeepCopyTests.cs` only — per-method traits, cascade assertion split into a `Characterization` fact. **161 tests / 322 executions / 0 failed** on `net10.0` + `net48`. **Uncommitted.** `Test Auditor` recommended, not run | `ProphetsWay.Example.Tests/SnapshotDeepCopyTests.cs` |
-| **Example doc staleness** | ⚠️ `AGENTS.md` and `docs/repo-profile.md` line 41 still say **160 / 320 / 138-2-20**; correct is **161 / 322 / 138-3-20**. `Repo Analyst` owns both | `ProphetsWay.Example` |
+| **Example suite** | 🟢 **`164 tests / 328 executions / 0 failed`, exit code 0, on `net10.0` + `net48`. Traits: Contract 139 / Characterization 5 / Dispatcher 20 — reconciles on both legs.** `NoDB` untouched. ⚠️ **Uncommitted.** `Test Auditor` recommended over the *newest* tests, not yet run | `ProphetsWay.Example.Tests/` — `SnapshotDeepCopyTests.cs`, `UserDaoTests.cs` |
+| **Example interface rules** | 🟢 **IDENTIFIER RULE + ROW COUNT RULE added DAL-wide to `IExampleDataAccess`**, closing findings A and B (~18 untraceable `Contract` assertions). Five `I*Dao` files touched alongside. **The ROW COUNT RULE is what made the cascade test writable.** ⚠️ **Uncommitted** | `ProphetsWay.Example.DataAccess/` |
+| **Example doc staleness** | ✅ **Corrected by `Repo Analyst`** across `AGENTS.md`, `README.md`, `docs/repo-profile.md`, `docs/purpose-and-scope.md`; the **138-vs-137 conflict settled at 138** (137 assumed a demotion where both retraits were splits). `CHANGELOG.md` **deliberately untouched** as shipped history. ⚠️ **Uncommitted**, and the counts moved again to **164/328/139-5-20** after that pass | `ProphetsWay.Example` |
+| **Example FR 11** | ⚠️ **Still `Outstanding`, and now numerically wrong** — projects the superseded 137/3/20 → 136/4/20. **`Purpose Refiner` only.** Unmodified in the working tree | `ProphetsWay.Example/docs/feature-requests.md` |
+| **Two open owner decisions** | 🟡 **Non-blocking.** (1) client-supplied `Guid` keys — `ResourceDao.Insert` overwrites, the EFTools contract says *"used as supplied"*; (2) is `Delete` a hard delete on the five silent interfaces — **six `Contract` assertions trace to no stated rule** | see Current Focus |
 | **Durable decisions filed last session** | ✅ **Committed** at `6569a59` | `prophets-pipelines` `main` |
 | **Shared block regeneration** | ✅ **Done — `/sync-agents-md` ran.** Uncommitted everywhere. No longer owed | all six consuming repos |
-| **`ProphetsWay.EFTools` full pass** | **Stage 1 committed. Stage 2 CLOSEABLE. Stage 3 UNGATED** | `ProphetsWay.EFTools` @ `947fcbf` on `3.0.0-first-pass` |
-| **`docs/api-contract.md`** | 🟢 **Revision 6.** Revision 5 drew **PASS WITH FINDINGS** (all twelve prior findings verified closed **against source**; readiness verdict *"Yes — start now"*); Revision 6 closed those eleven findings plus OD-6/OD-7. ⚠️ **Tracked and modified**, not untracked — committed at `947fcbf`, Revision 6 delta unstaged | `ProphetsWay.EFTools/docs/api-contract.md` |
-| **Test obligations** | **142 total, zero blocked groups** (was 106 with three blocked). ~93% authorable at Revision 5; the `ToQueryString()` seam unblocked the last nine | derived from `docs/api-contract.md` |
-| **Fourth `Contract Reviewer` pass** | ⏳ **Recommended over the Revision 6 delta, not yet run.** Every revision so far introduced new contradictions | `ProphetsWay.EFTools/docs/api-contract.md` |
+| **`ProphetsWay.EFTools` full pass** | **Stage 1 committed. Stage 2 CLOSED. Stage 3 UNGATED — next move** | `ProphetsWay.EFTools` @ `56e6a66` on `3.0.0-first-pass` |
+| **`docs/api-contract.md`** | 🟢 **Revision 7.** Closes **F1–F8** from the fourth `Contract Reviewer` pass (**PASS WITH FINDINGS** on Revision 6). Killed a note **inside a test obligation** telling the author to expect a red Example test — it would have had `Test Designer` accept a genuine failure. Fixed the `Restore` sample, which still detached on the **success path only** and taught the shape **OD-7 retracted**. ⚠️ Tracked; a small delta unstaged on top of `56e6a66` | `ProphetsWay.EFTools/docs/api-contract.md` |
+| **Test obligations** | **142 total, zero blocked. Stage 2 closed on this number** | derived from `docs/api-contract.md` Revision 7 |
+| **Fourth `Contract Reviewer` pass** | ✅ **Ran. PASS WITH FINDINGS; F1–F8 all closed in Revision 7** | `ProphetsWay.EFTools/docs/api-contract.md` |
 | **EFTools submodule** | ✅ **Advanced to Example 3.1.0 (`d845863`) and committed** at `947fcbf`. Expect **`CS0534` on `BaseEFDataAccess.Dispose`** — Stage 3's first red, not a regression | `ProphetsWay.EFTools/ProphetsWay.Example` |
 | **EFTools `AGENTS.md` D7 edit** | ✅ **Committed** at `947fcbf`. Working tree clean for that file | `ProphetsWay.EFTools/AGENTS.md` |
 | **OD-1 … OD-7** | ⚠️ **Recorded in this handoff only.** None filed to `docs/purpose-and-scope.md` | see Current Focus |
-| **Two unrecorded source defects** | ⚠️ **Recorded in this handoff only.** `RootNonIdDao.EnsureBeginTransaction` silent no-op; `BaseEFDataAccess` leaked `DbContext` (a **shipped 2.2.0 defect** — `Changelog Author` **Fixed**, not Changed) | owed to `ProphetsWay.EFTools/docs/feature-requests.md` |
+| **Two unrecorded source defects** | ✅ **Both filed.** New **entry 12** — `RootNonIdDao.EnsureBeginTransaction` silent no-op, `Proposed`, **no 2.2.x patch**, named in the 3.0.0 notes as **Fixed**. The leaked `DbContext` got **no new entry** — dedupe folded it into **entry 3**, which now carries the shipped-defect framing and records that **`ContextOwnership` (A9) supersedes its open question Q2** | `ProphetsWay.EFTools/docs/feature-requests.md` |
 | **Seven documentation omissions D-1…D-7** | Found by `Repo Analyst` against source. Not yet actioned | `ProphetsWay.EFTools/docs/` |
 | **Markdownlint config** | **Investigated, no artifact exists.** Findings preserved below | nowhere on disk |
 | **Pipeline rework** | Audited read-only; premise corrected and filed. No `.yml` touched | now unblocked by the merge |
 
 ## Uncommitted Changes
 
-Re-verified with `git status --porcelain --untracked-files=all` in all eight repos at this checkpoint.
+Re-verified with `git status --porcelain --untracked-files=all` in all eight repos at this checkpoint
+(2026-08-16 00:41).
 
 | Repo | Files | Description |
 |---|---|---|
-| `prophets-pipelines` | `M docs/session-handoff.md` | **This file only.** `main` @ `6569a59`. |
-| `ProphetsWay.EFTools` | `M docs/api-contract.md` | **The whole list**, on `3.0.0-first-pass` @ **`947fcbf`**. ⚠️ **Correction to the sign-off notes: the file is tracked, not untracked** — it was committed at `947fcbf` along with the submodule advance and the `AGENTS.md` D7 edit; what is dirty is the **Revision 6 delta** (+415 / −128). ✅ Submodule advanced to `d845863` **(3.1.0)** and committed. **No `.cs`, `.csproj`, `.sln`, `.yml`, or version artifact modified here.** |
-| `ProphetsWay.BaseDataAccess` | `M AGENTS.md` | **Sync output only.** `main` @ `cce91be`. |
-| `ProphetsWay.Example` | `M AGENTS.md`, `M ProphetsWay.Example.Tests/SnapshotDeepCopyTests.cs` | ✅ On **`main` @ `d845863`**. `AGENTS.md` is **sync output only** — it does **not** yet carry the 161/322 correction. **`SnapshotDeepCopyTests.cs` (+72 / −3) is the session's only source change** and is **intended**: per-method traits plus the new `Characterization` fact. |
+| `prophets-pipelines` | `M docs/session-handoff.md` | **This file only.** `main` @ **`16e99a3`** ("session checkin"). |
+| `ProphetsWay.EFTools` | `M docs/api-contract.md` | **The whole list**, on `3.0.0-first-pass` @ **`56e6a66`**. Only **+4 / −3** dirty — the bulk of Revisions 6–7 and the `feature-requests.md` edits are **committed** across `eb79717` and `56e6a66`. **No `.cs`, `.csproj`, `.sln`, `.yml`, or version artifact modified here.** Submodule remains at `d845863` **(Example 3.1.0)**. |
+| `ProphetsWay.BaseDataAccess` | `M AGENTS.md` | **Sync output only.** `main` @ `cce91be`. Unchanged since the last checkpoint. |
+| `ProphetsWay.Example` | **12 files, +469 / −84** | ⚠️ **No longer on `main`** — on **`3.1.1-eftool-findings` @ `749dd20`**, pushed. Dirty: `AGENTS.md`, `README.md`, `docs/purpose-and-scope.md`, `docs/repo-profile.md`, `IExampleDataAccess.cs`, five `IDaos/I*Dao.cs`, `SnapshotDeepCopyTests.cs`, `UserDaoTests.cs`. **All intended** — the two DAL-wide rules, the two new `Contract` tests, the `ShouldCallCustomUserFunctionality` retrait, three strengthened assertions, one rename, and the count corrections. **Nothing under `.DataAccess.NoDB/` is touched** — the suite goes green against an unmodified implementation, which is the point. `CHANGELOG.md` and `docs/feature-requests.md` are **deliberately clean.** |
 | `ProphetsWay.Logger` | `?? AGENTS.md` + **7 modified `.cs`** | Abandoned refactor, to be **discarded before work reaches Logger**. ⚠️ One is a test file. Full list: `ProphetsWay.Logger.Test/FileDestinationTests.cs`, `Generics/Logger.cs`, `Logger.cs`, `LoggerDestinations/EventDestination.cs`, `LoggerDestinations/FileDestination.cs`, `LoggerDestinations/GenericEventDestination.cs`, `LoggingDestinationCore.cs`. Any agent reading these as current intent draws the wrong conclusion. |
 | `ProphetsWay.Utilities` | `?? AGENTS.md` | Sync output, untracked. On `master`. |
 | `ProphetsWay.Hasher` | `?? AGENTS.md` | Sync output, untracked. On `master`. |
