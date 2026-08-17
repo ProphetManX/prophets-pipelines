@@ -39,10 +39,11 @@ a two-file pattern in their own root: `app-variables.yml` (per-repo values) and 
 | Folder | Contents |
 |---|---|
 | `stages/` | `prophets-pipeline.yml`, `ci-build.yml`, `pull-request.yml`, `deploy-release.yml` |
-| `steps/` | `package-artifacts.yml`, `package-changelog.yml`, `create-github-release.yml`, and others |
-| `variables/` | Shared variable templates |
+| `steps/` | `package-artifacts.yml`, `package-changelog.yml`, `create-github-release.yml`, `restore-build-test.yml` |
+| `variables/` | `versions.yml` — derives `SemanticVersion`, `AlphaVersion`, `BetaVersion` from `Major`/`Minor`/`Patch` |
 | `local/` | Reference copies of `app-variables.yml` and `local-pipeline.yml` for new repos to start from |
-| `conventions/` | `AGENTS.shared.md` — the conventions master |
+| `conventions/` | `AGENTS.shared.md` — the conventions master — plus `agent-toolbelt.md` and `toolbelt/`, the agent and prompt definitions |
+| `docs/` | `session-handoff.md` |
 
 ### The Contract with Consuming Repos
 
@@ -89,9 +90,10 @@ template `ref`**, so a merge here is live for every in-flight build.
 
 | # | Gap | Notes |
 |---|---|---|
-| 1 | **README is two lines** | "A generic repo to store my reusable pipeline templates." Nothing documents the variable contract, the stage graph, or how to onboard a new repo. Highest-value documentation target in the workspace — it is the piece a new developer needs to understand the build system. |
+| 1 | **README is two lines** | "A generic repo to store my reusable pipeline templates" — that is the whole file. Nothing documents the variable contract, the stage graph, or how to onboard a new repo. Highest-value documentation target in the workspace — it is the piece a new developer needs to understand the build system. |
 | 2 | `ProphetsWay.Hasher` does not consume these templates | It still uses standalone `azure-pipelines.yml` + `version-variables.yml`. |
 | 3 | `ProphetsWay.Utilities` has no pipeline at all | It consumes nothing from this repo. |
 | 4 | No versioning on the templates themselves | Consumers presumably track `main`, so a breaking template change hits everyone at once with no opt-in. Consider tagging releases and having consumers pin a ref. |
-| 5 | `steps/create-github-release.yml` hardcodes `gitHubConnection` | It ignores its own parameter. Found by `Pipeline Auditor`, unfixed. |
-| 6 | `local/local-pipeline.yml` passes an undeclared parameter | It passes `PostTargetToNuGet:` to a template that declares no such parameter — **the reference copy new repos start from fails at compile.** Found by `Pipeline Auditor`, unfixed. |
+| 5 | `steps/create-github-release.yml` hardcodes `gitHubConnection` | It ignores its own parameter. Found by `Pipeline Auditor`, unfixed — **re-verified 2026-08-16, still real:** the template declares `GitHubConnectionName` and then passes the literal `'ProphetsWay@GitHub'` to `GitHubRelease@1`. `deploy-release.yml` does forward `${{ variables.GitHubConnectionName }}` into it, so the value is supplied and discarded. |
+| 6 | `local/local-pipeline.yml` passes an undeclared parameter | It passes `PostTargetToNuGet:` to a template that declares no such parameter — **the reference copy new repos start from fails at compile.** Found by `Pipeline Auditor`, unfixed — **re-verified 2026-08-16, still real:** `stages/prophets-pipeline.yml` declares only `PoolType`, `PoolName` and `LocalVariables`. Every working consumer's `local-pipeline.yml` — BaseDataAccess, EFTools, Logger, Example — omits the line, so the reference copy is the only one that breaks. |
+| 7 | `local/app-variables.yml` omits `LocalTestsOnly` | The variable contract above lists it, and `ci-build.yml` and `pull-request.yml` both pass `${{ variables.LocalTestsOnly }}` into `steps/restore-build-test.yml`. An undefined variable expands to an empty string, so this does **not** break the build — the effect is that a new repo copying the reference file never sees the knob. The same file is also prefilled with `ProphetsWay.BaseDataAccess` values for `TargetProject`, `Product` and `RepoName`, and carries a stale `2`/`1`/`1` version. Found 2026-08-16. |
