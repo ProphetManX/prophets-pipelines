@@ -1,355 +1,302 @@
 ---
-written: 2026-08-18T00:00:00
+written: 2026-08-18T23:00:00
 head:
-  prophets-pipelines: 2aa3632              # main — dirty: this file
-  ProphetsWay.EFTools: 699bde3             # branch 3.0.0-first-pass — dirty: submodule pointer, Constants.cs, 2 untracked
+  prophets-pipelines: f28798c              # main — dirty: this file
+  ProphetsWay.EFTools: a72b60b             # branch 3.0.0-first-pass — dirty: docs/purpose-and-scope.md (this wrapup)
   ProphetsWay.Example: 61d9e7d             # main — clean; PR #21 merged (squash)
   ProphetsWay.BaseDataAccess: 207c5de      # main — clean
   ProphetsWay.Logger: 86568fd              # main — untracked AGENTS.md
   ProphetsWay.Utilities: 5095e5e           # master — untracked AGENTS.md
   ProphetsWay.Hasher: d1410ca              # master — untracked AGENTS.md
   ProphetsWay.BPA: 4c0ba1f                 # main — empty repo, clean
-status: live
+status: fresh
 ---
 
 # Session Handoff
 
 ## Where We Are
 
-`ProphetsWay.EFTools` **3.0.0 first pass**, Stage 3, **lap 3**, branch `3.0.0-first-pass`. THE BLOCKER
-and THE TRAP that dominated the previous two sessions are both **cleared**, and the first honest
-measurement of EF conformance in the history of this repo has been taken. `ProphetsWay.Example` PR #21
-is merged to `main` and the repo is clean.
+`ProphetsWay.EFTools` **3.0.0 first pass**, Stage 3, **end of lap 3**, branch `3.0.0-first-pass`.
+THE BLOCKER and THE TRAP are cleared, the seam guard is hardened and audited, and the hand-written
+`DepartmentDao` is written, reviewed and measured. **All of it is committed** — `08deda6`, `b9320fd`,
+`a72b60b` — and the EFTools working tree is clean apart from this wrapup's own edit.
 
-The cycle is now in the ordinary red phase, with one caveat: `Test Auditor` says the guard that makes
-the red trustworthy is **not yet trustworthy itself**.
+**151 tests · 123 passed · 28 failed**, up from 57/94 at the start of the day, against a suite that a
+week ago was silently running on the in-memory implementation.
 
-## ✅ THE BLOCKER — cleared
-
-Owner merged `ProphetsWay.Example` `3.1.1-eftool-findings` → `main` as PR #21 (squash **`61d9e7d`**),
-then ran `git submodule update --remote --init ProphetsWay.Example` in EFTools. Pointer moved
-`d845863` → **`61d9e7d`**.
-
-**Verified at checkpoint:** `git submodule status` → `+61d9e7dfb209… (3.1.0-1-g61d9e7d)`; the leading
-`+` is the giveaway — **the pointer advance is staged in the working tree and has not been committed.**
-`ProphetsWay.Example` `main` is at the same `61d9e7d`, clean.
-
-Full solution build green: `dotnet build ProphetsWay.EFTools.sln -c Debug` — **0 warnings, 0 errors**,
-all 10 project/TFM combinations including the `.sqlproj` dacpac. (Owner-run; recorded, not re-measured
-here.)
-
-## ✅ THE TRAP — disarmed, but the disarming device is unaudited
-
-`Test Designer` created two files in `ProphetsWay.EFTools.Tests` — **both untracked, verified on disk
-at checkpoint**:
-
-| File | Contains |
-|---|---|
-| `TestSeam.cs` | `internal static class TestSeam`; `[ModuleInitializer]` method `PointTheSuiteAtEntityFramework()` calling `TestDataAccessFactory.Use(() => Constants.GetExampleDataAccess)`. A module initializer rather than a fixture because xUnit runs collections in parallel |
-| `TestSeamTests.cs` | `public class TestSeamTests`, **3 guard `[Fact]`s** asserting the factory hands out `ProphetsWay.Example.DataAccess.EF.ExampleDataAccess` |
-
-It also modified `Constants.cs`, appending **`TrustServerCertificate=True`** to the connection string —
-SQL Server at localhost presents a self-signed cert and `Microsoft.Data.SqlClient` defaults
-`Encrypt=true`. Without it **all 71 SQL tests failed identically at login**. `Test Auditor` reviewed and
-endorsed it as the right fix in the right file. Verified at `Constants.cs` line 12, with the reason in a
-comment on line 10.
-
-## 📊 First real EF conformance measurement ever taken
-
-`dotnet test ProphetsWay.EFTools.Tests` — **147 total · 53 passed · 94 failed.**
-
-| Bucket | Count | Detail |
-|---|---|---|
-| `NotImplementedException` stubs | **92** | Across 10 reached throw sites. **62 are the single member `IDepartmentDao.Insert`**; 14 are `ICompanyResourceDao.Insert`; the rest 1–3 each across Department `GetCount`/`GetPaged`/`Get`/`Update`/`Delete`/`Restore` and CompanyResource `Delete`/`GetAll`. `IDepartmentDao.GetAll` is **never reached** — `Insert` throws first |
-| **Genuine contract mismatches** | **2** | Both `NullReferenceException`, both `Scope=Contract`, both in `SnapshotDeepCopyTests`: `ShouldNotStoreEditsMadeToAUsersNavigationAfterInsertReturned` (line 249) and `ShouldGiveTwoUsersNamingOneCompanyTheirOwnCompanyInstances` (line 553) |
-| Connectivity failures | 0 | |
-| Isolation failures | 0 | **Measured**, not assumed — suite run twice back-to-back against the dirty DB, failing sets diffed by name, identical |
-
-**The 2 are the first genuine contract finding of the cycle.** Root cause: EF `UserDao` returns a `User`
-whose `Company`/`Job` navigations are null — no `Include`, and `NoTracking` prevents fix-up. NoDB
-satisfies the snapshot rule for free; EF does not.
-
-**Six DAO classes fully green against real SQL Server — never true before:** `EFCompanyDaoTests` 7/7,
-`EFJobDaoTests` 5/5, `EFResourceDaoTests` 5/5, `EFTransactionDaoTests` 6/6, `EFUserDaoTests` 7/7,
-`EFBaseDataAccessTests` 7/7.
-
-**147 is correct, not a shortfall.** The 20 `Scope=Dispatcher` `ConventionShowcase` tests construct
-their own deliberately mis-wired DALs and belong to no implementation: 164 − 20 = 144 upstream + 3
-guard = **147**. `Test Auditor` verified the exclusion independently.
-
-## ⚠️ `Test Auditor` verdict — GAPS TO CLOSE FIRST
-
-**Would not pass the guard as-is. All eleven findings are outstanding and unfixed.**
-
-| # | Sev | Finding | Proposed fix |
-|---|---|---|---|
-| F1 | **CRITICAL** | Guard asserts on `TestDataAccessFactory`; the 144 tests read `BaseUnitTests<T>._da`. **Nothing binds them.** If upstream reintroduces a `CreateDataAccess` virtual hook, the guard stays green while 144 tests revert to NoDB | Derive `TestSeamTests` from `BaseUnitTests<ICompanyDao>`, assert on `_da` |
-| F2 | **CRITICAL** | `ShouldBeAssignableTo<BaseEFDataAccess<ExampleContext>>` is a **compile-time tautology** (test 1 implies it), and "EF-backed" is satisfiable by `.UseInMemoryDatabase(...)`. Both InMemory and Sqlite are already on the compile path — this reproduces the original false-green hazard one layer up | Assert `Database.ProviderName == "Microsoft.EntityFrameworkCore.SqlServer"` |
-| F3 | HIGH | Changing `=>` to `=` in `Constants.GetExampleDataAccess` — **one character** — yields one shared instance that guard test 1 disposes; all 3 guard tests still pass, all 144 real tests throw `ObjectDisposedException` | Assert fresh-instance-per-call and instance-is-usable |
-| F4 | HIGH | `TestSeamTests` carries **no `[Trait("Scope",…)]`** — confirmed at checkpoint — so `--filter "Scope=Contract"`, the documented gate, omits it. `LocalTestsOnly: 'yes'` means CI never runs these, so the filtered human run is the **only** runner | Separate key `[Trait("Guard","Seam")]` |
-| F5 | HIGH | With the seam present the Department/CompanyResource adapters cannot pass, so **deleting `TestSeam.cs` makes the run look dramatically better**. The guard's failure mode invites its own deletion | Custom failure messages that state the consequence |
-| F6 | MEDIUM | `TestSeamTests` lacks `[Collection(TestCollections.SharedStore)]` — confirmed at checkpoint — so it runs concurrently with the shared-store collection. Harmless only while the guard touches no DB, and **every proposed strengthening changes that** | Add it now |
-| F7 | MEDIUM | Nothing detects an upstream test class gaining no adapter. Submodule advances, upstream adds a class, no adapter, nothing red, **silently never runs against EF** | — |
-| F8 | MEDIUM | Suite depends on an **undeclared external precondition** (SQL Server at localhost with a `ProphetsWay.Example` database); nothing creates, asserts, or names it | — |
-| F9 | LOW | `Microsoft.EntityFrameworkCore.Sqlite` referenced in the test csproj for a certification leg that **does not exist**; unused | — |
-| F10/F11 | NONE | Dispatcher exclusion correct; disposal handling correct | — |
-
-**Also noted by the auditor:** `ProphetsWay.Example.Tests` is a project in `ProphetsWay.EFTools.sln`, so
-a solution-wide `dotnet test` runs **164 unguarded NoDB tests alongside** this assembly's 147.
-
-## Known-Outstanding Implementation Gaps
-
-Reported, not fixed:
-
-- `ExampleContext` maps **neither `Department` nor `CompanyResource`** — no `DbSet`, no `ToTable`, no
-  soft-delete filter.
-- **No `DepartmentDao` or `CompanyResourceDao` exist** in `ProphetsWay.Example.DataAccess.EF/Daos/`.
+The session's real output is not the DAO. It is **the finding underneath it** — the existing EF DAO
+bases *adopt the caller's instance*, which the SNAPSHOT rule forbids, and several tests were green only
+*because* of that violation — and the **five owner decisions** that reordered the plan around it.
 
 ## Current Focus
 
-**Hardening the seam guard before writing any implementation.** A second `Test Designer` pass to close
-F1/F2/F3/F6/F7 — explicitly **not** `Implementer` yet. Hardening is cheap and everything downstream
-rests on trusting the guard.
+**The generic DAO family collapse (FR 10), carrying the corrected semantics inside it.** Blocking Q9 —
+the scope of the adoption fix — is **closed by D14 in favour of route (b)**: fix the bases *as* the
+collapse rather than patch them and collapse afterwards.
 
 ## Next Session — Start Here
 
+**Exact first invocation:** `@Interface Architect` — one scoped pass over `ProphetsWay.EFTools` to
+shape the six generic DAO families: names, generic parameters, and specifically which members are
+`virtual` / `abstract` / `sealed`, with XML docs. Follow it immediately with `Contract Reviewer`.
+
+**Semantics are not being invented in that pass.** They are already settled by `DepartmentDao`
+(`ProphetsWay.EFTools/ProphetsWay.Example.DataAccess.EF/Daos/DepartmentDao.cs`, 299 lines, 33/33 green).
+The pass decides **surface only**.
+
+**Why shape comes first — recorded so it is not skipped as ceremony.** The fatal flaw in the current
+bases is a **shape** flaw: every member is declared `new` instead of `virtual`, so it can only be
+hidden, never overridden. That is exactly the kind of decision made by accident when the author is
+focused on behaviour — and it is a published API surface that lives for a whole major version.
+
 | # | Task | Agent | Why it's next |
 |---|---|---|---|
-| 1 | **Second `Test Designer` pass — harden the seam guard.** Close **F1, F2, F3, F6, F7** | `Test Designer` | Cheap, and every measurement after this one rests on the guard being trustworthy. **Not `Implementer` yet** |
-| 2 | Decide the `Guard`/`Scope` trait question (F4) and add whichever key is chosen | Owner then `Test Designer` | The documented gate currently omits the guard entirely |
-| 3 | Lap 3 — the **hand-written `DepartmentDao`** (owner decision **D13**) + map `Department` in `ExampleContext` | `Implementer` | Largest single win available: **~62 + 12 failures**. Verified against `DepartmentDaoTests`' 40 `Contract` tests. **Lap sizing not yet owner-approved** |
-| 4 | Lap 4 — `CompanyResourceDao` + `CompanyResource` mapping | `Implementer` | ~17 failures. **Not yet approved** |
-| 5 | Lap 5 — the navigation eager-loading fix for the 2 genuine contract mismatches | `Implementer` | The only non-stub failures in the run. **Not yet approved** |
-| 6 | Check **A31**'s three version-sensitive surfaces against EF Core 10's real breaking-changes page | `Implementer` | Unblocked now that EF Core is pinned at `10.0.11` |
+| 1 | **Shape the six generic families** — names, type parameters, `virtual`/`abstract`/`sealed`, XML docs | `Interface Architect` | Shape is the flaw; settle it before any body is written |
+| 2 | Review that surface | `Contract Reviewer` | A published API for a whole major version |
+| 3 | **Fill the bodies from `DepartmentDao`'s semantics** | `Implementer` | D15 — the families are derived *from* the concrete DAO |
+| 4 | **Repoint the five existing DAOs onto the families** | `Implementer` | D17 — `CompanyDao`/`JobDao`/`UserDao`/`ResourceDao`/`TransactionDao` stay on the bases |
+| 5 | **Convert `DepartmentDao` onto the soft-delete family** | `Implementer` | **D16 — this conversion is the family's acceptance test.** 33/33 must still pass |
+| 6 | **`CompanyResourceDao` + the `CompanyResource` mapping.** Fold in the `NotWrittenYet` message fix | `Implementer` | ~16 of the 28 reds; D17's second justification |
 
-**Critical constraint, already proven — do not re-derive it.** `RootBaseSoftDao` **cannot** serve
-`IDepartmentDao` by inheritance: it violates rules **1, 3, 5 and 6**, including `Update` silently
-un-deleting a soft-deleted row by wiping the stored `DeletedDate`, and a second `Delete` refreshing the
-timestamp and returning `1` instead of `0`. **"Just inherit the existing soft base" is a trap.**
+**Open design question, deliberately not pre-answered:** does `Restore` belong on the soft-delete
+family, or stay specific to `IDepartmentDao`?
 
-**The keyless mapping question is settled: composite `HasKey` is the only viable answer.** `HasNoKey()`
-makes the entity read-only and forbids the `Insert`/`Delete` `ICompanyResourceDao`'s contract requires.
+**Likely family shape — confirm, do not assume.** 18 classes = 3 key types × 6 shapes, so the six
+families are *probably* the six shapes made generic over key type. **Verify before building.**
 
-## Open Questions — Blocking
+## Owner Decisions Taken This Session — D14–D18
 
-| # | Question | Blocks | Raised |
-|---|---|---|---|
-| 6 | **Harden the guard first, or accept it and proceed to `Implementer`?** `Vanguard`'s recommendation is harden first; `Test Auditor` says the guard would not pass as-is | The whole of lap 3 | 08-18 |
-| 7 | **Lap size for `Implementer`.** Proposed: lap 3 = `DepartmentDao` + `ExampleContext` mapping (~62 + 12 failures), lap 4 = `CompanyResourceDao` (~17), lap 5 = the navigation eager-loading fix. **Not yet approved** | Sequencing of steps 3–5 above | 08-18 |
-| 8 | **`Scope`/`Guard` trait on `TestSeamTests`** — omitted deliberately; the auditor suggests a **separate trait key** (`Guard=Seam`) rather than folding it into `Scope`, so the existing three-way `Scope` partition stays a clean sum | Whether `--filter "Scope=Contract"` remains a complete gate | 08-18 |
+**Filed in `ProphetsWay.EFTools/docs/purpose-and-scope.md` § Owner Decisions, as rows D14–D18, each
+marked ⏳ — recorded by an agent, pending `Purpose Refiner` ratification of the numbering and status.**
+The substance is the owner's and is **not to be re-litigated**. This table is an index, not a
+restatement.
 
-## Open Questions — Non-Blocking
+| Ref | Substance |
+|---|---|
+| **D14** | **Collapse first, do not fix-then-collapse.** FR 10 proceeds now, carrying the corrected `Insert`/`Update`/`Get` semantics inside it. Patching `RootNonIdDao.Insert`, `RootDao.Update` and `Int.BaseDao.Get` in place first was **declined as doing the work twice**. **Closes Blocking Q9 in favour of route (b).** |
+| **D15** | **The families are modelled on the hand-written `DepartmentDao`** — D13 executed, not extended. Its precondition was satisfied on 2026-08-18 when the DAO landed. |
+| **D16** | **`DepartmentDao` is converted onto the family once it exists, and that conversion is the family's acceptance test.** 33 tests against 19 numbered rules; if the thin derivation keeps all 33 green, the family is proven against the strictest contract in the repo. |
+| **D17** | **The line for hand-writing a DAO:** *justified only when it is the source for a family that does not yet exist, or when the contract has no family to belong to.* `DepartmentDao` qualifies on the first, `CompanyResourceDao` on the second. **`CompanyDao`/`JobDao`/`UserDao` qualify on neither and stay on the bases.** Hand-writing those three to route around the adoption defect was **declined** — it would leave 2 of 7 DAOs exercising EFTools, making this a demo of BaseDataAccess rather than of EFTools, while the defect kept shipping. **Reversed an earlier agent recommendation; the owner caught it.** |
+| **D18** | **One test suite, never two.** A second EF suite was **rejected** — the seam's value is one suite with one construction site; a second would drift until it proved nothing. **The variable is which DAOs derive from bases, never which suite runs.** |
 
-| # | Question | Raised |
+## Measured State — 151 · 123 passed · 28 failed
+
+Build 0 warnings, 0 errors. **No regressions.**
+
+| Class | Result |
+|---|---|
+| `DepartmentDaoTests` | **33/33** |
+| `DepartmentDataAccessTests` | 11/12 |
+| `DataAccessTransactionTests` | **19/20**, up from 4/20 |
+| `Guard=Seam` | 7/7 |
+
+The 28 remaining:
+
+| Count | Failure | Note |
 |---|---|---|
-| 1 | **What version number does Example's line carry at tag time?** `app-variables.yml` reads `3`/`1`/`1` — a **patch**. But `Use` is new public API (minor floor), and the IDENTIFIER and ROW COUNT rules were **restated on five further DAO interfaces**, tightening a contract on implementers (arguably major). **An implementation conforming to the 3.1.0 text can be non-conforming to this one without changing a line. Downgraded from Blocking on 08-18** — the merge happened without settling it, so it no longer blocks anything, but it must be settled before Example is tagged | 08-16 |
-| 2 | **SourceLink** — the owner wants it working before the NuGet deployment. Deviation 5's five missing properties (`PublishRepositoryUrl`, `EmbedUntrackedSources`, `IncludeSymbols`, `SymbolPackageFormat`, `ContinuousIntegrationBuild`) plus the `Microsoft.SourceLink.GitHub` reference. **Removing the `Submod` block stopped the warning; it did not deliver Source Link** — read Deviations 5 and 7 together or you will conclude it works | 08-16 |
-| 3 | **A31's three version-sensitive EF Core surfaces** — `IgnoreQueryFilters()` granularity, `SetValues` against shadow foreign keys, `MultipleCollectionIncludeWarning`. Nobody in this session had a verifiable source **and nobody guessed** | 08-16 |
-| 4 | Client-supplied `Guid` keys — `ProphetsWay.Example/…/ResourceDao.cs` line 48 | earlier |
-| 5 | Whether to state hard-delete explicitly on the five silent DAOs | earlier |
+| 16 | `CompanyResourceDao` `NotImplementedException` | Task 6 above |
+| **9** | `Cannot insert explicit value for identity column in table 'Departments'` | **The adoption defect surfacing. These fail *because* `DepartmentDao` is correct** |
+| 2 | `UserDao` null-navigation `NullReferenceException` | Pre-existing; no `Include`, and `NoTracking` prevents fix-up |
+| 1 | `EFDataAccessTransactionTests.ShouldExposeUncommittedWritesToAnotherInstance` | 30-second SQL Server lock timeout. `Scope=Characterization` and **failing correctly** — **do not "fix" it** |
 
-## Environment Prerequisite
+**The gate is `--filter "Scope=Contract|Guard=Seam"`** — 139 + 7 = **146**. `Scope=Contract` alone omits
+the seam guard entirely; any older text naming it as the complete gate is superseded.
 
-**The SQL Server `localhost` / `ProphetsWay.Example` database must exist** for the suite to run against
-Entity Framework — this is why `LocalTestsOnly: 'yes'` is set. The connection string is in
-`ProphetsWay.EFTools.Tests/Constants.cs`. **SQLite in-memory remains D4's future CI leg**; the provider
-is already referenced by the test project at `10.0.11`.
+## 🔥 The Major Finding — the EF DAO bases adopt the caller's instance
+
+**Read this before writing any further DAO.** Filed as `ProphetsWay.EFTools/docs/feature-requests.md`
+**entry 14**, status `Proposed` — set by no agent; awaiting `Purpose Refiner` triage.
+
+`RootNonIdDao.Insert` is `Dataset.Add(item); SaveChanges();` — leaving **the caller's own instance**
+tracked as `Unchanged`. `CompanyDao`/`JobDao` navigations survive `UserDao.Insert`'s graph paint **only
+because of that adoption**, which the SNAPSHOT rule forbids. The correct `DepartmentDao` does not adopt,
+which is exactly why 9 tests now fail on IDENTITY_INSERT.
+
+Three extensions of the same defect:
+
+1. `Int/BaseDao.Get` returns **store instances with no `AsNoTracking()`**. It escapes violation only
+   because `QueryTrackingBehavior.NoTracking` is set on **one of three** `ExampleDataAccess`
+   constructors — so a consumer using either DI-friendly constructor gets a DAL whose `Get` hands out
+   tracked instances and whose next `Update` flushes edits nobody submitted.
+2. `RootDao.Update` is whole-object replacement using `Single` rather than `SingleOrDefault`, so it
+   **throws** where the ROW COUNT rule requires `0`.
+3. `SnapshotDeepCopyTests.ShouldNotStoreEditsMadeToAUsersNavigationAfterInsertReturned` is **green by
+   luck of ordering** — insert one more entity through the same DAL between the edit and the assertion
+   and it fails. **Upstream: it belongs to `ProphetsWay.Example`.**
+
+Entry 13 was strengthened the same day with the structural finding below and an **8-of-9** violation
+count. Both entries record that making `DepartmentDao` adopt like its neighbours was an available
+option and was **declined**.
+
+## Verified Facts — checked tonight, do not re-derive
+
+**All five pre-existing DAOs derive from EFTools bases** — verified by opening each file:
+
+| DAO | Base |
+|---|---|
+| `CompanyDao` | `Int.BasePagedDao<Company>` |
+| `JobDao` | `Int.BaseGetAllDao<Job>` |
+| `UserDao` | `Int.BaseDao<User>` |
+| `ResourceDao` | `Guid.BaseGetAllDao<Resource>` |
+| `TransactionDao` | `Long.BasePagedDao<Transaction>` |
+
+Only `DepartmentDao` is hand-written. **The ratio is 5:1** — not the 2:5 the plan rejected in D17 would
+have produced.
+
+**`ResourceDao.Insert` and `TransactionDao.Insert`/`Update` are declared `public new`** — FR 13's hiding
+trap, live in this repository. Through the `IResourceDao`/`ITransactionDao` interfaces they still bind
+correctly, so **nothing is broken today**; the hiding only bites through a base-class-typed reference.
+The collapse will touch these.
+
+**FR 13's `new`-not-`virtual` finding means the bases cannot be fixed *from below*, not that they
+cannot be fixed *in place*.** An in-place fix needs no `virtual`. This distinction was blurred earlier
+in the session and corrected — **do not re-blur it.**
 
 ## In Flight
 
 | Item | State | Where |
 |---|---|---|
-| `TestSeam.cs` | **On disk, untracked.** `[ModuleInitializer]` verified at line 27 | `ProphetsWay.EFTools.Tests/TestSeam.cs` |
-| `TestSeamTests.cs` | **On disk, untracked.** 3 `[Fact]`s verified; **no `[Trait]`, no `[Collection]`** — F4 and F6 confirmed by direct read | `ProphetsWay.EFTools.Tests/TestSeamTests.cs` |
-| `Constants.cs` connection string | **Modified, uncommitted.** `TrustServerCertificate=True` verified at line 12 | `ProphetsWay.EFTools.Tests/Constants.cs` |
-| Submodule pointer `d845863` → `61d9e7d` | **Staged, uncommitted** — `git submodule status` shows the leading `+` | `ProphetsWay.EFTools/ProphetsWay.Example` |
-| 11 `Test Auditor` findings F1–F11 | **All outstanding, none fixed** | table above |
-| 13 discovery adapters | Committed in `8e78b94`; now **actually running against Entity Framework** | `ProphetsWay.EFTools.Tests/EF*Tests.cs` |
-| `BaseEFDataAccess<TContext>` | Committed, and **now executed against a real database** — `EFBaseDataAccessTests` 7/7 | `ProphetsWay.EFTools/BaseEFDataAccess.cs` |
-| `NotImplementedException` stubs | Untouched. **10 throw sites reached, 92 failures** | `ProphetsWay.Example.DataAccess.EF/ExampleDataAccess.cs` |
-| `ExampleContext` mappings for `Department` / `CompanyResource` | **Do not exist** | `ProphetsWay.Example.DataAccess.EF/` |
-| `DepartmentDao` / `CompanyResourceDao` | **Do not exist** | `ProphetsWay.Example.DataAccess.EF/Daos/` |
-| `docs/api-contract.md` | **Revision 8, *under review*** — J1–J10 folded in place; **no pass has run against the text as it now stands** | `ProphetsWay.EFTools/docs/` |
+| Six generic DAO families | **Not started.** Next session's first move | `ProphetsWay.EFTools/` |
+| `CompanyResourceDao` | **Does not exist** | `ProphetsWay.Example.DataAccess.EF/Daos/` |
+| `ExampleContext` mapping for `CompanyResource` | **Does not exist** — no `DbSet`, no `ToTable` | `ProphetsWay.Example.DataAccess.EF/` |
+| `NotWrittenYet` message | Still claims Department has no EF DAO and that `ExampleContext` maps neither entity — **both now false for Department.** Thrown only from CompanyResource forwarders, so harmless today | `ProphetsWay.Example.DataAccess.EF/` |
+| `docs/api-contract.md` | **Revision 8, under review.** J1–J10 folded in place; no pass has run against the text as it now stands | `ProphetsWay.EFTools/docs/` |
+| `docs/feature-requests.md` entry 14 | `Proposed`, untriaged | `ProphetsWay.EFTools/docs/` |
+| D14–D18 | Recorded ⏳, awaiting `Purpose Refiner` ratification | `ProphetsWay.EFTools/docs/purpose-and-scope.md` |
 
 ## Uncommitted Changes
 
-**Re-read at this checkpoint from `git status --short` in every root, not assumed.**
+**Read from `git status --short` in all eight roots at sign-off.**
 
 | Repo | Files | Description |
 |---|---|---|
-| `ProphetsWay.EFTools` @ `699bde3` | ` M ProphetsWay.Example` (submodule pointer)<br>` M ProphetsWay.EFTools.Tests/Constants.cs`<br>`?? ProphetsWay.EFTools.Tests/TestSeam.cs`<br>`?? ProphetsWay.EFTools.Tests/TestSeamTests.cs` | The whole of this session's EFTools work. **Nothing here looks accidental.** Note the guard files are the ones `Test Auditor` says need a second pass — committing now commits a guard with 5 open CRITICAL/HIGH findings |
-| `prophets-pipelines` @ `2aa3632` | `docs/session-handoff.md` | This file — the `status: consumed` stamp from this session's resume, plus this checkpoint |
-| `ProphetsWay.Logger` @ `86568fd` | `AGENTS.md` **untracked** | Long-standing, unrelated. Commit-ready |
-| `ProphetsWay.Utilities` @ `5095e5e` | `AGENTS.md` **untracked** | Same |
-| `ProphetsWay.Hasher` @ `d1410ca` | `AGENTS.md` **untracked** | Same — **and this one carried a live hazard, see Decisions below** |
+| `ProphetsWay.EFTools` @ `a72b60b` | ` M docs/purpose-and-scope.md` | **D14–D18 appended by this wrapup.** Nothing else — lap 3 is committed |
+| `prophets-pipelines` @ `f28798c` | ` M docs/session-handoff.md` | This file |
+| `ProphetsWay.Logger` @ `86568fd` | `?? AGENTS.md` | Long-standing, unrelated. Commit-ready |
+| `ProphetsWay.Utilities` @ `5095e5e` | `?? AGENTS.md` | Same |
+| `ProphetsWay.Hasher` @ `d1410ca` | `?? AGENTS.md` | Same — **this one carried a live hazard**: the pre-correction file instructed agents to make a binary-breaking namespace change, undoing a deliberate v2.0.0 decision |
 
-`ProphetsWay.Example` (`61d9e7d`, `main`), `ProphetsWay.BaseDataAccess` (`207c5de`) and
-`ProphetsWay.BPA` (`4c0ba1f`) are **clean**. Example's previously-uncommitted CHANGELOG and README went
-in with PR #21.
+`ProphetsWay.Example` (`61d9e7d`), `ProphetsWay.BaseDataAccess` (`207c5de`) and `ProphetsWay.BPA`
+(`4c0ba1f`, empty) are **clean**. **Committing is the owner's call.**
 
-`ProphetsWay.BaseDataAccess` (`207c5de`) and `ProphetsWay.BPA` (`4c0ba1f`, an empty repo — `.git` and
-`.gitignore` only) are clean. **Nothing here looks accidental.** Committing is the owner's call.
+### ⚠️ Discrepancy found and corrected
 
-## Decisions Made — session of 2026-08-16 → 08-17
+The sign-off report described lap 3 as **uncommitted** — `DepartmentDao.cs` new, plus `ExampleContext.cs`,
+`ExampleDataAccess.cs` and `docs/feature-requests.md` modified, with the commit message in hand. **Git
+says otherwise.** `a72b60b` — *"Implement the Entity Framework DepartmentDao"*, G. Gordon Nasseri,
+Tue Aug 18 22:57:03 2026 — contains **exactly those four files**, +477/−10, and the EFTools working tree
+was **clean** when this wrapup began. **The commit was made; the report was written just before it.**
+`git submodule status` shows `61d9e7d` with **no leading `+`** — the pointer advance is committed too.
+No other claim in the report contradicted git.
 
-**Carried forward unchanged by the 08-18 checkpoint. Thirteen owner decisions and rulings.** Each is
-already in a permanent home; this is an index, not a restatement.
+## Environment Prerequisite
 
-| Ref | Substance | Filed in |
+**A SQL Server `localhost` / `ProphetsWay.Example` database must exist** or the suite cannot run against
+Entity Framework — this is why `LocalTestsOnly: 'yes'` is set and CI never runs these. The connection
+string is in `ProphetsWay.EFTools.Tests/Constants.cs`, carrying `TrustServerCertificate=True` (without
+it all 71 SQL tests fail identically at login). **SQLite in-memory remains D4's future CI leg**; the
+provider is referenced at `10.0.11` but no such leg exists.
+
+## Open Questions — Blocking
+
+**None.** Q9 — the scope of the adoption fix — is **closed by D14** in favour of route (b). Q6, Q7 and
+Q8 were closed earlier in the session.
+
+## Open Questions — Non-Blocking
+
+| # | Question | Raised |
 |---|---|---|
-| **D11** | Release ordering — Example is tagged only after EFTools is green against it | `ProphetsWay.EFTools/docs/purpose-and-scope.md`, summarized in `docs/feature-requests.md` |
-| **D11 clarification** | An interim submodule-pointer advance is not a D11 violation | `ProphetsWay.EFTools/docs/feature-requests.md` § *Release Ordering — D11* — **filed by this wrapup** |
-| **D12** | Document the three shipped 2.2.0 defects rather than patch the 2.2.x line | `ProphetsWay.EFTools/docs/purpose-and-scope.md`, FR 3 and FR 12 |
-| **D13** | `DepartmentDao` is hand-written, not inherited from `RootBaseSoftDao` | `ProphetsWay.EFTools/docs/purpose-and-scope.md`, FR 1 and FR 13 |
-| **OD-8, OD-9, OD-11** | Contract-document decisions; **`OD-10` does not exist** — the lead conflated it with `D10` | `ProphetsWay.EFTools/docs/api-contract.md` |
-| **Rule 18 narrowing** | `IDepartmentDao`'s UTC guarantee narrowed as a direct result of EF design work here | `ProphetsWay.Example/…/IDepartmentDao.cs`; cited in `api-contract.md` as present **from 3.1.1** |
-| **J1 ruling** | **A `[C]` obligation may not depend on a certified-provider fact** | `api-contract.md`, plus a **mixed-traceability tie-breaker** added to the Scope notation |
-| **J2 finding** | Two obligations were **verbatim duplicates**, so the preamble's integrity check had been counting two twice; **143 → 141**, a correction not a loss of coverage | `api-contract.md` |
-
-**Code changes filed as closures:** FR 3's leaked `DbContext` (`Activator.CreateInstance` is gone) and
-its disposal-guarding half; FR 12's silently no-opping transaction commit/rollback. **Deviation 8
-closed** — all three enumerated breaks, by an owner-run `dotnet build`, SDK 10.0.400, 7 warnings,
-0 errors.
-
-**Documentation re-verified against source across all four in-scope repos**, producing three findings
-that mattered more than the corrections themselves:
-
-1. **`ProphetsWay.Hasher`'s `AGENTS.md` was instructing agents to make a binary-breaking namespace
-   change** — undoing a deliberate v2.0.0 decision. **Corrected but still untracked.**
-2. **`ProphetsWay.BaseDataAccess`'s behavioural-contracts index was missing an entire section** —
-   CONVENTION-BASED DISPATCH, which explicitly states it is *not* a term of the contract.
-   **The EFTools 3.x design was drafted off that index.**
-3. **`ProphetsWay.Example`'s version line is 3.1.1** where three documents said 3.1.0, and its README
-   named a test that does not exist.
-
-## 🔑 The Lesson — carry this into every future documentation lap
-
-**Three times in this session a revision log or status line asserted a correction the body did not
-have** — Revision 7's F5 and F8, and Revision 8's `BaseSoftDao` overclaim. **Every one was caught only
-by an independent read of the body, never by reading the claim.** Two **splice-duplication** defects
-were also found — in `api-contract.md` and in `Constants.cs` — both from a botched find-and-replace
-pasting a file header over live content.
-
-The corruption that opened this session illustrates the same thing twice over: it was reported as one
-site, **turned out to be seven**, and **the obvious recovery source was itself corrupt**. `56e6a66`
-was identified as the commit that introduced the signature; `56e6a66^` was verified clean and used
-instead. Recovery was a **merge, not a restore** — the clean copy predated Revision 7's F3–F8
-corrections while the working file had them misplaced.
-
-**The checks that caught these are now written into the artifacts rather than left as lessons someone
-must relearn:** the obligation-sum integrity check (`123 + 10 + 8 = 141`, verified in the file at lines
-178 and 3390), the mixed-traceability tie-breaker, and the `[C]`-must-trace-to-a-stated-rule discipline.
-
-**A candidate for `conventions/AGENTS.shared.md` that was NOT applied:** a rule that a revision log
-entry is not evidence its own correction landed. The shared block regenerates seven repos, so that is
-an owner instruction, not a scribe's edit. Raising it here rather than doing it.
+| 1 | **What version does `ProphetsWay.Example` carry at tag time?** `app-variables.yml` reads `3`/`1`/`1` — a **patch** — but `TestDataAccessFactory.Use` is new public API, a MINOR by house rule, and the IDENTIFIER and ROW COUNT rules were restated on five further DAO interfaces, tightening a contract on implementers (arguably major). **An implementation conforming to the 3.1.0 text can be non-conforming to this one without changing a line.** Must be settled before Example is tagged | 08-16 |
+| 2 | **`Test Auditor` pass over `SnapshotDeepCopyTests.ShouldNotStoreEditsMadeToAUsersNavigationAfterInsertReturned`** — green by luck of ordering. **Must run in the `ProphetsWay.Example` repository, never from EFTools** | 08-18 |
+| 3 | **`ThrowIfDisposed()` is missing from the other 32 forwarders** in `ExampleDataAccess` — a contract requirement with **no test**. 8 of 40 guarded. Routed as a separate sweeping change | 08-18 |
+| 4 | **SourceLink** — wanted working before the NuGet deployment. Deviation 5's five missing properties plus the `Microsoft.SourceLink.GitHub` reference. **Removing the `Submod` block stopped the warning; it did not deliver Source Link** — read Deviations 5 and 7 together | 08-16 |
+| 5 | **A31's three version-sensitive EF Core surfaces** — `IgnoreQueryFilters()` granularity, `SetValues` against shadow foreign keys, `MultipleCollectionIncludeWarning`. Nobody had a verifiable source **and nobody guessed** | 08-16 |
+| 6 | Client-supplied `Guid` keys — `ProphetsWay.Example/…/ResourceDao.cs` line 48 | earlier |
+| 7 | Whether to state hard-delete explicitly on the five silent DAOs | earlier |
 
 ## Standing Guardrails
 
 - **No new test file in `ProphetsWay.EFTools.Tests`** beyond the thirteen discovery adapters,
-  `TestSeam.cs` and `TestSeamTests.cs`. Local assertions are shape A through the back door, and **D10
-  committed to shape B**. `TestSeamTests.cs` is the seam's own guard, not a conformance test — the
-  auditor's proposed strengthenings must keep it on that side of the line.
-- **A green EFTools suite is now meaningful only while `TestSeam.cs` is on disk.** Per F5, deleting it
-  makes the run look dramatically better. **Never delete it to reduce a red count.**
+  `TestSeam.cs`, `TestSeamTests.cs` and `AdapterCoverageTests.cs`. Local assertions are shape A through
+  the back door, and **D10 committed to shape B**. Reinforced by **D18**.
+- **The 9 IDENTITY_INSERT failures are not a defect in `DepartmentDao`.** Making it adopt the caller's
+  instance like its neighbours would turn them green and would be **wrong** — an available option,
+  explicitly declined. See FR 14.
+- **Do not "fix" `EFDataAccessTransactionTests.ShouldExposeUncommittedWritesToAnotherInstance`.**
+  `Scope=Characterization`, failing correctly; its own summary says a DAL over a store providing
+  isolation fails it.
+- **A green EFTools suite is meaningful only while `TestSeam.cs` is on disk.** Per F5, deleting it makes
+  the run look dramatically better. **Never delete it to reduce a red count.**
+- **`RootBaseSoftDao` cannot serve `IDepartmentDao` by inheritance** — it violates **8 of its 9**
+  members, and its members are **`new`, not `virtual`**, so they cannot be overridden at all. *"Just
+  inherit the existing soft base"* is a trap. Already proven; do not re-derive.
+- **The keyless mapping question is settled: composite `HasKey` is the only viable answer.**
+  `HasNoKey()` makes the entity read-only and forbids the `Insert`/`Delete` `ICompanyResourceDao`
+  requires.
 - **`UseQueryTrackingBehavior(NoTracking)` must be removed in the same lap that adds per-query
   `AsNoTracking()`** — not before, or every Example read silently becomes tracked.
 - **Never edit anything under `ProphetsWay.EFTools/ProphetsWay.Example/`** — pinned submodule. Edit
   upstream and move the pointer.
-- **`ConventionShowcaseTests` and `ExceptionPassthroughShowcaseTests` stay excluded** from the
-  adapters: `Scope=Dispatcher`, they belong to `ProphetsWay.BaseDataAccess`, and their DALs are
-  deliberately mis-wired and self-constructing.
+- **`ConventionShowcaseTests` and `ExceptionPassthroughShowcaseTests` stay excluded** from the adapters:
+  `Scope=Dispatcher`, they belong to `ProphetsWay.BaseDataAccess`, and their DALs are deliberately
+  mis-wired and self-constructing.
 
 ## Deliberately Deferred
 
 | Item | Why | Revisit when |
 |---|---|---|
-| `ProphetsWay.EFTools/README.md` documents types that no longer exist — `BaseEFDataAccess<TContextType, TIdType>`, `BaseEFContext(string)` | Stage 4 work; **the list is growing** | Stage 4 |
-| Deviation 3 — remove the SQL Server and InMemory provider references from the published library | Breaking; needs the provider-neutrality lap. **`Microsoft.EntityFrameworkCore.InMemory` now has zero call sites**, which strengthens the case | The provider-neutrality lap |
+| `ProphetsWay.EFTools/README.md` documents types that no longer exist — `BaseEFDataAccess<TContextType, TIdType>`, `BaseEFContext(string)` | Stage 4 work; **the list is growing**, and the family collapse will lengthen it further | Stage 4 |
+| Deviation 3 — remove the SQL Server and InMemory provider references from the published library | Breaking; needs the provider-neutrality lap. **`Microsoft.EntityFrameworkCore.InMemory` now has zero call sites** | The provider-neutrality lap |
 | `xUnit1013` on the submodule's `DepartmentDaoTests.cs` lines 294 and 1001 | Upstream — a `Test Designer` fixes it **in `ProphetsWay.Example`**, never from the EFTools side | Next Example pass |
 | The three corrected untracked `AGENTS.md` files | Out of scope once the owner narrowed to four repos | Owner's convenience |
+| A `conventions/AGENTS.shared.md` rule that **a revision-log entry is not evidence its own correction landed** | The shared block regenerates seven repos — that is an owner instruction, not a scribe's edit | Owner's call |
 
-## Also Noted
+## Earlier Decisions — index only
 
-- **A seam call-site count was reported as 25 and is actually 29** (15 + 9 + 3 + 2). The original
-  arithmetic was wrong and was caught on a recount; the design conclusion is unchanged.
-- A `Test Designer` reported running an **invalid build probe that produced 280 spurious `CS0579`
-  errors**; no source was modified and no residue remains. **Recorded because it was self-reported
-  rather than hidden.**
+Each already in a permanent home. **D1–D13** in `ProphetsWay.EFTools/docs/purpose-and-scope.md`
+§ Owner Decisions; **OD-8, OD-9, OD-11** and the J1/J2 rulings in
+`ProphetsWay.EFTools/docs/api-contract.md`. **`OD-10` does not exist** — an earlier lead conflated it
+with `D10`. The Rule 18 UTC narrowing lives on `ProphetsWay.Example/…/IDepartmentDao.cs`, cited in
+`api-contract.md` as present **from 3.1.1**.
 
-## ⚙️ Tooling Constraint That Shaped the 08-16 → 08-17 Session
+## 🔑 The Lesson
 
-**No terminal tool in that working session.** No agent could run `git`, `dotnet build` or `dotnet test`;
-**the owner ran every command.** Two agents **correctly stopped rather than guess** — one refusing to
-invent an EF Core version, one refusing to reconstruct a destroyed obligation from context. Both
-refusals were right, and both are the reason that day's measured claims are trustworthy.
+**Three times this week a revision log or status line asserted a correction the body did not have.**
+Every one was caught only by an **independent read of the body**, never by reading the claim. Two
+splice-duplication defects came from a botched find-and-replace pasting a file header over live
+content. The session-opening corruption made the same point twice: reported as one site, **turned out
+to be seven**, and **the obvious recovery source was itself corrupt** — recovery was a *merge*, not a
+restore.
 
-**On 08-18 the owner again ran the build and the test suite**; the 147/53/94 figures above are
-owner-measured and recorded here, not re-run by the scribe. This checkpoint did have a terminal and
-re-derived every HEAD, branch and `git status --short`, plus `git submodule status` and the on-disk
-contents of the three test files.
+Tonight's discrepancy is the same shape in miniature, in the safe direction: the report said lap 3 was
+uncommitted; git said it was committed twenty minutes earlier. **Reading the artifact beat reading the
+claim, again.**
+
+The checks that catch these now live in the artifacts rather than as lessons someone must relearn: the
+obligation-sum integrity check (`123 + 10 + 8 = 141`), the mixed-traceability tie-breaker, and the
+`[C]`-must-trace-to-a-stated-rule discipline.
 
 ## Recent Sessions
 
+### 2026-08-18
+
+`ProphetsWay.Example` PR #21 merged (`61d9e7d`) and the EFTools submodule pointer advanced onto it —
+**the blocker cleared**. THE TRAP disarmed and committed: `TestSeam.cs`'s `[ModuleInitializer]` points
+the upstream suite at the EF DAL, and `Constants.cs` gained `TrustServerCertificate=True`. The guard was
+then **hardened against its own auditor** — `TestSeamTests` now derives from `BaseUnitTests<ICompanyDao>`
+and asserts on `_da`, with relational-provider, fresh-instance-per-call and store-reachability
+assertions, `[Collection(TestCollections.SharedStore)]`, `[Trait("Guard","Seam")]`, and failure messages
+that say plainly what a failure means; plus a new `AdapterCoverageTests.cs`. **All 11 findings closed,
+four validated by applying the cheat, watching the guard fail, and reverting** (`b9320fd`). Lap 3
+landed: `DepartmentDao` written, `Code Reviewer`-passed, committed as `a72b60b`. **57/94 → 123/28.**
+FR 14 filed on the argument-adoption defect; FR 13 strengthened with the `new`-not-`virtual` structural
+finding. **Five owner decisions, D14–D18**, reordered the plan onto the family collapse.
+
 ### 2026-08-16 → 08-17
 
-Opened as a routine resume to repair **one** corrupted obligation in `api-contract.md`; **it was seven,
-and the recovery source was itself corrupt**, which redirected the day. Recovered by merge from
-`56e6a66^`, then advanced to **Revision 8** through two `Contract Reviewer` passes — H1–H9, then a
-delta review keyed **J1–J10**, all folded in place. Final: **141 obligations, `[C]` 123 / `[X]` 10 /
-`[D]` 8**, still *under review*, nothing self-certified. **The build went green and Deviation 8
-closed** (owner-run, SDK 10.0.400, 0 errors). Three shipped 2.2.0 defects closed in code;
-`BaseEFDataAccess<TContext>` brought to the document's specification — `abstract`, sealed five-step
-`Dispose`, `ThrowIfDisposed()`, seven guarded overrides, a real transaction state machine. The
-**shape B seam** (`TestDataAccessFactory.Use`) designed and built in `ProphetsWay.Example`; thirteen
-discovery adapters added to EFTools. **Thirteen owner decisions recorded.** Documentation re-verified
-across four repos, catching an `AGENTS.md` that was **instructing a binary-breaking namespace change**
-and a behavioural index **missing the section the 3.x design was drafted off**. Ends with the seam
-**not wired** and a suite that would pass against the wrong implementation.
-
-### 2026-08-15 → 08-16
-
-Independently verified the whole `ProphetsWay.EFTools` Stage 2 output after the owner lost confidence
-in the prior agent. **The evidence was sound; the self-assessment was not** — `Repo Analyst`
-re-derived every Stage 1 count from source and all matched, but the "Stage 2 closed" status line had
-been recorded at 19:50 against a file last written at 20:22. A fresh review returned **BLOCK**. Four
-review cycles took the API contract from Revision 3 to **Revision 7** — 142 obligations, zero blocked
-— **with every cycle catching a defect introduced by the one before it**. OD-1…OD-7 settled; EFTools
-FR 12 filed and FR 3 extended; D7 recorded in `AGENTS.md`; submodule advanced to Example 3.1.0. In
-`ProphetsWay.Example`, two DAL-wide rules added to `IExampleDataAccess` and **two new `Contract`
-tests closing a gate hole — a cascading `Update` had been passing all 138 `Contract` tests**. Suite
-now **164 / 328 — Contract 139, Characterization 5, Dispatcher 20**, green on both legs. Stage 3
-scoped to **three fat laps**. Wrapup found a **committed corruption** in `api-contract.md` and a
-status line never advanced.
-
-### 2026-08-15
-
-Completed the **`ProphetsWay.Example` 3.1.0** pass end to end — Stage 1 (`Modernizer` →
-`Purpose Refiner` → `Repo Analyst`) and Stage 4 (`Changelog Author`, `README Author`), no Stage 2 or
-3. PR #20 built green (`3.1.0.496`), confirming `windows-latest` carries the .NET 10 SDK and that
-`HasSqlProj` → `VSBuild@1` builds the SDK-style `.sqlproj`; since merged at `d845863`, tagged
-`3.1.0`, published. Caught three false README claims that had survived multiple documentation passes
-because no agent opened the artifact behind them — now a rule in `AGENTS.shared.md`. Filed FR 9
-(seed data, Deferred) and closed FR 6. Investigated 446 markdownlint warnings and set the work aside;
-**the two config files that sign-off believed existed do not.**
-
-### 2026-08-13 → 08-14
-
-Found and fixed the `VSTest@2` single-TFM defect — half of every test suite in the workspace had
-never run in CI. Shipped `prophets-pipelines` `5df6e21`: `dotnet test`, Release configuration
-everywhere, build-once-and-promote, hardened release-notes script, `RepositoryType` correction.
-Shipped **BaseDataAccess 3.1.0** via PR #39 (`cce91be`, tagged): `netstandard2.0;net10.0`, four XML
-`<remarks>` corrections around explicit interface implementation, one new characterization test
-(116 per TFM / 232 executions). Triaged five feature-request entries to permanent status and
-implemented the shared-append ownership model. Created the `Pipeline Engineer` agent, closing the
-roster gap that had blocked the pipeline fix for a full session.
-
-### 2026-08-12 → 13
-
-Shipped Example 3.0.0 (PR #19 merged, tagged `3.0.0`) after a `Repo Analyst` pass that produced the
-repo's first `docs/repo-profile.md` and corrected the EFTools-submodule claim in `AGENTS.md`;
-`Code Reviewer` rejected the one outstanding bot review comment as backwards. Rewrote the TFM
-standard in `conventions/AGENTS.shared.md` — LTS-only, nine rules — and applied it to
-BaseDataAccess as 3.1.0. Assessed xunit v3 and deferred it on discovering that the shared `VSTest@2`
-glob would silently drop the `net48` test leg. Closed by running `/sync-agents-md` into all six
-consuming repos.
+Documentation re-verified against source across four repos, producing three findings that mattered more
+than the corrections: `ProphetsWay.Hasher`'s `AGENTS.md` was instructing agents to make a
+binary-breaking namespace change; `ProphetsWay.BaseDataAccess`'s behavioural-contracts index was missing
+an entire section that the EFTools 3.x design had been drafted off; and `ProphetsWay.Example`'s version
+line is 3.1.1 where three documents said 3.1.0. D11–D13 taken. **No terminal tool that session** — the
+owner ran every command, and two agents correctly stopped rather than guess.
