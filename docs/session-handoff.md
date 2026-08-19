@@ -1,86 +1,125 @@
 ---
-written: 2026-08-17T01:30:00
+written: 2026-08-18T00:00:00
 head:
-  prophets-pipelines: ccfdfc9              # main — dirty: this file
-  ProphetsWay.EFTools: 8e78b94             # branch 3.0.0-first-pass — dirty: docs/feature-requests.md
-  ProphetsWay.Example: 8493130             # branch 3.1.1-eftool-findings — dirty: CHANGELOG.md, README.md
+  prophets-pipelines: 2aa3632              # main — dirty: this file
+  ProphetsWay.EFTools: 699bde3             # branch 3.0.0-first-pass — dirty: submodule pointer, Constants.cs, 2 untracked
+  ProphetsWay.Example: 61d9e7d             # main — clean; PR #21 merged (squash)
   ProphetsWay.BaseDataAccess: 207c5de      # main — clean
   ProphetsWay.Logger: 86568fd              # main — untracked AGENTS.md
   ProphetsWay.Utilities: 5095e5e           # master — untracked AGENTS.md
   ProphetsWay.Hasher: d1410ca              # master — untracked AGENTS.md
   ProphetsWay.BPA: 4c0ba1f                 # main — empty repo, clean
-status: fresh
+status: live
 ---
 
 # Session Handoff
 
 ## Where We Are
 
-`ProphetsWay.EFTools` **3.0.0 first pass**, Stage 3, between laps 2 and 3. The build is green, the
-disposal and transaction contracts are implemented, and the upstream test suite is discoverable from
-EFTools' own assembly — but **it is pointed at the wrong implementation**, and one owner-run merge is
-what unblocks everything else.
+`ProphetsWay.EFTools` **3.0.0 first pass**, Stage 3, **lap 3**, branch `3.0.0-first-pass`. THE BLOCKER
+and THE TRAP that dominated the previous two sessions are both **cleared**, and the first honest
+measurement of EF conformance in the history of this repo has been taken. `ProphetsWay.Example` PR #21
+is merged to `main` and the repo is clean.
 
-`ProphetsWay.Example` carries an unreleased **3.1.1** line on `3.1.1-eftool-findings` whose only job is
-to hand EFTools that seam. `ProphetsWay.BaseDataAccess` and `prophets-pipelines` are stable and were
-touched only for documentation corrections.
+The cycle is now in the ordinary red phase, with one caveat: `Test Auditor` says the guard that makes
+the red trustworthy is **not yet trustworthy itself**.
 
-## ⚠️⚠️ THE TRAP — read before running or believing any EFTools test result
+## ✅ THE BLOCKER — cleared
 
-**`ProphetsWay.EFTools.Tests` contains thirteen `EF*Tests.cs` discovery adapters that compile,
-discover the upstream suite, and will run it against the NoDB *in-memory* implementation — and PASS.**
-Verified at wrapup: the thirteen files are on disk, `TestSeam.cs` is **not**.
+Owner merged `ProphetsWay.Example` `3.1.1-eftool-findings` → `main` as PR #21 (squash **`61d9e7d`**),
+then ran `git submodule update --remote --init ProphetsWay.Example` in EFTools. Pointer moved
+`d845863` → **`61d9e7d`**.
 
-**A green `dotnet test` on `ProphetsWay.EFTools` right now means nothing about Entity Framework.**
-This is the hole `TestDataAccessFactory.Use`'s own XML documentation names — *"a consumer that never
-calls `Use` runs green and proves nothing."* Nobody may read a passing EFTools suite as evidence of
-anything until `TestSeam.cs` is wired.
+**Verified at checkpoint:** `git submodule status` → `+61d9e7dfb209… (3.1.0-1-g61d9e7d)`; the leading
+`+` is the giveaway — **the pointer advance is staged in the working tree and has not been committed.**
+`ProphetsWay.Example` `main` is at the same `61d9e7d`, clean.
 
-## 🔴 THE BLOCKER — the seam is not in the code EFTools compiles against
+Full solution build green: `dotnet build ProphetsWay.EFTools.sln -c Debug` — **0 warnings, 0 errors**,
+all 10 project/TFM combinations including the `.sqlproj` dacpac. (Owner-run; recorded, not re-measured
+here.)
 
-`ProphetsWay.EFTools.Tests` project-references the **submodule** copy of `ProphetsWay.Example.Tests`.
-Re-verified at wrapup:
+## ✅ THE TRAP — disarmed, but the disarming device is unaudited
 
-- `git submodule status` → **`d845863 (3.1.0)`**
-- `ProphetsWay.Example` `main` → **`d845863`**
-- `TestDataAccessFactory.Use` exists only on **`3.1.1-eftool-findings`** @ **`8493130`**
-  (confirmed at `ProphetsWay.Example.Tests/TestDataAccessFactory.cs` line 148, behind a first-use
-  latch over the `_implementation` field at line 59)
+`Test Designer` created two files in `ProphetsWay.EFTools.Tests` — **both untracked, verified on disk
+at checkpoint**:
 
-Writing `TestSeam.cs` today yields `CS0117`. **`Implementer` correctly stopped rather than write it.**
+| File | Contains |
+|---|---|
+| `TestSeam.cs` | `internal static class TestSeam`; `[ModuleInitializer]` method `PointTheSuiteAtEntityFramework()` calling `TestDataAccessFactory.Use(() => Constants.GetExampleDataAccess)`. A module initializer rather than a fixture because xUnit runs collections in parallel |
+| `TestSeamTests.cs` | `public class TestSeamTests`, **3 guard `[Fact]`s** asserting the factory hands out `ProphetsWay.Example.DataAccess.EF.ExampleDataAccess` |
 
-`TestSeam.cs`, drafted and ready — the expression is verified against
-`ProphetsWay.EFTools.Tests/Constants.cs`, which exposes `GetExampleDataAccess` (15 lines,
-brace-balanced after the splice repair):
+It also modified `Constants.cs`, appending **`TrustServerCertificate=True`** to the connection string —
+SQL Server at localhost presents a self-signed cert and `Microsoft.Data.SqlClient` defaults
+`Encrypt=true`. Without it **all 71 SQL tests failed identically at login**. `Test Auditor` reviewed and
+endorsed it as the right fix in the right file. Verified at `Constants.cs` line 12, with the reason in a
+comment on line 10.
 
-```csharp
-[ModuleInitializer]
-internal static void PointTheSuiteAtEntityFramework()
-{
-	TestDataAccessFactory.Use(() => Constants.GetExampleDataAccess);
-}
-```
+## 📊 First real EF conformance measurement ever taken
 
-> **Not a D11 violation.** D11 defers *tagging and releasing* `ProphetsWay.Example`; advancing the
-> pointer so EFTools can consume in-progress work is a different act, and D11's premise silently
-> assumed the submodule could see that work. **Filed at wrapup** into
-> `ProphetsWay.EFTools/docs/feature-requests.md` § *Release Ordering — D11*, as a clarification that
-> changes no status.
+`dotnet test ProphetsWay.EFTools.Tests` — **147 total · 53 passed · 94 failed.**
+
+| Bucket | Count | Detail |
+|---|---|---|
+| `NotImplementedException` stubs | **92** | Across 10 reached throw sites. **62 are the single member `IDepartmentDao.Insert`**; 14 are `ICompanyResourceDao.Insert`; the rest 1–3 each across Department `GetCount`/`GetPaged`/`Get`/`Update`/`Delete`/`Restore` and CompanyResource `Delete`/`GetAll`. `IDepartmentDao.GetAll` is **never reached** — `Insert` throws first |
+| **Genuine contract mismatches** | **2** | Both `NullReferenceException`, both `Scope=Contract`, both in `SnapshotDeepCopyTests`: `ShouldNotStoreEditsMadeToAUsersNavigationAfterInsertReturned` (line 249) and `ShouldGiveTwoUsersNamingOneCompanyTheirOwnCompanyInstances` (line 553) |
+| Connectivity failures | 0 | |
+| Isolation failures | 0 | **Measured**, not assumed — suite run twice back-to-back against the dirty DB, failing sets diffed by name, identical |
+
+**The 2 are the first genuine contract finding of the cycle.** Root cause: EF `UserDao` returns a `User`
+whose `Company`/`Job` navigations are null — no `Include`, and `NoTracking` prevents fix-up. NoDB
+satisfies the snapshot rule for free; EF does not.
+
+**Six DAO classes fully green against real SQL Server — never true before:** `EFCompanyDaoTests` 7/7,
+`EFJobDaoTests` 5/5, `EFResourceDaoTests` 5/5, `EFTransactionDaoTests` 6/6, `EFUserDaoTests` 7/7,
+`EFBaseDataAccessTests` 7/7.
+
+**147 is correct, not a shortfall.** The 20 `Scope=Dispatcher` `ConventionShowcase` tests construct
+their own deliberately mis-wired DALs and belong to no implementation: 164 − 20 = 144 upstream + 3
+guard = **147**. `Test Auditor` verified the exclusion independently.
+
+## ⚠️ `Test Auditor` verdict — GAPS TO CLOSE FIRST
+
+**Would not pass the guard as-is. All eleven findings are outstanding and unfixed.**
+
+| # | Sev | Finding | Proposed fix |
+|---|---|---|---|
+| F1 | **CRITICAL** | Guard asserts on `TestDataAccessFactory`; the 144 tests read `BaseUnitTests<T>._da`. **Nothing binds them.** If upstream reintroduces a `CreateDataAccess` virtual hook, the guard stays green while 144 tests revert to NoDB | Derive `TestSeamTests` from `BaseUnitTests<ICompanyDao>`, assert on `_da` |
+| F2 | **CRITICAL** | `ShouldBeAssignableTo<BaseEFDataAccess<ExampleContext>>` is a **compile-time tautology** (test 1 implies it), and "EF-backed" is satisfiable by `.UseInMemoryDatabase(...)`. Both InMemory and Sqlite are already on the compile path — this reproduces the original false-green hazard one layer up | Assert `Database.ProviderName == "Microsoft.EntityFrameworkCore.SqlServer"` |
+| F3 | HIGH | Changing `=>` to `=` in `Constants.GetExampleDataAccess` — **one character** — yields one shared instance that guard test 1 disposes; all 3 guard tests still pass, all 144 real tests throw `ObjectDisposedException` | Assert fresh-instance-per-call and instance-is-usable |
+| F4 | HIGH | `TestSeamTests` carries **no `[Trait("Scope",…)]`** — confirmed at checkpoint — so `--filter "Scope=Contract"`, the documented gate, omits it. `LocalTestsOnly: 'yes'` means CI never runs these, so the filtered human run is the **only** runner | Separate key `[Trait("Guard","Seam")]` |
+| F5 | HIGH | With the seam present the Department/CompanyResource adapters cannot pass, so **deleting `TestSeam.cs` makes the run look dramatically better**. The guard's failure mode invites its own deletion | Custom failure messages that state the consequence |
+| F6 | MEDIUM | `TestSeamTests` lacks `[Collection(TestCollections.SharedStore)]` — confirmed at checkpoint — so it runs concurrently with the shared-store collection. Harmless only while the guard touches no DB, and **every proposed strengthening changes that** | Add it now |
+| F7 | MEDIUM | Nothing detects an upstream test class gaining no adapter. Submodule advances, upstream adds a class, no adapter, nothing red, **silently never runs against EF** | — |
+| F8 | MEDIUM | Suite depends on an **undeclared external precondition** (SQL Server at localhost with a `ProphetsWay.Example` database); nothing creates, asserts, or names it | — |
+| F9 | LOW | `Microsoft.EntityFrameworkCore.Sqlite` referenced in the test csproj for a certification leg that **does not exist**; unused | — |
+| F10/F11 | NONE | Dispatcher exclusion correct; disposal handling correct | — |
+
+**Also noted by the auditor:** `ProphetsWay.Example.Tests` is a project in `ProphetsWay.EFTools.sln`, so
+a solution-wide `dotnet test` runs **164 unguarded NoDB tests alongside** this assembly's 147.
+
+## Known-Outstanding Implementation Gaps
+
+Reported, not fixed:
+
+- `ExampleContext` maps **neither `Department` nor `CompanyResource`** — no `DbSet`, no `ToTable`, no
+  soft-delete filter.
+- **No `DepartmentDao` or `CompanyResourceDao` exist** in `ProphetsWay.Example.DataAccess.EF/Daos/`.
 
 ## Current Focus
 
-Unblocking the seam so the first honest red phase can run. Everything in *Next Session* is downstream
-of step 1.
+**Hardening the seam guard before writing any implementation.** A second `Test Designer` pass to close
+F1/F2/F3/F6/F7 — explicitly **not** `Implementer` yet. Hardening is cheap and everything downstream
+rests on trusting the guard.
 
 ## Next Session — Start Here
 
 | # | Task | Agent | Why it's next |
 |---|---|---|---|
-| 1 | Merge Example `3.1.1-eftool-findings` → `main` (PR prepared); then `git submodule update --remote ProphetsWay.Example` in EFTools; rebuild | **Owner** | Nothing downstream can move. Not a D11 violation — see above |
-| 2 | Write `TestSeam.cs` (drafted above) into `ProphetsWay.EFTools.Tests` | `Implementer` | Closes THE TRAP. Until it lands, a green suite is meaningless |
-| 3 | **The first honest red phase** — run the suite against Entity Framework | `Test Designer` / owner | It will fail on **11 `NotImplementedException` stubs** (8 `IDepartmentDao`, 3 `ICompanyResourceDao`) and **two unmapped entities**. **Expect a large red; that red is the point** |
-| 4 | Lap 3 — the **hand-written `DepartmentDao`** (owner decision **D13**) | `Implementer` | Verified against `DepartmentDaoTests`' **40 `Contract`** tests |
-| 5 | Map `Department` and `CompanyResource` in `ExampleContext` | `Implementer` | Model building fails at runtime the moment anything materializes the model |
+| 1 | **Second `Test Designer` pass — harden the seam guard.** Close **F1, F2, F3, F6, F7** | `Test Designer` | Cheap, and every measurement after this one rests on the guard being trustworthy. **Not `Implementer` yet** |
+| 2 | Decide the `Guard`/`Scope` trait question (F4) and add whichever key is chosen | Owner then `Test Designer` | The documented gate currently omits the guard entirely |
+| 3 | Lap 3 — the **hand-written `DepartmentDao`** (owner decision **D13**) + map `Department` in `ExampleContext` | `Implementer` | Largest single win available: **~62 + 12 failures**. Verified against `DepartmentDaoTests`' 40 `Contract` tests. **Lap sizing not yet owner-approved** |
+| 4 | Lap 4 — `CompanyResourceDao` + `CompanyResource` mapping | `Implementer` | ~17 failures. **Not yet approved** |
+| 5 | Lap 5 — the navigation eager-loading fix for the 2 genuine contract mismatches | `Implementer` | The only non-stub failures in the run. **Not yet approved** |
 | 6 | Check **A31**'s three version-sensitive surfaces against EF Core 10's real breaking-changes page | `Implementer` | Unblocked now that EF Core is pinned at `10.0.11` |
 
 **Critical constraint, already proven — do not re-derive it.** `RootBaseSoftDao` **cannot** serve
@@ -95,12 +134,15 @@ makes the entity read-only and forbids the `Insert`/`Delete` `ICompanyResourceDa
 
 | # | Question | Blocks | Raised |
 |---|---|---|---|
-| 1 | **What version number does Example's line carry at tag time?** `app-variables.yml` reads `3`/`1`/`1` — a **patch**. But `Use` is new public API (minor floor), and the IDENTIFIER and ROW COUNT rules were **restated on five further DAO interfaces**, tightening a contract on implementers (arguably major). **An implementation conforming to the 3.1.0 text can be non-conforming to this one without changing a line.** The line is unreleased so the number is still open — settle it deliberately at tag time rather than discover it after. Note this is a question **before the tag, not before the merge**; step 1 above does not wait on it | Example's tag; the D11 sequence | 08-16 |
+| 6 | **Harden the guard first, or accept it and proceed to `Implementer`?** `Vanguard`'s recommendation is harden first; `Test Auditor` says the guard would not pass as-is | The whole of lap 3 | 08-18 |
+| 7 | **Lap size for `Implementer`.** Proposed: lap 3 = `DepartmentDao` + `ExampleContext` mapping (~62 + 12 failures), lap 4 = `CompanyResourceDao` (~17), lap 5 = the navigation eager-loading fix. **Not yet approved** | Sequencing of steps 3–5 above | 08-18 |
+| 8 | **`Scope`/`Guard` trait on `TestSeamTests`** — omitted deliberately; the auditor suggests a **separate trait key** (`Guard=Seam`) rather than folding it into `Scope`, so the existing three-way `Scope` partition stays a clean sum | Whether `--filter "Scope=Contract"` remains a complete gate | 08-18 |
 
 ## Open Questions — Non-Blocking
 
 | # | Question | Raised |
 |---|---|---|
+| 1 | **What version number does Example's line carry at tag time?** `app-variables.yml` reads `3`/`1`/`1` — a **patch**. But `Use` is new public API (minor floor), and the IDENTIFIER and ROW COUNT rules were **restated on five further DAO interfaces**, tightening a contract on implementers (arguably major). **An implementation conforming to the 3.1.0 text can be non-conforming to this one without changing a line. Downgraded from Blocking on 08-18** — the merge happened without settling it, so it no longer blocks anything, but it must be settled before Example is tagged | 08-16 |
 | 2 | **SourceLink** — the owner wants it working before the NuGet deployment. Deviation 5's five missing properties (`PublishRepositoryUrl`, `EmbedUntrackedSources`, `IncludeSymbols`, `SymbolPackageFormat`, `ContinuousIntegrationBuild`) plus the `Microsoft.SourceLink.GitHub` reference. **Removing the `Submod` block stopped the warning; it did not deliver Source Link** — read Deviations 5 and 7 together or you will conclude it works | 08-16 |
 | 3 | **A31's three version-sensitive EF Core surfaces** — `IgnoreQueryFilters()` granularity, `SetValues` against shadow foreign keys, `MultipleCollectionIncludeWarning`. Nobody in this session had a verifiable source **and nobody guessed** | 08-16 |
 | 4 | Client-supplied `Guid` keys — `ProphetsWay.Example/…/ResourceDao.cs` line 48 | earlier |
@@ -117,34 +159,41 @@ is already referenced by the test project at `10.0.11`.
 
 | Item | State | Where |
 |---|---|---|
-| `TestSeam.cs` | **Drafted, not on disk** — blocked on the submodule advance | text above |
-| 13 discovery adapters | Committed in `8e78b94`, empty bodies, **will pass against NoDB — see THE TRAP** | `ProphetsWay.EFTools.Tests/EF*Tests.cs` |
-| `BaseEFDataAccess<TContext>` | Committed, **compiles green, never executed against a database** | `ProphetsWay.EFTools/BaseEFDataAccess.cs` |
-| 11 `NotImplementedException` stubs | Untouched, verified by count | `ProphetsWay.Example.DataAccess.EF/ExampleDataAccess.cs` |
+| `TestSeam.cs` | **On disk, untracked.** `[ModuleInitializer]` verified at line 27 | `ProphetsWay.EFTools.Tests/TestSeam.cs` |
+| `TestSeamTests.cs` | **On disk, untracked.** 3 `[Fact]`s verified; **no `[Trait]`, no `[Collection]`** — F4 and F6 confirmed by direct read | `ProphetsWay.EFTools.Tests/TestSeamTests.cs` |
+| `Constants.cs` connection string | **Modified, uncommitted.** `TrustServerCertificate=True` verified at line 12 | `ProphetsWay.EFTools.Tests/Constants.cs` |
+| Submodule pointer `d845863` → `61d9e7d` | **Staged, uncommitted** — `git submodule status` shows the leading `+` | `ProphetsWay.EFTools/ProphetsWay.Example` |
+| 11 `Test Auditor` findings F1–F11 | **All outstanding, none fixed** | table above |
+| 13 discovery adapters | Committed in `8e78b94`; now **actually running against Entity Framework** | `ProphetsWay.EFTools.Tests/EF*Tests.cs` |
+| `BaseEFDataAccess<TContext>` | Committed, and **now executed against a real database** — `EFBaseDataAccessTests` 7/7 | `ProphetsWay.EFTools/BaseEFDataAccess.cs` |
+| `NotImplementedException` stubs | Untouched. **10 throw sites reached, 92 failures** | `ProphetsWay.Example.DataAccess.EF/ExampleDataAccess.cs` |
+| `ExampleContext` mappings for `Department` / `CompanyResource` | **Do not exist** | `ProphetsWay.Example.DataAccess.EF/` |
+| `DepartmentDao` / `CompanyResourceDao` | **Do not exist** | `ProphetsWay.Example.DataAccess.EF/Daos/` |
 | `docs/api-contract.md` | **Revision 8, *under review*** — J1–J10 folded in place; **no pass has run against the text as it now stands** | `ProphetsWay.EFTools/docs/` |
-| Example 3.1.1 CHANGELOG + README | Written, **uncommitted** | `ProphetsWay.Example` |
-| Example PR `3.1.1-eftool-findings` → `main` | Owner reports it prepared; branch is pushed to `origin` | GitHub |
 
 ## Uncommitted Changes
 
-**Re-read at wrapup, not assumed.**
+**Re-read at this checkpoint from `git status --short` in every root, not assumed.**
 
 | Repo | Files | Description |
 |---|---|---|
-| `ProphetsWay.Example` @ `8493130` | `CHANGELOG.md` (+181), `README.md` (+150/−38) | The v3.1.1 entry and the README corrections. **Expected — this is the PR content.** |
-| `ProphetsWay.EFTools` @ `8e78b94` | `docs/feature-requests.md` | The D11 clarification filed by this wrapup. Nothing else. |
-| `prophets-pipelines` @ `ccfdfc9` | `docs/session-handoff.md` | This file. |
-| `ProphetsWay.Logger` @ `86568fd` | `AGENTS.md` **untracked** | Corrected this session, then out of scope when the owner narrowed to four repos. Commit-ready. |
-| `ProphetsWay.Utilities` @ `5095e5e` | `AGENTS.md` **untracked** | Same. |
-| `ProphetsWay.Hasher` @ `d1410ca` | `AGENTS.md` **untracked** | Same — **and this one carried a live hazard, see Decisions below.** |
+| `ProphetsWay.EFTools` @ `699bde3` | ` M ProphetsWay.Example` (submodule pointer)<br>` M ProphetsWay.EFTools.Tests/Constants.cs`<br>`?? ProphetsWay.EFTools.Tests/TestSeam.cs`<br>`?? ProphetsWay.EFTools.Tests/TestSeamTests.cs` | The whole of this session's EFTools work. **Nothing here looks accidental.** Note the guard files are the ones `Test Auditor` says need a second pass — committing now commits a guard with 5 open CRITICAL/HIGH findings |
+| `prophets-pipelines` @ `2aa3632` | `docs/session-handoff.md` | This file — the `status: consumed` stamp from this session's resume, plus this checkpoint |
+| `ProphetsWay.Logger` @ `86568fd` | `AGENTS.md` **untracked** | Long-standing, unrelated. Commit-ready |
+| `ProphetsWay.Utilities` @ `5095e5e` | `AGENTS.md` **untracked** | Same |
+| `ProphetsWay.Hasher` @ `d1410ca` | `AGENTS.md` **untracked** | Same — **and this one carried a live hazard, see Decisions below** |
+
+`ProphetsWay.Example` (`61d9e7d`, `main`), `ProphetsWay.BaseDataAccess` (`207c5de`) and
+`ProphetsWay.BPA` (`4c0ba1f`) are **clean**. Example's previously-uncommitted CHANGELOG and README went
+in with PR #21.
 
 `ProphetsWay.BaseDataAccess` (`207c5de`) and `ProphetsWay.BPA` (`4c0ba1f`, an empty repo — `.git` and
 `.gitignore` only) are clean. **Nothing here looks accidental.** Committing is the owner's call.
 
-## Decisions Made This Session
+## Decisions Made — session of 2026-08-16 → 08-17
 
-**Thirteen owner decisions and rulings.** Each is already in a permanent home; this is an index, not a
-restatement.
+**Carried forward unchanged by the 08-18 checkpoint. Thirteen owner decisions and rulings.** Each is
+already in a permanent home; this is an index, not a restatement.
 
 | Ref | Substance | Filed in |
 |---|---|---|
@@ -197,8 +246,12 @@ an owner instruction, not a scribe's edit. Raising it here rather than doing it.
 
 ## Standing Guardrails
 
-- **No new test file in `ProphetsWay.EFTools.Tests`** beyond the thirteen discovery adapters and
-  `TestSeam.cs`. Local assertions are shape A through the back door, and **D10 committed to shape B**.
+- **No new test file in `ProphetsWay.EFTools.Tests`** beyond the thirteen discovery adapters,
+  `TestSeam.cs` and `TestSeamTests.cs`. Local assertions are shape A through the back door, and **D10
+  committed to shape B**. `TestSeamTests.cs` is the seam's own guard, not a conformance test — the
+  auditor's proposed strengthenings must keep it on that side of the line.
+- **A green EFTools suite is now meaningful only while `TestSeam.cs` is on disk.** Per F5, deleting it
+  makes the run look dramatically better. **Never delete it to reduce a red count.**
 - **`UseQueryTrackingBehavior(NoTracking)` must be removed in the same lap that adds per-query
   `AsNoTracking()`** — not before, or every Example read silently becomes tracked.
 - **Never edit anything under `ProphetsWay.EFTools/ProphetsWay.Example/`** — pinned submodule. Edit
@@ -224,15 +277,17 @@ an owner instruction, not a scribe's edit. Raising it here rather than doing it.
   errors**; no source was modified and no residue remains. **Recorded because it was self-reported
   rather than hidden.**
 
-## ⚙️ Tooling Constraint That Shaped the Entire Session
+## ⚙️ Tooling Constraint That Shaped the 08-16 → 08-17 Session
 
-**No terminal tool in the working session.** No agent could run `git`, `dotnet build` or `dotnet test`;
+**No terminal tool in that working session.** No agent could run `git`, `dotnet build` or `dotnet test`;
 **the owner ran every command.** Two agents **correctly stopped rather than guess** — one refusing to
 invent an EF Core version, one refusing to reconstruct a destroyed obligation from context. Both
-refusals were right, and both are the reason the day's measured claims are trustworthy.
+refusals were right, and both are the reason that day's measured claims are trustworthy.
 
-(This wrapup did have a terminal and re-derived all eight HEADs, branches, `git status --short`,
-`git submodule status`, the obligation counts and the test-file inventory directly.)
+**On 08-18 the owner again ran the build and the test suite**; the 147/53/94 figures above are
+owner-measured and recorded here, not re-run by the scribe. This checkpoint did have a terminal and
+re-derived every HEAD, branch and `git status --short`, plus `git submodule status` and the on-disk
+contents of the three test files.
 
 ## Recent Sessions
 
