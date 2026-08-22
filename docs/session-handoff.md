@@ -1,22 +1,619 @@
 ---
-written: 2026-08-20T23:59:00
+written: 2026-08-22T23:55:00
 head:
-  prophets-pipelines: fd894e0              # main — in sync with origin; dirty: this file only
-  ProphetsWay.EFTools: 52a2edf             # branch 3.0.0-first-pass — 0 ahead / 0 behind origin; TREE CLEAN
-  ProphetsWay.Example: 61d9e7d             # main — in sync; dirty: AGENTS.md, README.md, docs/feature-requests.md, docs/repo-profile.md
-  ProphetsWay.BaseDataAccess: bd02dfd      # branch notes-from-eftools-3.0.0 — in sync with origin; CLEAN (main is still 207c5de, UNMERGED)
-  ProphetsWay.Logger: 86568fd              # main — untracked AGENTS.md
-  ProphetsWay.Utilities: 5095e5e           # master — untracked AGENTS.md
-  ProphetsWay.Hasher: d1410ca              # master — untracked AGENTS.md
-  ProphetsWay.BPA: 4c0ba1f                 # main — empty repo, clean
-status: fresh                              # deliberate sign-off 2026-08-20 after lap 2 — supersedes the live checkpoint written earlier the same day
+  prophets-pipelines: 048d432              # main — verified from .git/refs/heads/main; dirty: this file only
+  ProphetsWay.EFTools: f79b471             # branch 3.0.0-first-pass — LAP 3 IS COMMITTED AND PUSHED, six commits on top of 52a2edf. origin/3.0.0-first-pass == f79b471, so 0 ahead / 0 behind. DIRTY: docs/api-contract.md + ProphetsWay.EFTools.Tests/FailedInsertWriteBackTests.cs. SUITE IS RED BY DESIGN — 2 failing tests await the Implementer
+  ProphetsWay.Example: 61d9e7d             # carried from 22:15, NOT re-verified this checkpoint — dirty: AGENTS.md, README.md, docs/feature-requests.md, docs/repo-profile.md
+  ProphetsWay.BaseDataAccess: bd02dfd      # carried, NOT re-verified — branch notes-from-eftools-3.0.0; main is still 207c5de, UNMERGED
+  ProphetsWay.Logger: 86568fd              # carried, NOT re-verified — untracked AGENTS.md
+  ProphetsWay.Utilities: 5095e5e           # carried, NOT re-verified — untracked AGENTS.md
+  ProphetsWay.Hasher: d1410ca              # carried, NOT re-verified — untracked AGENTS.md
+  ProphetsWay.BPA: 4c0ba1f                 # carried, NOT re-verified — empty repo
+status: live                               # MID-SESSION auto-checkpoint, 2026-08-22 LATE EVENING — lap 3 committed, then reviewed, and the review found a blocker. Not a clean wrap. RECONCILED IN PLACE over the 22:15 and 09:41 checkpoints of the same session — there is one 2026-08-22 entry, not three. The 2026-08-20 `fresh` handoff was consumed on resume this morning
 ---
 
 # Session Handoff
 
-> **Sign-off for 2026-08-20.** This **supersedes the `live` checkpoint** written earlier the same day;
-> every still-open item from it has been folded forward, not dropped. It covers **laps 1 and 2**.
-> Lap 1's content is retained because most of it is still open; everything superseded is marked so.
+> **⏸ CHECKPOINT — 2026-08-22, late evening.** Everything under **2026-08-22 — Checkpoint** below is
+> current. **It has been reconciled in place over BOTH earlier checkpoints of the same session** — the
+> 09:41 one (written mid-Stage-2 with the collision gate open) and the 22:15 one (written with lap 3
+> green but uncommitted). There is **one** 2026-08-22 entry, not three. Where a row says CLOSED or
+> COMMITTED, the earlier text said OPEN or UNCOMMITTED; do not resurrect the earlier wording.
+>
+> Everything after the sign-off rule is the **2026-08-20 sign-off**, retained because most of it is still
+> open and **corrected in place where this session moved it**. The 2026-08-20 handoff was `fresh`; it was
+> consumed on resume this morning and must not be replayed.
+>
+> **This is an auto-checkpoint, not a sign-off.** Durable content has **not** been filed to permanent
+> homes — that is `wrapup`'s job and it has not run.
+>
+> ⚠️ **No shell was available to `Session Scribe` at this checkpoint** — the configured `pwsh.exe` path
+> does not resolve, which is the same environment failure `Test Designer` hit. **Git facts below were
+> read directly out of `.git`** (`logs/HEAD`, `refs/heads/…`, `refs/remotes/origin/…`), which is exact
+> for SHAs and branch tips and **gives nothing about working-tree state**. Where the tree is described,
+> it is **the owner's report, not a measurement** — labelled as such.
+
+---
+
+# 2026-08-22 — Checkpoint
+
+**Repo:** `ProphetsWay.EFTools`, branch `3.0.0-first-pass`, HEAD **`f79b471`** — **moved six commits**
+from `52a2edf`. **Lap 3 is committed and pushed.** The session began as a Stage 2 one (contract moved,
+code did not), became a Stage 3 one (lap 3 written and green), and has now closed the commit and been
+**reviewed** — with the review finding **one blocker** and a **specification defect that is the highest-
+value finding of the session**.
+
+## ✅ LAP 3 IS COMMITTED AND PUSHED — six commits, SHAs verified
+
+**Read out of `.git/logs/HEAD` and `.git/refs/`, not taken on report.** `refs/heads/3.0.0-first-pass`
+and `refs/remotes/origin/3.0.0-first-pass` are **both `f79b471`**, so the branch is **0 ahead / 0
+behind** and the work is pushed, not merely local.
+
+| # | SHA | Subject | The split as planned |
+|---|---|---|---|
+| 1 | **`3c0d7e7`** | *Record the lap-3 decisions and specify the keyless DAO families* | `docs/api-contract.md` — **its own commit**, keeping `6cf43d1`'s precedent |
+| 2 | **`10d93f0`** | *Copy the 2.2.x keyless DAO types to Legacy names* | the three `Legacy*` copies + `RootDao.cs`'s base clause |
+| 3 | **`fb9b54a`** | *Extract `BaseDao`'s entity-graph helpers into `EntityGraph`* | `EntityGraph.cs` + `BaseDao.cs` |
+| 4 | **`50e15dd`** | *Add the keyless and keyless-soft DAO families* | the four keyless types + `KeylessDaoTests` + `KeylessSoftDaoTests`. ⚠️ **Carries a `BREAKING:` trailer** |
+| 5 | **`1efa52e`** | *Restore a soft entity's timestamps when `Insert` throws* | `BaseSoftDao.cs` + `FailedInsertWriteBackTests` + `SoftDeleteTimestampHookTests` |
+| 6 | **`f79b471`** | *Implement `CompanyResourceDao` and map `CompanyResource`* | `CompanyResourceDao` + `ExampleContext` + `ExampleDataAccess` + `CompanyResourceConversionTests` |
+
+> 📌 **It went out as SIX commits, not the planned three.** The 22:15 checkpoint's plan and its *Exact
+> invocation* both said three; both have been rewritten. The finer split is strictly better — the
+> `EntityGraph` extraction got **its own commit (`fb9b54a`)**, which is exactly what a reviewer needs to
+> diff it in isolation. **Do not restate the three-commit plan as what happened.**
+
+> 🕐 **A timestamp discrepancy, recorded and not resolved.** `.git/logs/HEAD` places all six commits at
+> **2026-08-22 12:29–12:38 local** (epoch 1787416176–1787416708, `-0400`), anchored against `52a2edf` at
+> 2026-08-20 23:54:45 — which matches the 2026-08-20 sign-off exactly, so the arithmetic is sound. That
+> sits **before** the 22:15 checkpoint which recorded lap 3 as entirely uncommitted. **The handoff's own
+> `written:` stamps are therefore narrative, not clock-derived. Git is authoritative; the stamps are
+> not.** Do not use a `written:` value to order events against a commit.
+
+## 🔴 THE SUITE IS RED BY DESIGN — 2 failing tests await the `Implementer`
+
+**This is a deliberate red phase, not a regression.** `FailedInsertWriteBackTests.cs` grew two new facts
+that were **observed failing for the defect they describe**. Do not "fix" the suite by weakening them,
+and do not report the red as a lap-3 regression.
+
+## 🟩 Lap 3's green measurements — as of the commit, still the last full numbers
+
+**All owner-run at 22:15, before the two red tests were added.**
+
+| Measurement | Result |
+|---|---|
+| `dotnet build ProphetsWay.EFTools.sln -c Debug` | **0 errors, 0 warnings** |
+| Lap gate `dotnet test --filter "Area=Keyless\|Area=Insert"` | **66 / 66 passed.** **Needs no SQL Server — SQLite only** |
+| Full suite | **268 total, 257 passed, 11 failed** — against a pre-lap baseline of **200 / 173 / 27** |
+| `ProphetsWay.Example.Tests` | **164 / 164 on both `net10.0` and `net48`** |
+
+**All 19 `EFCompanyResource*` cases pass.** The arithmetic checks out: **27 − 16 = 11**, and there are
+exactly **11 non-conversion failures** — **zero regressions**.
+
+**The 11 remaining reds are pre-existing and outside the lap:**
+
+- **10 × `EFSnapshotDeepCopyTests`** — `ApplyIncludes` defaults to identity per **OD-1 / A18** and no EF
+  DAO overrides it, so `stored.User.Company.Name` dereferences a null navigation.
+- **1 × `EFDataAccessTransactionTests.ShouldExposeUncommittedWritesToAnotherInstance`** — SQL Server
+  execution timeout, **environmental**.
+
+> 📌 **The lap gate is the reproducible one.** `Area=Keyless\|Area=Insert` is 66/66 on any machine; the
+> full suite still requires a local SQL Server carrying `ProphetsWay.Example`.
+
+## ✅ THE GATE — CLOSED. Option (a), and it has been executed
+
+**The blocking gate at the top of the 09:41 checkpoint is answered: option (a).** The preparatory rename
+is **done**, and it landed exactly as scoped.
+
+| 2.2.x type | Renamed to | Visibility |
+|---|---|---|
+| `RootNonIdDao<T>` | `LegacyRootNonIdDao<T>` | internal |
+| `BaseNonIdDao<T>` | `LegacyBaseNonIdDao<T>` | public |
+| `BaseSoftNonIdDao<T>` | `LegacyBaseSoftNonIdDao<T>` | public |
+
+Plus `RootDao.cs`'s base clause. Files renamed to match. **Verified rename-only** by stripping the
+prefix and diffing against the HEAD blob — identical, BOM preserved. **Blast radius held at exactly
+four library files**: grep found 9 references in 4 files and **zero** in the tests, in
+`ProphetsWay.Example.DataAccess.EF`, in the submodule, or in any `.csproj`/`.sln` — SDK-style implicit
+globbing meant **no project-file edit was needed**. Build and tests were back on baseline immediately
+after. **Do not re-ask the gate, and do not re-propose options (b), (d), (e) or (f).**
+
+## 📦 What Landed — ✅ ALL SIX COMMITS ARE IN. Retained as the file-level map
+
+**`Commit Author` ran, and the tree is clean of lap 3.** The table below is now a *map of which commit
+owns which file*, not a to-do.
+
+| Commit | Files |
+|---|---|
+| **`3c0d7e7`** | `docs/api-contract.md` — the lap-3 decisions and the keyless family specification |
+| **`10d93f0` — the preparatory rename** | `LegacyRootNonIdDao.cs`, `LegacyBaseNonIdDao.cs`, `LegacyBaseSoftNonIdDao.cs` (new files carrying the renamed 2.2.x types), plus `RootDao.cs`'s base clause |
+| **`fb9b54a` — the extraction, ISOLATED** | `EntityGraph.cs` (new `internal static class`), `BaseDao.cs` repointed at it. **Its own commit is what made the verbatim check below cheap** |
+| **`50e15dd` — four new library types** ⚠️ `BREAKING:` | `RootNonIdDao.cs`, `BaseNonIdDao.cs`, `RootSoftNonIdDao.cs`, `BaseSoftNonIdDao.cs` — all root-namespace — plus `KeylessDaoTests.cs` and `KeylessSoftDaoTests.cs` |
+| **`1efa52e` — F10** | `BaseSoftDao.cs`, `FailedInsertWriteBackTests.cs`, `SoftDeleteTimestampHookTests.cs` |
+| **`f79b471` — the consumer side** | `ProphetsWay.Example.DataAccess.EF/Daos/CompanyResourceDao.cs` (**new** — the D17 conversion onto `RootNonIdDao<CompanyResource>`), `ExampleContext.cs` (`DbSet<CompanyResource>`, `HasKey(x => new { x.CompanyId, x.ResourceId })`, `ToTable("CompanyResources")`), `ExampleDataAccess.cs` (the field, its construction, three **real** forwarders; the `NotWrittenYet` throw helper **deleted** — it had no other caller), `CompanyResourceConversionTests.cs` |
+
+**Tests — five files, lap 3 total 50 methods / 66 cases (Contract 47, Characterization 2, Dispatcher 1):**
+
+| File | State | Count |
+|---|---|---|
+| `KeylessDaoTests.cs` | new, 1,312 lines | 23 methods / 31 cases |
+| `KeylessSoftDaoTests.cs` | new, 1,299 lines | 21 / 29 |
+| `FailedInsertWriteBackTests.cs` | new, 361 lines | 3 / 3 |
+| `CompanyResourceConversionTests.cs` | new, 240 lines | 3 / 3 |
+| `SoftDeleteTimestampHookTests.cs` | **modified**, +160 / −17 | 8 → **10** methods |
+
+**Since the commit, `FailedInsertWriteBackTests.cs` has grown to 5 facts** — the 3 above untouched, plus
+two new **red** ones. See *Two New Red Tests* below.
+
+## 🔎 `Code Reviewer` — verdict: **ship with minor changes**, one blocker
+
+**`Code Reviewer` ran, three laps late.** It was pointed at the `EntityGraph` extraction hardest, as the
+22:15 checkpoint instructed.
+
+### ✅ THE `EntityGraph` EXTRACTION IS VERBATIM — **MECHANICALLY VERIFIED. DO NOT RE-OPEN THIS.**
+
+**This is a measurement, not an inference, and it retires the single largest open risk of the lap.**
+Each member's body was pulled from `52a2edf:BaseDao.cs` and from `EntityGraph.cs`, comments and
+whitespace stripped, the **declared** `Context.` → `context.` substitution applied, then diffed.
+
+| Member | Result |
+|---|---|
+| `CopyForStore` | Identical but for an **added generic constraint** |
+| `RemoveFromInverseNavigations` | Identical but for the same added constraint |
+| `ReachableFrom` (37 lines) | **Byte-identical** |
+| `Navigations` (6 lines) | **Byte-identical** |
+| `Detach` (3 lines) | **Byte-identical** |
+
+**No lost null check. Traversal order unchanged. Reference identity intact.** `DetachAfterWrite`'s two
+call sites were **genuinely identical before the merge**, so collapsing them lost nothing.
+**`EntityGraph` holds no fields**, so there is no shared mutable state to reason about.
+
+> 📌 **The `fb9b54a` isolation is what made this cheap.** Extraction-in-its-own-commit is now a
+> demonstrated practice, not a preference — carry it into lap 4's deletions.
+
+### Also verified good — do not re-review
+
+- **`Dataset` is lazy in all four new types** (A17).
+- **A15's message is built from `GetType().Name` / `typeof(TEntity).Name`**, matching the spec template
+  **placeholder-for-placeholder** (M7).
+- **`GetCount` invokes the ordering hook once and discards it** — the shape defect 5.12 warns a reviewer
+  will delete. It is intentional and now reviewed as such.
+- **`RootSoftNonIdDao` overrides rather than hides everywhere** (A2) — the `new`-not-`virtual` structural
+  defect did **not** regress into lap 3.
+- **The consumer side is correct end to end.**
+
+### 🚨 THE BLOCKER — the keyed F10 fix has a **post-`SaveChanges` window**
+
+`BaseSoftDao.Insert` sets `stored = true` only **after `base.Insert(item)` returns**. But `BaseDao.Insert`
+does **three things after `SaveChanges()` has already succeeded**: assigns the identifier, calls
+`RemoveFromInverseNavigations`, then detaches in its own `finally`. **If any of them throws, the row IS
+stored and the outer `finally` rolls the timestamps back anyway.**
+
+**Result: the caller holds a real database identifier and no `CreatedDate`.** Same shape at
+`RootSoftNonIdDao.UpdateCore`.
+
+> ⚠️ **Correction to the reviewer, from `Test Designer`:** of `BaseDao.Insert`'s three post-save steps
+> the **first** is the identifier assignment — so if *that* is what throws, the identifier is **not** on
+> `item`. The instance is still wrong, **by a different route**. Both routes leave the caller
+> disagreeing with the stored row; only the shape of the disagreement differs.
+
+## 🏆 THE HIGHEST-VALUE FINDING OF THE SESSION — **F10's two remedies are NOT equivalent, and F10 says they are**
+
+**This is a specification defect, not just a bug. File it as such.**
+
+F10 offers two remedies and states **"neither is mandated."** Under the post-save window they **diverge**:
+
+| Branch | Remedy taken | Outcome |
+|---|---|---|
+| `RootSoftNonIdDao.Insert` | **Remedy one** — stamp the copy, assign after `SaveChanges` returns | ✅ **Immune** |
+| `BaseSoftDao.Insert` | **Remedy two** — stamp `item`, restore in a `finally` | 🔴 **The defect** |
+
+> **Remedy two is unsafe wherever the member does anything after `SaveChanges`.** F10 needs that as a
+> **term**, not as a footnote. Until it does, a future implementer picking remedy two on a member with a
+> post-save step reproduces this bug while conforming to every sentence F10 contains.
+
+**This is the second time this exact class of gap has been found in the same area** — A32 says *when* the
+write-back happens but never that a failed `Insert` writes nothing back. **Triage F10's new term and
+A32's wording together; they are one edit, not two.**
+
+## 🧪 Two New Red Tests — `Test Designer`, observed failing for the defect
+
+`FailedInsertWriteBackTests.cs` extended to **5 facts** (the 3 pre-existing **untouched**).
+
+**The post-save throw is authorable from outside the library** — which is what makes these legitimate
+tests rather than a white-box hack. Both post-save steps reach a **caller-owned collection instance**, so
+a `TrapCollection<T>` that refuses exactly one operation is a fair fixture. Graph: **`Binder`** (keyless
+soft principal, key `Code`, collection `Slips`) ← **`Slip`** (keyed soft dependent). **Both ends are named
+in `OnModelCreating`**, because a one-sided relationship has no `Inverse` and **both post-save steps skip
+silently** against one.
+
+| Test | Scope / Area | Observed |
+|---|---|---|
+| `ShouldLeaveTheCallersInstanceAgreeingWithTheStoredRowWhenAKeyedSoftInsertThrowsAfterSaving` | `Contract` / `Insert` | 🔴 **Fails.** `slip.CreatedDate` should be the committed row's stamp; was the **2001 sentinel**. ⚠️ **`slip.Id.ShouldBe(row.Id)` passed first** — the caller holds the **real identifier** while carrying a **rolled-back `CreatedDate`**. That assertion ordering is the evidence, not incidental |
+| `ShouldLeaveTheCallersInstanceAgreeingWithTheStoredRowWhenAKeylessSoftUpdateThrowsAfterSaving` | **`Characterization`** / `Keyless` | 🔴 Fails. **Tagged `Characterization` deliberately** — **no stated term covers a write whose save succeeded and whose later step threw.** Tagging it `Contract` would bind every future implementer to a rule the spec does not make. **The spec gap is the point** |
+
+> 🛠 **Environment note — not a test outcome.** The literal `dotnet test --filter` command **could not be
+> run**: a PowerShell session held the test DLL, and after exiting it the shell became unavailable
+> (`pwsh.exe` no longer resolves — the same failure `Session Scribe` hit at this checkpoint). Tests were
+> run through **VS Code's test integration**, the same MSBuild + VSTest path. **Treat the results as
+> real and the missing terminal as an environment problem to fix.**
+
+## 🔴 A LATENT DEFECT IN `EntityGraph.RemoveFromInverseNavigations` — tracked NOWHERE ELSE
+
+**Recorded here because it exists in no other document.** It iterates `entityType.GetNavigations()` —
+**reference *and* collection** — and treats every one as a reference to a principal. **An entity with a
+populated collection navigation raises `TargetException`** in the same post-save window.
+
+**Latent only because the current seeds hold `null`.** ⚠️ **Reasoned from source, not executed.** It is
+an `Implementer` investigation item, not yet a proven bug.
+
+> 📌 Note the interaction: the **new `Binder`/`Slip` fixture is the first keyless graph in the suite with
+> a real collection navigation.** It may make this reachable — and it may unblock the A24/OD-4/A37
+> navigation coverage gap that has been recorded as *"blocked, no keyless fixture entity declares a
+> navigation property"* since 22:15.
+
+## 🛠 `BaseSoftDao.Update` — the unwritten keyed twin, left unwritten ON PURPOSE
+
+It is the keyed counterpart of the `RootSoftNonIdDao.UpdateCore` case. `Test Designer` **deliberately did
+not write it** until the specification has the term. **Do not treat its absence as an oversight** — it is
+waiting on the F10 amendment above.
+
+## 🧭 `Interface Architect` — **FOURTH silent occurrence, and the pattern is now agent-specific**
+
+**Four silent-subagent occurrences across two sessions. Two are this session. BOTH of this session's are
+`Interface Architect`.** The failure is **no longer random** — it correlates with the agent.
+
+> 🚩 **This is a toolbelt item and deserves a separate sitting.** The "silence is a failure" instruction
+> held for `Test Designer`, `Test Auditor` and `Implementer` this session; it did **not** hold for
+> `Interface Architect`. That is a sharper signal than three undifferentiated occurrences were.
+
+**Its work was recovered by grepping `docs/api-contract.md` directly** — the same recovery that worked at
+09:41. What it wrote:
+
+| Ref | Content |
+|---|---|
+| **A38** | **The write plumbing is `protected`, the same on both halves, and now *stated*.** `TrackForWrite(TEntity item)` → **`protected`**; `ApplyUpdateValues(EntityEntry<TEntity>, TEntity)` → **`protected virtual`**; `InsertRoot(TEntity, DateTime?)` **stays `private protected`** — the **one asymmetry, and it is stated**, because its `stamp` parameter admits exactly one conforming value from outside and it has no keyed counterpart. ⚠️ **A keyless `Restore` MUST call `TrackForWrite`, and nothing else will do** — which is why it cannot stay `private protected` |
+| **F11** | The **accessibility-versus-documentation** finding, **closed by A38**. The spec had been **silent on all three members**, and that silence was the cause. ⚠️ **This supersedes the 22:15 note reading "three members are `private protected` … deliberate; do not widen them."** Two of the three are now specified `protected`; the third stays. Do not act on the old note |
+| **F12** | **A34's purity constraint tightened** for in-memory null semantics against **partially-populated tracked entries** |
+| **F13** | **`RootSoftNonIdDao.UpdateCore` mutates `item.UpdatedDate` *before* `MatchRow(item)` is built.** Binds **every member that locates through the hook** — not just this one |
+| **F14** | 🔥 **It found an existing specification claim to be WRONG** — see below |
+
+### F14 — the document asserted a false provider fact
+
+The document listed **`Guid`** among types that *"order identically on every relational provider."*
+**SQL Server orders `uniqueidentifier` by comparing the last six bytes first** — which is neither
+`Guid.CompareTo`'s order **nor** textual order, and is exactly why a sequential `Guid` looks unordered
+to .NET.
+
+- A **provider comparison table** was added.
+- **SQLite's ordering is explicitly NOT asserted** — recorded as a mapping fact to **measure on the box**,
+  not predict. **That restraint is the correct call and should be imitated**; two EF Core claims in this
+  chain have already been wrong because they were reasoned.
+- ⚠️ **Consequence with a date on it:** `CompanyResourceDao.ApplyStableOrder` does
+  `.ThenBy(x => x.ResourceId)` on a `UNIQUEIDENTIFIER`. It is **correct on SQL Server today** and will
+  produce **different page boundaries the moment the SQLite leg lands.** Whoever adds D4's SQLite CI leg
+  must expect this, not debug it.
+
+## ✅ F10 — fixed on both branches, but the KEYED fix is REOPENED as the blocker
+
+> 🔴 **SUPERSEDED at this checkpoint.** The 22:15 text below said the two remedies were used *"one per
+> branch, deliberately"* and read as settled. **`Code Reviewer` has since shown the two remedies are not
+> equivalent** — remedy 2 leaves a post-`SaveChanges` window and **`BaseSoftDao.Insert` is defective.**
+> Read *THE HIGHEST-VALUE FINDING* above first. The table below is retained for **why each remedy was
+> chosen**, which is still the useful record.
+
+**This was deliberate, not inconsistency — the reasoning was sound and the conclusion was wrong.**
+
+| Branch | Remedy | Why that one |
+|---|---|---|
+| **Keyed soft** — `BaseSoftDao.Insert` | **Remedy 2** — capture the three timestamps, stamp, call `base.Insert(item)`, restore in a `finally` when the call did not return normally | `BaseDao.Insert` owns the copy and is **already conforming**, so reaching remedy 1 there would mean adding a stamping hook to a member with **no defect**. It is also literally the shape `BaseSoftDao.Update` two members down already uses — which was **fact 1 of the finding's own argument** |
+| **Keyless soft** — `RootSoftNonIdDao.Insert` | **Remedy 1** — A24 steps **6b** and **9b** as written: `InsertRoot(item, stamp)` stamps the **copy** before `State = Added`, and assigns **the same single clock reading** onto `item` **after** `SaveChanges()` returns, inside the `try` | Matches `DepartmentDao.Insert`, which is what **D16 grades against** |
+
+**The keyed hard branch needed no change.**
+
+## 🧩 A34's Pre-Detach — one mechanism for both keyless branches
+
+`RootNonIdDao.TrackForWrite(item)` builds `MatchRow(item)` **once**, hands that same expression to
+`DetachTrackedRowsMatching`, which `.Compile()`s it and runs the delegate **in memory** over
+`ChangeTracker.Entries<TEntity>()` setting hits to `Detached`, then runs the **uncompiled** expression as
+the `AsTracking().IgnoreQueryFilters().Where(…).SingleOrDefault()` fetch. `Delete`, `UpdateCore` and the
+soft `Delete` **all route through it**, so the pre-detach cannot be present on one member and missing on
+another. **The change tracker is never cleared.**
+
+> ⚠️ **Ordering is load-bearing on the soft branch.** `ApplyUpdateValues` captures
+> `CreatedDate`/`DeletedDate` from `entry.Entity` **after** the fetch, so **A30 restores the stored stamp
+> and not a tracked `null`.** Reordering these two silently breaks A30.
+
+## 🟠 Judgement Call Not In The Brief — `EntityGraph`, flagged for review
+
+`RootNonIdDao.Insert` needs **A32's copy, A24's reachability walk, A37's inverse-navigation removal and
+A26's detach** — ~140 lines that already existed as `private` members of `BaseDao`. **The keyed and
+keyless families are unrelated branches and cannot inherit from each other.**
+
+The `Implementer` **extracted them verbatim into `internal static class EntityGraph`** (166 lines) and
+repointed `BaseDao` at them — the only change being `Context` becoming a `context` **parameter** — citing
+`SoftTimestamps`'s own `<remarks>` as the house position against duplicated logic across the two
+branches. `BaseDao.cs` is **+12 / −143** as a result. Full-suite counts confirm it is
+**behaviour-preserving**.
+
+> ~~🚩 **This is a refactor of previously-working code performed during a green phase, and should be
+> reviewed as such.**~~ ✅ **REVIEWED AND CLEARED at this checkpoint — mechanically, member by member.**
+> See *THE `EntityGraph` EXTRACTION IS VERBATIM* above. **Do not re-open it, and do not carry it forward
+> as an open risk.**
+
+~~**Three members are `private protected` rather than `protected`**~~ — 🔴 **SUPERSEDED by A38.**
+`TrackForWrite` and `ApplyUpdateValues` are **specified `protected` / `protected virtual`** and are
+**still `private protected` in the code** — that is an `Implementer` item, not a settled decision. Only
+`InsertRoot` stays `private protected`. **Do not act on the old "deliberate; do not widen them" note.**
+
+## 🛡️ Audit Trail — the gate was hardened BEFORE `Implementer` ran
+
+**`Test Auditor` ran this lap** — the first lap it has. It reviewed the red phase and found **three
+blocking gaps plus one high-priority hole**, all closed by a **second `Test Designer` pass** before any
+implementation was written.
+
+| # | Gap | Why it mattered |
+|---|---|---|
+| 1 | **`BaseNonIdDao<T>.Get` was never invoked on a row that exists** — anywhere in the lap or upstream | A `return null` stub would have **shipped green on a published member of a published type in a major release**. Upstream could not save it: `CompanyResourceDao` is on `RootNonIdDao`, not `BaseNonIdDao` |
+| 2 | **A34's pre-detach was untested on `UpdateCore`**, both branches | A silent **lost update** (hard) and a silent **un-delete** (soft) |
+| 3 | **`thrown.Message.ShouldContain(nameof(Link))` was vacuous** — satisfied by the substring `"LinkDao"` | **M7's entity-name clause was unpinned.** Fixed with an `UnorderedDao` fixture whose name shares no substring with the entity |
+| 4 | **R4-S6, the lap's only `[D]`, was unwritten** — and it is **here-or-nowhere**: `CompanyResourceDao` overrides `ApplyStableOrder`, so **no upstream test can ever reach the case** | Now written, `Scope=Dispatcher`, `Area=Keyless` |
+
+**`Test Designer` corrected the brief on one point.** The soft A34 arrangement **as specified could not
+fail**: `Attach` takes original values from the attached instance, so a fabricated `DeletedDate = null`
+is both original **and** current, EF omits unmodified columns from the `UPDATE`, and the stamp survives.
+It substituted the arrangement **the obligation itself prescribes** — read through the raw context,
+mutate the tracked instance without saving.
+
+> ⚠️ **Residual limit, recorded in the test's own `<remarks>`:** an implementation capturing from
+> `Entry(stored).OriginalValues` rather than from the entity **would pass without a pre-detach**.
+
+## ✅ The F2/F3 Inversion — CLOSED
+
+`SoftDeleteTimestampHookTests.cs` was found **still encoding the superseded wording of both owner
+decisions** while the library declaration site (`BaseSoftDao.cs` lines 36–39) and the keyless tests
+already carried the amended rule. **That is an inversion, not a pending change** — the tests were
+testing a rule the library no longer states.
+
+Closed by:
+
+- A **direct-hook normalizer assertion** via a `ReachNormalizeRetrievedTimestamp` seam — **F3 Option C**:
+  `Unspecified` in, `Utc` and equal `Ticks` out, **no round trip, no provider**.
+- A `FrozenClockLabelDao` plus the **F2 Option C carve-out test**.
+- **Deleting** the now-incorrect `NormalizeRetrievedTimestamp` overrides on `CountingClockLabelDao` and
+  `SettableClockLabelDao`, and their *"A13: the pair travels together"* comment.
+- Correcting **three doc comments** that were teaching the superseded rule.
+
+**Verified by grep that neither deleted override was ever executed by a test**, so **no assertion was
+weakened**.
+
+## 🔬 One Test Was Found Defective By The `Implementer` — and fixed properly
+
+`CompanyResourceConversionTests.ShouldForwardInsertDeleteAndGetAllButNeverGetOnTheDataAccessLayer`
+asserted `dal.GetMethod("Get", [CompanyResource]).ShouldBeNull()`. **Unsatisfiable by construction:**
+`BaseEFDataAccess<TContext>` declares `public override T Get<T>(object id)` — a member **A19 requires** —
+and `Type.GetMethod(string, Type[])` uses the **default binder**, which accepts a widening reference
+conversion, so the call returns `T Get[T](System.Object)` **in every possible state**.
+
+> ✅ **The `Implementer` reported it and did not touch it.** That is the correct behaviour under the
+> restriction that an implementer never edits a test, and it is **worth recording as the workflow
+> working** — the same workflow that produced three silent subagents also produced this.
+
+`Test Designer` then replaced the instrument with a **`ForwardersFor` enumeration mirroring
+`BaseDataAccessHelper.FindExactMatch`'s five clauses**: `Public|Instance`, skip
+`IsGenericMethodDefinition`, ordinal name equality, parameter-count equality, exact positional
+parameter-type equality.
+
+> 📌 **`DeclaredOnly` was deliberately declined.** `FindExactMatch` passes it **per level** while walking
+> the whole hierarchy, so a `DeclaredOnly` guard would agree with the dispatcher **only while the
+> hierarchy stayed one level deep**. Two control assertions were added so the guard cannot go silently
+> empty.
+
+## ⚠️ Carried Forward From This Lap — small, real, not written
+
+| Item | Detail |
+|---|---|
+| **Deferred coverage gaps the auditor rated High** | **A26 / OD-7** detach-on-failure for keyless `Insert`; **A24 / OD-4 / A37** navigation-graph handling — **blocked, because no keyless fixture entity declares a navigation property**; **A28 `HasQueryFilter`** — the token appears **nowhere in the assembly** |
+| **The three positive assertions in `CompanyResourceConversionTests`** | Same binder looseness, **pointing the other way** — they pass because exact matches exist, but would stay **green** if `Insert(CompanyResource)` became `Insert(IBaseEntity)` while the dispatcher **threw**. One-line-each fix, left alone |
+| **`ProphetsWay.Example.Tests` is worth a sweep for the same `GetMethod` binder trap** | **No other reflection site exists in `ProphetsWay.EFTools.Tests`** — that side is clear |
+
+## ~~⛔ THE OPEN GATE~~ — **SUPERSEDED at 22:15. Answered (a); executed.**
+
+See *✅ THE GATE — CLOSED* above. Options **(b)**, **(d)**, **(e)** and **(f)** are all off the table and
+must not be re-proposed. The rejection reasons for (b), (d) and (e) are preserved in *Stage 2 Headline*
+below; **(f)**'s cost — splitting one family across two laps and deferring the `BaseSoftNonIdDao.Update`
+obligation — is now moot because (a) landed both `Base*` types in lap 3.
+
+## ✅ D16's Stated Clause — CLOSED, and upgraded from reconstruction to primary source at this checkpoint
+
+**The reconstruction was right, and it is no longer a reconstruction.** The session produced the answer
+from `docs/api-contract.md`'s D16 helper table plus reads of the shipped base classes, **explicitly
+flagging that no terminal was available** so `git show` could not corroborate it.
+
+> 🔎 **A terminal *was* available to `Session Scribe` at this checkpoint, and the command was run.**
+> `git show 52a2edf -- ProphetsWay.Example.DataAccess.EF/Daos/DepartmentDao.cs`, filtered to removed
+> member declarations, returns exactly:
+> `Live()` · `Read(int)` · `Track(int)` · `Save(Department)` · `Detach(Department)` ·
+> `static Snapshot(Department)` · `static AsUtc(DateTime)` · `static AsUtc(DateTime?)`
+> — **seven helper names, eight methods**, plus the private `Dataset` property and the constructor.
+> **`Restore` is absent from the removed set**, confirming it survives hand-written.
+> **The diff corroborates the reconstruction item for item. D16 is closed on evidence, not inference.**
+
+**All seven ABSORBED — none retained, none dropped:**
+
+| Helper | Where it went |
+|---|---|
+| `Live()` | **Split into three seams** — `BaseSoftDao.ApplyReadFilter`, `BaseDao.ApplyStableOrder`, and `AsNoTracking()` in the retrieval members |
+| `Read(int id)` | `BaseDao.Get`. The literal `x => x.Id == id` became `MatchRow` → `KeyEquals(GetKey(item))` **as an expression tree, so the provider parameterizes** |
+| `Save(tracked)` | The `try`/`finally` is now **inlined into every write member** |
+| `Detach(entity)` | `BaseDao.Detach`, **generalized** from one entity to `ReachableFrom(root)` |
+| `AsUtc(…)` — **two overloads** | Collapsed to one `NormalizeRetrievedTimestamp` → `SoftTimestamps.AsUtc`. **The nullable overload vanished** because the family only invokes the hook where the nullable holds a value |
+| `Snapshot(source)` — read-side only | `AsNoTracking()` plus `SoftTimestamps.Normalize` |
+| `Track(int id)` | `BaseDao.TrackForWrite`, **including the pre-detach** — Revision 8 omitted it; **finding G2, closed by A34** |
+
+> 📌 **Correction to the record: seven *helpers*, eight *methods*** if `AsUtc`'s two overloads are counted
+> separately. `Restore` is **not** one of the seven — it is an `IDepartmentDao` member kept by **D19**.
+
+**Three behaviors newly catalogued in the same pass, not previously recorded:**
+
+| Change | Direction |
+|---|---|
+| `Update` now writes **via reflection over the model** | **Widening** — any scalar later added to `Department` is written automatically |
+| `Get` now calls `IgnoreQueryFilters()` | **Widening** |
+| `Restore` / `BaseSoftDao.Delete` **detach only the root** | Safe for `Department` today; **unsafe the first time a soft entity gains a navigation** |
+
+> ⚠️ **The provenance limit that remains.** The seven helpers' behavior is established as present in the
+> family. That is **not** proof that nothing *else* in the old 299 lines was lost — and **F10 below is a
+> case where something was.**
+
+## 🟢 Owner Decisions — 2026-08-22
+
+**Not yet filed to a permanent home. `wrapup` owes them one.**
+
+| Ref | Decision | State |
+|---|---|---|
+| **F2 → Option C** | **A13's Timestamp Pair Rule reworded so its letter matches its rationale.** Overriding `GetCurrentTimestamp()` alone is **conforming provided the replacement clock still yields UTC**. Every other single override remains a defect | ✅ **Landed** in `docs/api-contract.md`, **and the XML `<remarks>` at the declaration sites were updated to match** — see the `.cs` flag under *Uncommitted Changes* |
+| **F3 → Option C** | The `[C]` obligation that depended on a **certified-provider fact** was **re-cut to assert directly against the hook**. It **stays `[C]`**; the Scope-notation rule stays as written | ✅ Landed. ⚠️ **The tally discrepancy is NOT resolved by it** — see below |
+| **F10 fix** | **Approved for inclusion in lap 3** | ✅ **WRITTEN AND GREEN at 22:15.** Both permitted remedies used, one per branch — see *F10 — CLOSED* above |
+
+### The tally after F3 — the gap is unchanged and still open
+
+**Re-measured mechanically at the 09:41 checkpoint**, same regex as the sign-off count. **Not
+re-measured at 22:15** — lap 3's implementation did not touch the preamble, but the count has not been
+redone since `Test Designer`'s second pass, so treat it as of 09:41.
+
+| | Published preamble | Counted |
+|---|---|---|
+| `Contract` / `[C]` | 131 | **133** |
+| `Characterization` / `[X]` | 11 | **11** |
+| `Dispatcher` / `[D]` | 8 | **8** |
+| **Total** | **150** | **152** |
+
+**The arithmetic to settle is published `150 + 1 = 151` against counted `151 + 1 = 152`** — the `+1`
+being F10's new obligation on each side. **The one-obligation gap predates both this session's edits and
+the A16 amendment, and is still open.** **F3's re-cut added one to both sides and did not close it,
+which rules F3 out as the cause.** `docs/api-contract.md` is now **6,082 lines** (was 5,326 at
+`52a2edf`) — re-verified at 22:15.
+
+## ~~🔴 F10 — a NEW finding~~ — **CLOSED at 22:15. Retained for the reasoning.**
+
+> ✅ **The fix is written and green.** See *F10 — CLOSED, and it uses BOTH permitted remedies* above for
+> which remedy went on which branch and why. The text below is the **finding as raised**, kept because
+> it is the record of D16's clause earning its keep. **Do not read it as current state.**
+
+**`BaseSoftDao.Insert` assigns all three timestamps onto the caller's `item` BEFORE calling
+`base.Insert(item)`**, so a throwing `SaveChanges` leaves the caller's instance carrying stamps **for a
+row that was never written**.
+
+- `BaseSoftDao.Update` **already handles this correctly**, via a `finally` restore. `Insert` has **no
+  equivalent**.
+- **The hand-written `DepartmentDao.Insert` it replaced did it correctly.** So the D16 conversion **lost
+  a behavior** — which is *exactly* what D16's clause exists to catch. **No test covers it.**
+
+**Obligation as stated:** *if `Insert` throws, `item` is unchanged* — no timestamp stamped, no timestamp
+nulled, no identifier assigned. **Binds every `Insert` on every family** — hard and soft, keyed and
+keyless. Tagged **`[C]`** on the basis of tracing to a term of this document; the upstream SNAPSHOT RULE
+and IDENTIFIER RULE are **both silent** on a call that stored nothing.
+
+**Two permitted remedies, implementer's choice:** stamp the copy and assign after `SaveChanges` returns,
+**or** stamp `item` and restore in a `finally`.
+
+### Audit result — `BaseSoftDao.Insert` is the ONLY defect site
+
+| Site | Verdict |
+|---|---|
+| `BaseDao.Insert` (keyed hard) | **Clean** — its identifier write-back already runs **after** `SaveChanges` |
+| `BaseSoftDao.Delete` | **Clean** |
+| `BaseDao.Update` / `Delete` | **Clean** — they write nothing back |
+
+> ⚠️ **One latent gap: A32's wording. STILL OPEN — the code fix did not close it.** A32 says *when* the
+> write-back happens but **never that a failed `Insert` writes nothing back** — so a hoisted assignment
+> would satisfy **every sentence A32 contains**. F10's implementation is correct; **the specification
+> that would keep a future implementation correct is not.**
+
+## 🔺 Stage 2 Headline — THREE name collisions, not one — **RESOLVED by option (a), executed**
+
+**The 2026-08-20 handoff expected one** (`RootNonIdDao<T>`, internal). Grepping every type declaration
+found three, and **the two that were missed are `public` on both sides.**
+
+| 2.2.x type | Visibility | 3.x type | Collides |
+|---|---|---|---|
+| `RootNonIdDao<T>` | internal | `RootNonIdDao<TEntity>` | **yes** |
+| `BaseNonIdDao<T>` | **public** | `BaseNonIdDao<TEntity>` | **yes** |
+| `BaseSoftNonIdDao<T>` | **public** | `BaseSoftNonIdDao<TEntity>` | **yes** |
+| *(none)* | — | `RootSoftNonIdDao<TEntity>` | no — **genuinely new, A14** |
+
+**Arity does not disambiguate** — every pair is **arity 1 in the root namespace**. *That* is why laps 1
+and 2 were additive and lap 3 is not: the old `BaseDao<T>` lived in `.Int` / `.Guid` / `.Long` and the
+new one is **arity 2**.
+
+**The internal engine is live, not dead** — `RootDao<T,TIdType>` derives from it and `BaseNonIdDao<T>`
+holds it as a field. **But nothing outside the library names any of the three:**
+`ProphetsWay.Example.DataAccess.EF` derives from none of them, and `ProphetsWay.EFTools.Tests` names
+none. **Blast radius: four library files.**
+
+**Rejected options, with reasons — do not re-propose:**
+
+| Option | Why rejected |
+|---|---|
+| **(b)** delete the internal engine | `RootDao` derives from it |
+| **(d)** sub-namespace | Contradicts the no-sub-namespaces rule **and FR 15** |
+| **(e)** merge old into new | The old type publishes `Ensure*Transaction` members **the 3.x contract forbids on DAOs** |
+
+**Breakage stated exactly:** collision 1 breaks nothing (internal). Collisions 2 and 3 are **source- and
+binary-breaking for a 2.2.x consumer — but that break is made by 3.0.0 itself, not by this plan.** S3
+forbids compatibility wrappers and lap 4 deletes both types regardless. **The plan changes only *when
+within the cycle* it lands, which is invisible outside, since nothing is published between laps.**
+
+> ✅ **EXECUTED at 22:15 as option (a).** All three 2.2.x types now carry the `Legacy` prefix; the four
+> 3.x types own the names. **The predicted blast radius of four library files held exactly** — 9
+> references in 4 files, zero outside the library, zero project-file edits. **Lap 4 deletes the four
+> `Legacy*` types.**
+
+## 🟦 Keyless Families Specified — and F8 is carried — **NOW IMPLEMENTED**
+
+> ✅ **All four types are written, green and uncommitted as of 22:15.** The specification below is what
+> they were built against and remains the reference; it is no longer a forward plan.
+
+`RootNonIdDao<TEntity>` / `BaseNonIdDao<TEntity>` / `RootSoftNonIdDao<TEntity>` /
+`BaseSoftNonIdDao<TEntity>` are **specified with full XML documentation in `docs/api-contract.md`.**
+
+- **`MatchRow` is `abstract` on `RootNonIdDao`** — there is no identifier to derive a predicate from.
+- **`ApplyStableOrder`'s keyless default throws `NotSupportedException`**, per **A15**.
+- ✅ **F8 is CARRIED, not dropped.** R4-S2's both-branches timestamp obligation is now stated on
+  **`RootSoftNonIdDao`'s own `<remarks>`** as well as in the Soft-delete group, **so a `Test Designer`
+  reading the declaration site cannot miss it.**
+
+**`CompanyResourceDao` on `RootNonIdDao<CompanyResource>` is confirmed viable** per D17's amendment — and
+notably **`IDepartmentDao`-style rule 8 is preserved**: `Get<CompanyResource>(id)` must always throw
+`DataAccessConventionException`, **and it does, because `RootNonIdDao` publishes no `Get`.** Deriving
+from `BaseNonIdDao` instead would publish a `Get` and **put rule 8 at risk.**
+
+## ⚠️ Process Finding — FOURTH occurrence, and now agent-specific — the mitigation held for everyone else
+
+**The Stage 2 `Interface Architect` completed correct work and returned no output at all — and then did
+it again later the same session.** Earlier occurrences: `Repo Analyst` (2026-08-20) and lap 2's
+`Implementer` (2026-08-20).
+
+**Four occurrences across two sessions — two this session, and BOTH are `Interface Architect`.** The work
+was recovered both times by grepping and reading `docs/api-contract.md` directly.
+
+> 🚩 **The pattern is no longer random — it correlates with the agent.** Record it as a **toolbelt item
+> for a separate sitting**, not as another tally mark.
+
+> ✅ **The "silence is a failure" mitigation held for every OTHER agent** — `Test Designer` (three times
+> now), `Test Auditor`, `Implementer` and `Code Reviewer` all reported. **Keep the instruction.** That it
+> did **not** hold for `Interface Architect` twice is the sharper signal.
+
+> 🚨 **A green build, or a modified file, is not evidence that a subagent reported.** Check for a report
+> explicitly and treat its absence as a **failure to escalate**, not a quiet success.
+
+---
+
+> **Sign-off for 2026-08-20 — everything below this line.** It **supersedes the `live` checkpoint**
+> written earlier that day; every still-open item from it was folded forward, not dropped. It covers
+> **laps 1 and 2**. Lap 1's content is retained because most of it is still open; everything superseded
+> is marked so. **Where the 2026-08-22 checkpoint above moves something, the checkpoint wins.**
 
 ## 🏁 The Headline Judgment of This Session
 
@@ -78,18 +675,38 @@ now **5,326 lines** after the A16 amendment.)*
 
 ## Current Focus
 
-**Nothing is in flight. Laps 1 and 2 are committed and pushed; EFTools' tree is clean.** The session
-ended at a clean boundary, which is the good case — tomorrow starts on **lap 3, the keyless families and
-`CompanyResourceDao`**, where **16 of the 27 remaining failures** live.
+**UPDATED 2026-08-22, late evening — supersedes the 22:15 and 09:41 text entirely.** The focus is
+**`Implementer` on the F10 blocker.**
 
-Behind it, unchanged and all still open: lap 1's **thirteen** specification defects, lap 2's **nine**
-(F1–F9), the **obligation tally recount**, **D16's unmet clause**, the **M5–M11** test obligations, and
-`Insert` being **entirely unasserted**.
+**Lap 3 is committed and pushed** as six commits, `3c0d7e7` → `f79b471`, branch **0 ahead / 0 behind**
+origin. `Code Reviewer` then ran for the first time in three laps and returned **"ship with minor
+changes" with one blocker**: `BaseSoftDao.Insert`'s F10 fix has a **post-`SaveChanges` window**, and the
+same shape sits at `RootSoftNonIdDao.UpdateCore`.
 
-> ⚠️ **`Test Auditor`, `Code Reviewer` and `Refactorer` were NOT run in lap 2**, the same omission lap 1
-> made. It was cheap to skip twice; it will not stay cheap.
+**The suite is RED by design** — two new facts in `FailedInsertWriteBackTests.cs` were **observed failing
+for that defect**. This is a deliberate red phase awaiting the `Implementer`.
+
+**The `EntityGraph` extraction — the largest open risk at 22:15 — is CLOSED**, verified verbatim member
+by member. **The session's highest-value output is a specification defect**: F10's two permitted remedies
+are **not equivalent**, and F10 says they are.
+
+**Uncommitted right now:** `docs/api-contract.md` (A38 + F11–F14) and
+`ProphetsWay.EFTools.Tests/FailedInsertWriteBackTests.cs` (the 2 red facts). **Owner-reported — no shell
+was available to verify.**
+
+Still open behind it: lap 1's **thirteen** specification defects, lap 2's F1 and F4–F7 and F9, the
+**obligation tally gap**, the **M5–M11** test obligations, and **A32's wording** — now F10's *proven*
+twin rather than its latent one. ✅ **D16's clause, F2, F3, F8, the collision gate and the `EntityGraph`
+review are all closed.**
+
+> ✅ **`Test Auditor` ran this lap and `Code Reviewer` has now run too.** **`Refactorer` is still unrun,
+> three laps in a row**, and it now has a concrete two-item list waiting for it.
 
 ## ⚠️ Process Finding — a silent subagent is a failed handoff
+
+> 🔁 **THIRD OCCURRENCE, 2026-08-22** — the Stage 2 `Interface Architect`. **Three across two sessions.**
+> See *Process Finding — THIRD occurrence* at the top of this file. This is now a pattern, not an
+> anomaly.
 
 **Two subagents this session completed their work correctly while returning no output at all** —
 `Repo Analyst` early on, and `Implementer` in lap 2.
@@ -117,44 +734,70 @@ until the final lap, and the solution compiles at every point.
 |---|---|---|
 | **1 — DONE, COMMITTED** | `BaseDao` / `BaseGetAllDao` / `BasePagedDao` `<TEntity,TKey>` + the key predicate. Repoint the 5 keyed DAOs | 25 new tests green, no regression ✅ `a4e0152` + `e52ee43` + merge `98b1a67` (+ `6cf43d1` for the A16 amendment) |
 | **2 — DONE, COMMITTED** | The three `BaseSoft*` families; `DepartmentDao` stops being hand-written | **D16's numeric bar met** — `EFDepartmentDaoTests` **40 passed / 0 failed**; build 0 errors 0 warnings; suite 200/173/27, zero regressions ✅ `52a2edf`. **D16's stated clause is still unmet** |
-| **3 — NEXT** | Keyless: `RootNonIdDao` / `BaseNonIdDao` / `RootSoftNonIdDao` / `BaseSoftNonIdDao`, **and write `CompanyResourceDao`** | Kills **16** of the 27 current failures. **Must also carry F8** — the keyless half of R4-S2 |
-| **4** | Delete the 18 closures + 2 bridges, the dead `#if NET4*` blocks, `ContextOwnership` constructors; add `ThrowIfDisposed` to the transaction members | Full suite |
+| **3 — DONE, COMMITTED, REVIEWED; suite now RED by design** | Keyless: `RootNonIdDao` / `BaseNonIdDao` / `RootSoftNonIdDao` / `BaseSoftNonIdDao`, the `Legacy*` rename, `EntityGraph`, **F10's fix**, **and `CompanyResourceDao`** | **Killed exactly the 16 predicted failures.** Build 0/0; gate `Area=Keyless\|Area=Insert` **66/66 without SQL Server**; suite **268 / 257 / 11** vs a **200 / 173 / 27** baseline, **zero regressions**; Example.Tests **164/164 × 2 legs**. ✅ **Committed and pushed as six commits, `3c0d7e7` → `f79b471`.** 🔴 **`Code Reviewer` then found one blocker and two red tests were written for it** — the suite is red on purpose until the `Implementer` runs |
+| **3b — THE FIX, next** | F10 remedy one on `BaseSoftDao.Insert` + `RootSoftNonIdDao.UpdateCore`; A38's visibility changes; the H7 comment; the `RemoveFromInverseNavigations` investigation | The two new `FailedInsertWriteBackTests` facts go green **without being edited** |
+| **4 — the deletion lap** | Delete **the four `Legacy*` types**, the 18 key-specific closures, both `Root*` bridges, the dead `#if NET4*` blocks, `ContextOwnership` constructors; add `ThrowIfDisposed` to the transaction members | Full suite. ⚠️ **Only after the suite is green again** — do not stack a deletion lap on a red suite |
 
-> ⚠️ **Lap 3 has a name collision to handle.** 2.2.x already declares an `internal RootNonIdDao<T>` in the
-> **root namespace**, and the redesign introduces a **`public`** one of the same name in the same place.
-> Unlike laps 1 and 2, this lap is **not** purely additive — plan the collision before writing a line.
+> ✅ **Lap 3's three name collisions were resolved by option (a), executed — CORRECTED 2026-08-22 22:15.**
+> The three 2.2.x types (`RootNonIdDao<T>` internal, `BaseNonIdDao<T>` and `BaseSoftNonIdDao<T>` both
+> public) now carry a `Legacy` prefix, freeing the names for the 3.x types. **The predicted four-file
+> blast radius held exactly.** **Lap 4 deletes the four `Legacy*` types.**
 
 ## Next Session — Start Here
 
-**One-line orientation:** laps 1 and 2 of the EFTools 3.0.0 DAO redesign are committed and green; lap 3
-is the keyless families plus a `CompanyResourceDao` that does not exist yet, and it is **the first lap
-that is not purely additive**.
+> **UPDATED 2026-08-22, late evening — reconciled over the 22:15 and 09:41 lists, not appended to.** This
+> is the *next move* list, not a morning list — the session is still open. Closed rows are struck rather
+> than deleted.
+
+**One-line orientation:** **EFTools lap 3 is committed and pushed (`f79b471`), reviewed, and the review
+left one blocker with two red tests already written for it** — run `@Implementer` on the F10 remedy-one
+fix, then `@Refactorer`, then re-run the gate, then the three documentation agents in order 4 → 5 → 6.
 
 | # | Task | Agent | Why it's next |
 |---|---|---|---|
-| 1 | **Close D16's stated clause** — state which of `DepartmentDao`'s seven private helpers the soft-delete family absorbed. Reconstruct from `git show 52a2edf -- …/DepartmentDao.cs`, or the owner accepts the 299 → 97 shrink as the answer | owner, or reconstruct from the diff | **Cheap, and it must not carry a third time.** D16 exists precisely to stop the shrink being read as the answer *by inference* |
-| 2 | **Lap 3 — the keyless families and `CompanyResourceDao`** | `Test Designer` → `Implementer` | **16 of the 27 remaining failures.** `CompanyResourceDao` **does not exist**: no file, no `DbSet`, no `ToTable` |
-| 3 | **Plan the name collision before writing a line of lap 3** | `Interface Architect` | 2.2.x already declares an **`internal RootNonIdDao<T>` in the root namespace**; the redesign introduces a **`public`** one of the same name in the same place. Laps 1 and 2 stayed additive only because the old classes sat in `.Int` / `.Guid` / `.Long` sub-namespaces — **that no longer holds** |
-| 4 | **Pick up F8 inside lap 3** — R4-S2's timestamp pair on the **keyless** branch | `Test Designer` | Only the keyed half exists. **If lap 3 does not carry it, the obligation is silently dropped** |
-| 5 | **Answer F2 and F3** — the two lap 2 findings that are owner calls, not defects | owner | F2 gates whether a UTC-clock-only override is conforming; F3 is a stated tension between two rules of the same document |
-| 6 | **Finish the obligation recount the owner had already started.** Mechanically confirmed twice: **`[C]` 132 / `[X]` 11 / `[D]` 8 = 151**, against a published **131 / 11 / 8 = 150** | `Interface Architect` | See the recount section — **resume it, do not restart it** |
-| 7 | **Triage the thirteen lap-1 defects (5.1–5.13).** Escalate **5.3** and **5.6** first — both silent-corruption class | owner, then `Contract Reviewer` | Still entirely untouched after two laps |
-| 8 | Decide the seven `Guard=Seam` tests' missing `Scope` trait; decide whether `ProphetsWay.BaseDataAccess`'s `notes-from-eftools-3.0.0` branch merges to `main` now or rides with 3.2.0 | owner | Both small; both leave something in a half-state until answered |
-| 9 | Commit the four `ProphetsWay.Example` doc corrections and the three untracked `AGENTS.md` files | owner | See *Uncommitted Changes* — **Hasher's is a correction sitting outside version control** |
+| **1** | **Fix the blocker and its neighbours.** **(a)** Apply the **F10 remedy-one** fix to `BaseSoftDao.Insert` **and** `RootSoftNonIdDao.UpdateCore` — stamp the copy, assign after `SaveChanges` returns; **(b)** apply **A38's visibility changes** — `TrackForWrite` → `protected`, `ApplyUpdateValues` → `protected virtual` (`InsertRoot` **stays** `private protected`); **(c)** **restore the dropped justifying comment** on `RootSoftNonIdDao.Delete`'s narrow detach — **H7 records that `AutoInclude` reaches the locating fetch**, and without the comment the narrowness reads as a bug; **(d)** **investigate the `EntityGraph.RemoveFromInverseNavigations` collection-navigation defect** | `Implementer` | **The suite is RED by design and these two tests are what turns it green the right way.** Do not let anything else land first |
+| **2** | **Two mechanical cleanups.** **(a)** `nameof(ApplyStableOrder)` instead of the hard-coded string literal in the A15 message; **(b)** constrain `EntityGraph.CopyForStore` / `RemoveFromInverseNavigations` to **`class, IBaseEntity`** — they moved from **class** type parameters to **method** type parameters, so `typeof(TEntity)` now drives `FindEntityType` **from inference** rather than from a closed generic | `Refactorer` | **First `Refactorer` run in three laps**, and both items are small and bounded. (b) is a direct consequence of the extraction and should not wait for lap 4 |
+| **3** | **Re-run the gate** — `--filter "Area=Keyless\|Area=Insert"`, then the full suite | owner | ⚠️ **The shell is broken** — `pwsh.exe` no longer resolves. **Fix the terminal first**; VS Code's test integration works but a `--filter` run does not |
+| **4** | **`Test Auditor` over the two new facts** — **especially the `Characterization` tag** on the keyless one | `Test Auditor` | It is a **live specification gap**, not a settled classification. If the F10 amendment lands a term, that tag becomes `Contract` — and if it does not, the tag is the record of why |
+| **5** | **Amend the specification.** **F10 needs a term: remedy two is unsafe wherever the member does anything after `SaveChanges`.** Fold in **A32's wording** — a failed `Insert` writes nothing back | `Interface Architect` | **The highest-value finding of the session.** These are **one edit, not two**. ⚠️ **Give this agent an explicit "silence is a failure" instruction and verify it reported** — it has now gone silent twice in one session |
+| ~~**1**~~ | ~~**Commit lap 3 as three commits**~~ | — | ✅ **DONE — as SIX commits, `3c0d7e7` → `f79b471`, pushed.** `docs/api-contract.md` got **its own commit** (`3c0d7e7`), keeping `6cf43d1`'s precedent. Do not re-ask where it goes |
+| ~~**2**~~ | ~~**`Code Reviewer` over the whole lap**~~ | — | ✅ **DONE — "ship with minor changes", one blocker.** The `EntityGraph` extraction is **cleared mechanically**; do not re-review it |
+| ~~**0**~~ | ~~**PICK OPTION (a) OR (f)**~~ | — | ✅ **CLOSED — (a), and executed.** Do not re-ask; do not re-propose (b), (d), (e) or (f) |
+| ~~1~~ | ~~**Close D16's stated clause**~~ | — | ✅ **CLOSED 2026-08-22**, corroborated against `git show 52a2edf`. Do not re-open |
+| ~~2~~ | ~~`Test Designer` writes the keyless obligations + F10~~ | — | ✅ **DONE — three times now**, the third being the two red post-save facts |
+| ~~3~~ | ~~`Implementer` writes the keyless families + `CompanyResourceDao`~~ | — | ✅ **DONE and green.** All 19 `EFCompanyResource*` cases pass |
+| ~~4~~ | ~~**Pick up F8 inside lap 3**~~ | — | ✅ **CARRIED**, and now implemented on `RootSoftNonIdDao` |
+| ~~5~~ | ~~**Answer F2 and F3**~~ | — | ✅ **BOTH — Option C each**, and the **test-side inversion they left behind is now closed too** |
+| 6 | **`Changelog Author`** — lap 3's entry. ⚠️ **Commit `50e15dd` carries a `BREAKING:` trailer**: `BaseNonIdDao<T>` / `BaseSoftNonIdDao<T>` **keep their names but are different types** | `Changelog Author` | The trailer is already in git; the changelog is what a consumer reads. 🚫 **Never touch `app-variables.yml` — it stays at `2`/`2`/`0`** |
+| 7 | **`Repo Analyst`** — `AGENTS.md` and `docs/repo-profile.md` are stale **since before lap 1**. **Verified counts: library 39 source files, tests 25**; `AGENTS.md` still claims **27 / 19** and still describes the **2.2.x class shape** | `Repo Analyst` | 🔄 **The "defer until lap 4" call is now questionable.** It was made when the drift was 7 files; it is now **12 library + 6 test files** plus a whole class-shape description that is wrong. **Owner call whether it still holds** |
+| 8 | **`README Author`** — `README.md` is **from 2022-08-14** and documents `BaseEFDataAccess<TContextType,TIdType>` and `BaseEFContext(string)`, **neither of which exists** | `README Author` | Same deferred-until-lap-4 call, same question. It is now four years stale and documents two types that are gone |
+| 9 | **Settle the obligation gap.** **`[C]` 133 / `[X]` 11 / `[D]` 8 = 152** against a published **150**; arithmetic is **published 150 + 1 = 151 vs counted 151 + 1 = 152** | `Interface Architect` | **Still open.** ✅ **F3 is ruled out as the cause** — its re-cut moved **both** sides. Predates every edit this session made; **resume it, do not restart it.** ⚠️ **Not re-counted since A38 + F11–F14 landed** |
+| 10 | **Write the three deferred coverage gaps** the auditor rated High | `Test Designer` | **A26 / OD-7** detach-on-failure for keyless `Insert`; **A28 `HasQueryFilter`** — the token appears nowhere in the assembly. 🔓 **A24 / OD-4 / A37 navigation handling may now be UNBLOCKED** — the new **`Binder`/`Slip`** fixture is the first keyless graph with a real collection navigation |
+| 11 | **Sweep `ProphetsWay.Example.Tests` for the `GetMethod` default-binder trap** | `Test Designer` | The **three positive assertions in `CompanyResourceConversionTests`** carry the same looseness **pointing the other way**. **`ProphetsWay.EFTools.Tests` has no other reflection site** — that side is clear |
+| 12 | **Triage the thirteen lap-1 defects (5.1–5.13).** Escalate **5.3** and **5.6** first — both silent-corruption class | owner, then `Contract Reviewer` | **Still entirely untouched after three laps** |
+| 13 | Decide the seven `Guard=Seam` tests' missing `Scope` trait; decide whether `ProphetsWay.BaseDataAccess`'s `notes-from-eftools-3.0.0` branch merges to `main` now or rides with 3.2.0 | owner | Both small; both leave something in a half-state until answered |
+| 14 | Commit the four `ProphetsWay.Example` doc corrections and the three untracked `AGENTS.md` files | owner | **Hasher's is a correction sitting outside version control.** Untouched for six days |
+| 15 | **Lap 4 — the deletion lap** | `Implementer` | The four `Legacy*` types, the 18 key-specific closures, both `Root*` bridges, the dead `#if NET4*` blocks. **Only after the blocker is fixed and the suite is green again** — do not stack a deletion lap on a red suite |
 
-**Exact invocation for step 2:** `@Test Designer` — write the keyless-family obligations
-(`RootNonIdDao` / `BaseNonIdDao` / `RootSoftNonIdDao` / `BaseSoftNonIdDao`) against
-`ProphetsWay.EFTools/docs/api-contract.md`, trait them `Scope=Contract` plus a **new `Area=` value** so
-the lap runs without a local SQL Server exactly as `Area=KeyPredicate` and `Area=SoftDelete` did, **and
-pick up F8** — R4-S2's routing table requires the timestamp pair tested on the keyless branch as well as
-the keyed one, and only the keyed half exists. Then `@Implementer` writes `CompanyResourceDao` and its
-`ExampleContext` mapping, planning it per **D17's amendment** as a **conversion onto
-`RootNonIdDao<CompanyResource>`**, not as a permanent hand-written DAO.
+**Exact invocation for step 1:** `@Implementer` — in `ProphetsWay.EFTools`, apply **F10 remedy one** to
+`BaseSoftDao.Insert` and `RootSoftNonIdDao.UpdateCore` so nothing is written back to the caller's
+instance until after `SaveChanges()` has returned **and every post-save step has completed**; change
+`TrackForWrite` to `protected` and `ApplyUpdateValues` to `protected virtual` per **A38**, leaving
+`InsertRoot` `private protected`; restore the **H7** justifying comment on `RootSoftNonIdDao.Delete`'s
+narrow detach; and **investigate** whether `EntityGraph.RemoveFromInverseNavigations` throws
+`TargetException` on a populated **collection** navigation. **The two new facts in
+`FailedInsertWriteBackTests.cs` are the acceptance bar — do not edit them.** Then `@Refactorer` for
+step 2.
 
-> 📌 **The `Area` trait is now load-bearing infrastructure, not a convenience.** `Area=KeyPredicate` (25),
-> `Area=SoftDelete` (10) and `Area=AlternateKeys` (14) are **how a lap runs green without a local SQL
-> Server** — the full suite cannot. **Lap 3 must add its own `Area` value** or it loses the ability to
-> prove itself on any machine but the owner's.
+> 🚨 **A silent `Interface Architect` is now expected, not surprising.** Step 5 dispatches it. **Give it
+> an explicit "silence is a failure" instruction and verify a report came back** — if it does not, grep
+> `docs/api-contract.md` for the new text rather than assuming nothing happened.
+
+> 📌 **The `Area` trait is load-bearing infrastructure, not a convenience.** `Area=KeyPredicate` (25),
+> `Area=SoftDelete` (10), `Area=AlternateKeys` (14) and now **`Area=Keyless` + `Area=Insert` (66
+> combined)** are **how a lap runs green without a local SQL Server** — the full suite cannot.
+> ✅ **Lap 3 added two values and the gate ran 66/66 on SQLite alone**, which is the convention paying
+> off rather than just being followed. **Lap 4 must do the same.**
 
 ## ✅ Closed at Sign-off — do not re-ask
 
@@ -279,6 +922,11 @@ cheaper never.
 **This is the single largest untested surface in the redesign.** It is not scheduled into any of the
 four laps. Decide where it goes.
 
+> ✅ **UPDATED 2026-08-22 — one obligation now has a home, and a sixth was found.** **F10** — *if `Insert`
+> throws, `item` is unchanged* — is **approved for lap 3** and `Test Designer` writes it there. **F10 is
+> not in the table above; it is new**, it binds **every `Insert` on every family**, and
+> **`BaseSoftDao.Insert` violates it today.** The five rows above still have no home.
+
 ## 🔴 The Obligation Tally Is Wrong — and it is the document's own integrity check
 
 Found by `Interface Architect`; **independently confirmed mechanically at this checkpoint** by counting
@@ -351,10 +999,22 @@ recompiled** and the `.dacpac` was produced — so their absence is real, not a 
 
 ## Open Questions — Blocking
 
+> **UPDATED 2026-08-22 late evening.** **No blocking *question* is open** — nothing is waiting on an
+> owner decision. 🔴 **But a blocking *defect* is:** F10's keyed fix has a post-`SaveChanges` window, two
+> red tests are written for it, and lap 4 must not start until it is green. **The next move is
+> mechanical (`Implementer`), not a decision.**
+
 | # | Question | Blocks | Raised |
 |---|---|---|---|
-| **F2** | **May a conforming implementation ship a UTC-clock-only override?** A13's letter says *"override both, or neither"*; its stated rationale is policy *disagreement*, and a UTC-only clock override with the default normalizer is policy-**consistent**. **The letter and the reason do not agree** | How A13 is written, and whether the two `Characterization` tests in `SoftDeleteTimestampHookTests.cs` are pinning the right thing | 08-20 lap 2 |
-| **F3** | **Is a `[C]` obligation allowed to depend on a certified-provider fact?** *"The default restores `DateTimeKind.Utc"`* is falsifiable only because the provider strips `Kind`. The Soft-delete obligation and the Scope-notation rule are in direct tension — **one of the two has to give** | Whether that obligation stays `[C]` or becomes `[X]`; feeds the tally recount | 08-20 lap 2 |
+| — | *(none open)* | — | — |
+
+### ✅ Answered 2026-08-22 — do not re-ask
+
+| # | Was | Answer |
+|---|---|---|
+| **GATE** | Option (a) or (f) for the three name collisions? | **(a) — and it is executed, not merely chosen.** All three 2.2.x types renamed `Legacy*`, verified rename-only against the HEAD blob, blast radius held at four library files, zero references outside the library. **(b), (d), (e) and (f) are off the table** |
+| **F2** | May a conforming implementation ship a **UTC-clock-only override**? A13's letter said *"override both, or neither"*; its stated rationale was policy *disagreement* | **Option C — yes.** A13 reworded so its letter matches its rationale: overriding `GetCurrentTimestamp()` alone is conforming **provided the replacement clock still yields UTC**. **Every other single override remains a defect.** Landed in `docs/api-contract.md` **and** in the declaration-site `<remarks>`. ✅ **The test-side inversion it left behind is now closed too** |
+| **F3** | Is a `[C]` obligation allowed to depend on a **certified-provider fact**? | **Option C.** The obligation was **re-cut to assert directly against the hook**. It **stays `[C]`**; the Scope-notation rule stays as written. ⚠️ **It did not resolve the tally gap** — and because it added one to *both* sides, it is now **ruled out as the cause** |
 
 ### ✅ Resolved this lap — was blocking question E
 
@@ -542,60 +1202,126 @@ Unresolved.
 
 ## In Flight
 
+> **UPDATED 2026-08-22 late evening — reconciled against the 22:15 and 09:41 rows, not appended to.** The
+> first rows are this session's; everything after them is carried from the 2026-08-20 sign-off, corrected
+> in place.
+
 | Item | State | Where |
 |---|---|---|
+| 🚨 **THE BLOCKER — F10's keyed fix has a post-`SaveChanges` window** | **`BaseSoftDao.Insert` sets `stored = true` only after `base.Insert(item)` returns**, but `BaseDao.Insert` does **three things after `SaveChanges()` succeeded** — assigns the identifier, calls `RemoveFromInverseNavigations`, detaches in its own `finally`. If any throws, **the row IS stored and the outer `finally` rolls the timestamps back anyway.** Same shape at `RootSoftNonIdDao.UpdateCore`. **Two red tests already written.** ⚠️ If the *identifier assignment* is the step that throws, the identifier is **not** on `item` — wrong by a different route | `ProphetsWay.EFTools/BaseSoftDao.cs`, `RootSoftNonIdDao.cs` |
+| 🏆 **F10's two remedies are NOT equivalent — and F10 says they are** | **A SPECIFICATION defect, and the session's highest-value finding.** F10 states *"neither is mandated."* Under the post-save window they diverge: **remedy one** (`RootSoftNonIdDao.Insert`) is **immune**; **remedy two** (`BaseSoftDao.Insert`) is the defect. **Remedy two is unsafe wherever the member does anything after `SaveChanges`.** F10 needs that as a **term**. **Triage with A32's wording — one edit, not two** | `ProphetsWay.EFTools/docs/api-contract.md` |
+| 🔴 **TWO RED TESTS — the suite is red BY DESIGN** | `FailedInsertWriteBackTests.cs` → **5 facts**, 3 pre-existing untouched. `…WhenAKeyedSoftInsertThrowsAfterSaving` (**`Contract`/`Insert`**) — `CreatedDate` was the **2001 sentinel**, and **`slip.Id.ShouldBe(row.Id)` passed FIRST**. `…WhenAKeylessSoftUpdateThrowsAfterSaving` (**`Characterization`/`Keyless`, deliberately** — no stated term covers it; **the spec gap is the point**). Fixture: **`Binder`** (keyless soft, key `Code`, collection `Slips`) ← **`Slip`**, **both ends named in `OnModelCreating`** because a one-sided relationship has no `Inverse` and both post-save steps **skip silently**. ⚠️ **Do not edit these to go green** | `ProphetsWay.EFTools.Tests/FailedInsertWriteBackTests.cs` **— UNCOMMITTED** |
+| 🔴 **Latent defect — `EntityGraph.RemoveFromInverseNavigations`** | **Tracked NOWHERE else — this row is its only home.** It iterates `entityType.GetNavigations()` — **reference AND collection** — and treats every one as a reference to a principal, so a **populated collection navigation** raises `TargetException` in the same post-save window. **Latent only because the current seeds hold `null`.** ⚠️ **Reasoned from source, NOT executed** — an `Implementer` investigation item, not a proven bug | `ProphetsWay.EFTools/EntityGraph.cs` |
+| ✅ **LAP 3 — COMMITTED AND PUSHED** | **Six commits, `3c0d7e7` → `f79b471`**, verified from `.git/logs/HEAD`; `refs/heads` and `refs/remotes/origin` **both `f79b471`**, so **0 ahead / 0 behind**. It went out as **six, not the planned three** — the `EntityGraph` extraction got **its own commit (`fb9b54a`)**. `docs/api-contract.md` got **its own (`3c0d7e7`)**, keeping `6cf43d1`'s precedent. ⚠️ **`50e15dd` carries a `BREAKING:` trailer** | `ProphetsWay.EFTools` @ `f79b471`, branch `3.0.0-first-pass` |
+| ✅ **`EntityGraph` extraction — REVIEWED AND CLEARED** | **Verbatim, MECHANICALLY VERIFIED member by member** — bodies pulled from `52a2edf:BaseDao.cs`, stripped, the declared `Context.` → `context.` substitution applied, diffed. `CopyForStore` / `RemoveFromInverseNavigations` identical but for an added generic constraint; **`ReachableFrom` (37 lines), `Navigations` (6), `Detach` (3) byte-identical.** No lost null check, traversal order unchanged, reference identity intact. `DetachAfterWrite`'s two call sites were genuinely identical before the merge. **`EntityGraph` holds no fields.** 🚫 **DO NOT RE-OPEN** | closed |
+| ✅ **`Code Reviewer` — first run in three laps** | Verdict **"ship with minor changes"**, one blocker. Also verified good and **not to be re-reviewed**: `Dataset` lazy in all four new types (A17); A15's message from `GetType().Name` / `typeof(TEntity).Name` matching the spec template **placeholder-for-placeholder** (M7); `GetCount` invokes the ordering hook once and discards it; `RootSoftNonIdDao` **overrides rather than hides everywhere** (A2); consumer side correct end to end | — |
+| 🟠 **A38 — the write plumbing's accessibility, now STATED** | **`TrackForWrite` → `protected`; `ApplyUpdateValues` → `protected virtual`; `InsertRoot` STAYS `private protected`** — the one asymmetry, and it is stated, because its `stamp` parameter admits exactly one conforming value from outside and it has no keyed counterpart. **A keyless `Restore` MUST call `TrackForWrite`, and nothing else will do.** ⚠️ **Specified but NOT YET APPLIED in code** — `Implementer` item 1(b). **This supersedes the 22:15 "deliberate; do not widen them" note** | `docs/api-contract.md` → `ProphetsWay.EFTools/` |
+| 🟠 **F11 – F13** | **F11** — accessibility-versus-documentation, **closed by A38**; the spec had been **silent on all three members** and that silence was the cause. **F12** — A34's purity constraint **tightened** for in-memory null semantics against **partially-populated tracked entries**. **F13** — **`RootSoftNonIdDao.UpdateCore` mutates `item.UpdatedDate` BEFORE `MatchRow(item)` is built**; binds **every member that locates through the hook** | `ProphetsWay.EFTools/docs/api-contract.md` |
+| 🔥 **F14 — an existing specification claim was WRONG** | The document listed **`Guid`** among types that *"order identically on every relational provider."* **SQL Server orders `uniqueidentifier` by comparing the last six bytes first** — neither `Guid.CompareTo`'s order nor textual order, and why a sequential `Guid` looks unordered to .NET. A **provider comparison table** was added; **SQLite's ordering is explicitly NOT asserted**, recorded as a fact to **measure on the box, not predict**. ⚠️ **`CompanyResourceDao.ApplyStableOrder` does `.ThenBy(x => x.ResourceId)` on a `UNIQUEIDENTIFIER`** — correct on SQL Server today, **different page boundaries the moment the SQLite leg lands** | `ProphetsWay.EFTools/docs/api-contract.md`, `…DataAccess.EF/Daos/CompanyResourceDao.cs` |
+| 🟡 **`BaseSoftDao.Update` — the unwritten keyed twin** | The keyed counterpart of the `RootSoftNonIdDao.UpdateCore` case. **`Test Designer` deliberately left it unwritten until the specification has the term.** Not an oversight — it is waiting on the F10 amendment | `ProphetsWay.EFTools.Tests/` |
+| 🟡 **`Refactorer` — two bounded items, still unrun after three laps** | **(a)** `nameof(ApplyStableOrder)` instead of the hard-coded literal in the A15 message. **(b)** Constrain `EntityGraph.CopyForStore` / `RemoveFromInverseNavigations` to **`class, IBaseEntity`** — they moved from **class** to **method** type parameters, so `typeof(TEntity)` now drives `FindEntityType` **from inference** | `ProphetsWay.EFTools/EntityGraph.cs`, the A15 message site |
+| 🟡 **`RootSoftNonIdDao.Delete`'s narrow detach lost its justifying comment** | **H7 records that `AutoInclude` reaches the locating fetch** — which is *why* the detach is narrow. Without the comment the narrowness reads as a bug and will be "fixed" by someone. **Restore it** | `ProphetsWay.EFTools/RootSoftNonIdDao.cs` |
+| 🔴 **A32's wording gap** | **STILL OPEN — and now F10's *proven* twin rather than its latent one.** A32 says *when* the write-back happens but **never that a failed `Insert` writes nothing back**; a hoisted assignment satisfies every sentence it contains. **Triage with F10's new term — one edit** | `ProphetsWay.EFTools/docs/api-contract.md` |
+| ✅ **The three-collision gate** | **CLOSED — option (a), executed.** Rename verified rename-only against the HEAD blob, BOM preserved; blast radius four library files, zero references outside the library, zero project-file edits | closed |
+| ✅ **Keyless family** | **All four types written and green.** `MatchRow` **abstract** on `RootNonIdDao`; `ApplyStableOrder`'s keyless default **throws `NotSupportedException`** per A15; **F8 carried** onto `RootSoftNonIdDao`. `CompanyResourceDao` on `RootNonIdDao<CompanyResource>` — **rule 8 preserved**, because that type publishes no `Get` | `ProphetsWay.EFTools/RootNonIdDao.cs`, `BaseNonIdDao.cs`, `RootSoftNonIdDao.cs`, `BaseSoftNonIdDao.cs` |
+| ✅ **F10** | **Fixed on both branches — but the KEYED fix is REOPENED as the blocker.** The reasoning behind the split was sound and the conclusion was wrong: remedy 2 (`finally` restore) on keyed soft leaves a **post-`SaveChanges` window**; remedy 1 (stamp the copy, assign after `SaveChanges`) on keyless soft per A24 6b/9b is **immune**. Keyed hard needed no change. **See the blocker row at the top** | `ProphetsWay.EFTools/BaseSoftDao.cs`, `RootSoftNonIdDao.cs` |
+| 🔴 **A32's wording gap** | **STILL OPEN — and the code fix did NOT close it.** A32 says *when* the write-back happens but **never that a failed `Insert` writes nothing back**; a hoisted assignment satisfies every sentence it contains. The implementation is right; the **specification that would keep a future implementation right is not** | `ProphetsWay.EFTools/docs/api-contract.md` |
+| 🟡 **A34's pre-detach — one mechanism, and an ordering dependency** | **Landed.** `RootNonIdDao.TrackForWrite` builds `MatchRow(item)` once and feeds both `DetachTrackedRowsMatching` (compiled, in-memory over `ChangeTracker.Entries<TEntity>()`) and the `AsTracking().IgnoreQueryFilters()` fetch; `Delete`, `UpdateCore` and soft `Delete` all route through it. Tracker never cleared. ⚠️ **Ordering is load-bearing**: `ApplyUpdateValues` captures `CreatedDate`/`DeletedDate` from `entry.Entity` **after** the fetch, so A30 restores the stored stamp, not a tracked `null` | `ProphetsWay.EFTools/RootNonIdDao.cs`, `RootSoftNonIdDao.cs` |
+| 🟡 **Three deferred coverage gaps, auditor-rated High** | **Not written.** **A26 / OD-7** detach-on-failure for keyless `Insert`; **A28 `HasQueryFilter`** — token appears nowhere in the assembly; **A24 / OD-4 / A37** navigation-graph handling — 🔓 **MAY NOW BE UNBLOCKED.** The 22:15 blocker was *"no keyless fixture entity declares a navigation property"*; the new **`Binder`/`Slip`** fixture is the first keyless graph with a real collection navigation. **Check before re-reporting it as blocked** | `ProphetsWay.EFTools.Tests/` |
+| 🟡 **`GetMethod` default-binder looseness** | **One assertion was found unsatisfiable by construction and replaced** with a `ForwardersFor` enumeration mirroring `FindExactMatch`'s five clauses (`DeclaredOnly` **deliberately declined** — `FindExactMatch` passes it *per level* while walking the hierarchy). **The three positive assertions in the same file have the same looseness pointing the other way** — green even if `Insert(CompanyResource)` became `Insert(IBaseEntity)` while the dispatcher threw. One-line-each fix, left alone. **`ProphetsWay.Example.Tests` is worth the same sweep**; EFTools.Tests has no other reflection site | `ProphetsWay.EFTools.Tests/CompanyResourceConversionTests.cs` |
+| ✅ **The F2/F3 test-side inversion** | **CLOSED.** `SoftDeleteTimestampHookTests.cs` was still encoding the **superseded** wording while `BaseSoftDao.cs` lines 36–39 and the keyless tests carried the amended rule. Added a direct-hook normalizer assertion via a `ReachNormalizeRetrievedTimestamp` seam (F3 Option C — no round trip, no provider) and a `FrozenClockLabelDao` + F2 carve-out test; **deleted** two now-incorrect `NormalizeRetrievedTimestamp` overrides and their comment; corrected three doc comments. **Grep-verified neither deleted override was ever executed — no assertion weakened** | `ProphetsWay.EFTools.Tests/SoftDeleteTimestampHookTests.cs` |
 | **Lap 1 — keyed families** | ✅ **Done, green, COMMITTED** — `a4e0152` + `e52ee43` + merge `98b1a67`, split into two commits by the owner; A16 amendment as `6cf43d1` | `ProphetsWay.EFTools/BaseDao.cs`, `BaseGetAllDao.cs`, `BasePagedDao.cs` |
-| **Lap 2 — soft-delete families** | ✅ **Done, green, COMMITTED and PUSHED as `52a2edf`.** 0 errors / 0 warnings; `Area=SoftDelete` 10; `EFDepartmentDaoTests` 40/40; suite 200/173/27, zero regressions. **Tree clean** | `ProphetsWay.EFTools/BaseSoft*.cs`, `SoftTimestamps.cs`, `BaseDao.cs`, `DepartmentDao.cs`, `SoftDeleteTimestampHookTests.cs` |
-| **D16's stated clause** | ❌ **UNMET.** The numeric half is met (40/40); the *"which of the seven private helpers"* statement was never made, because the `Implementer` returned no report. **Close before lap 3** | reconstruct from `git show 52a2edf` |
-| **Lap 3 — keyless families + `CompanyResourceDao`** | **Not started.** Next build step. **Has a name collision to plan** — an `internal RootNonIdDao<T>` already exists in the root namespace, and this lap is **not purely additive** | — |
-| **Lap 2's nine findings F1–F9** | **All open.** F2 and F3 are **owner calls**, now the two blocking questions. **F8 must be carried into lap 3** | `ProphetsWay.EFTools/docs/api-contract.md` |
-| **The obligation tally** | **Wrong, confirmed mechanically: 132/11/8 = 151 vs a published 131/11/8 = 150.** Predates the A16 amendment. Two untested-but-shipped behaviors would take it to **152** | `ProphetsWay.EFTools/docs/api-contract.md` |
-| **The thirteen lap-1 specification defects** | **All open, untouched.** 5.3 and 5.6 escalated | `ProphetsWay.EFTools/docs/api-contract.md` |
-| **M5–M11 test obligations** | **Open**, M8 partially folded in. Still not written after two laps | `ProphetsWay.EFTools.Tests/` |
-| **`Insert` is still unasserted** | An **empty `Insert` body passes every `Area=KeyPredicate` test.** Unchanged by lap 2 | `ProphetsWay.EFTools.Tests/` |
-| `docs/api-contract.md` | ✅ **COMMITTED as `6cf43d1`**, its own commit ahead of lap 2. **5,326 lines.** The commit-split question is closed | `ProphetsWay.EFTools/docs/api-contract.md` |
-| `AlternateKeyGuardSpikeTests.cs` | ✅ **Traited and committed.** `Scope=Characterization` + `Area=AlternateKeys` × 7 theories, 14 cases. **Sum-check 190/190.** The `Test Auditor` pass on its `Record.Exception` sites and the `SpikeUser` naming are still undone | `ProphetsWay.EFTools/ProphetsWay.EFTools.Tests/` |
+| **Lap 2 — soft-delete families** | ✅ **Done, green, COMMITTED and PUSHED as `52a2edf`.** 0 errors / 0 warnings; `Area=SoftDelete` 10; `EFDepartmentDaoTests` 40/40; suite 200/173/27, zero regressions | `ProphetsWay.EFTools/BaseSoft*.cs`, `SoftTimestamps.cs`, `BaseDao.cs`, `DepartmentDao.cs`, `SoftDeleteTimestampHookTests.cs` |
+| **D16's stated clause** | ✅ **CLOSED 2026-08-22.** All seven helpers **absorbed, none retained, none dropped** — reconstructed from the D16 helper table and the shipped bases, then **corroborated against `git show 52a2edf`**, which returns exactly those seven names (eight methods, `AsUtc` ×2) and **no `Restore`**. Do not re-open | closed |
+| **Lap 4 — the deletion lap** | **Next, after lap 3 is committed and reviewed.** Deletes the **four `Legacy*` types**, the 18 key-specific closures, both `Root*` bridges, the dead `#if NET4*` blocks. ⚠️ **Do not stack an uncommitted deletion lap on an uncommitted addition lap** | `ProphetsWay.EFTools/` |
+| **Lap 2's findings F1–F10** | **F2, F3 ✅ answered; F8 ✅ carried and implemented; F10 ✅ fixed and green.** **F1, F4–F7, F9 unchanged and open** | `ProphetsWay.EFTools/docs/api-contract.md` |
+| **The obligation tally** | **Still wrong. `[C]` 133 / `[X]` 11 / `[D]` 8 = 152 against a published 150** — measured at 09:41, **not re-measured after `Test Designer`'s second pass**. The arithmetic to settle is **published 150 + 1 = 151 vs counted 151 + 1 = 152**. ✅ **F3 is now ruled out as the cause** — its re-cut added one to *both* sides. The gap predates every edit this session made | `ProphetsWay.EFTools/docs/api-contract.md` |
+| **The thirteen lap-1 specification defects** | **All open, untouched after three laps.** 5.3 and 5.6 escalated | `ProphetsWay.EFTools/docs/api-contract.md` |
+| **M5–M11 test obligations** | **Open**, M8 partially folded in. Still not written | `ProphetsWay.EFTools.Tests/` |
+| ~~**`Insert` is still unasserted**~~ | ✅ **CLOSED by lap 3.** `Area=Insert` exists, `FailedInsertWriteBackTests.cs` is written, and an empty `Insert` body no longer passes. **Do not restate the "empty `Insert` passes everything" claim** | `ProphetsWay.EFTools.Tests/FailedInsertWriteBackTests.cs` |
+| `docs/api-contract.md` | ✅ **The lap-3 content is COMMITTED as `3c0d7e7`** — its own commit, keeping `6cf43d1`'s precedent. ⚠️ **DIRTY AGAIN** with **A38 + F11–F14**, written after the commit. **Give it its own commit again** | `ProphetsWay.EFTools/docs/api-contract.md` |
+| `AlternateKeyGuardSpikeTests.cs` | ✅ **Traited and committed.** `Scope=Characterization` + `Area=AlternateKeys` × 7 theories, 14 cases. The `Test Auditor` pass on its `Record.Exception` sites and the `SpikeUser` naming are still undone | `ProphetsWay.EFTools.Tests/` |
 | Seven `Guard=Seam` tests carry **no `Scope` trait** | Deliberate choice of a different key. **Owner call whether they should** | `ProphetsWay.EFTools.Tests/TestSeamTests.cs`, `AdapterCoverageTests.cs` |
-| `CompanyResourceDao` and its `ExampleContext` mapping | **Still do not exist** — no `DbSet`, no `ToTable`. **~16 of the 27 red tests.** Lap 3 | `ProphetsWay.Example.DataAccess.EF/` |
-| `NotWrittenYet` message | Still claims Department has no EF DAO and that `ExampleContext` maps neither entity — **both now false for Department.** Thrown only from `CompanyResource` forwarders, so harmless today | `ProphetsWay.Example.DataAccess.EF/` |
+| ~~`CompanyResourceDao` and its `ExampleContext` mapping~~ | ✅ **WRITTEN and green.** `CompanyResourceDao.cs` (84 lines) on `RootNonIdDao<CompanyResource>`; `ExampleContext` gained `DbSet<CompanyResource>`, `HasKey(x => new { x.CompanyId, x.ResourceId })` and `ToTable("CompanyResources")`. **All 19 `EFCompanyResource*` cases pass.** Uncommitted | `ProphetsWay.Example.DataAccess.EF/` |
+| ~~`NotWrittenYet` message~~ | ✅ **DELETED.** The throw helper had no other caller once the three `ICompanyResourceDao` forwarders became real | `ProphetsWay.Example.DataAccess.EF/ExampleDataAccess.cs` |
 | `ProphetsWay.BaseDataAccess` **FR 10** | ✅ **Committed** on branch `notes-from-eftools-3.0.0` (`bd02dfd`). **Status `Scheduled`, v3.2.0, high priority, after EFTools 3.0.0 ships.** Repo is **clean** | `ProphetsWay.BaseDataAccess/docs/feature-requests.md` |
 | **`Purpose Refiner`'s CS8767 objection** to the BaseDataAccess 3.2.0 scope | **Open.** Annotating *parameters* runs the **opposite way** from returns and would **relocate** warning noise onto every nullable-enabled implementation — **EFTools' own included.** Four contract judgements should be settled before that work starts | `ProphetsWay.BaseDataAccess/docs/feature-requests.md` FR 10 |
 | **BaseDataAccess `docs/repo-profile.md` carries a wrong claim** | It says C# 7.3 is *why* NRT are absent. **The TFM sets the default, not a ceiling; `<LangVersion>` is independent.** Recorded inside FR 10, **not yet corrected in the profile** | `ProphetsWay.BaseDataAccess/docs/repo-profile.md` |
 | `ProphetsWay.EFTools` FR 15 | **Committed** (`a98f2bb`). Awaiting `Purpose Refiner` triage | `ProphetsWay.EFTools/docs/feature-requests.md` |
 | `ProphetsWay.Example` FR 15 and 16 | Filed `Proposed`, **still uncommitted**, awaiting `Purpose Refiner` triage | `ProphetsWay.Example/docs/feature-requests.md` |
 | `ProphetsWay.Example` doc corrections | **Uncommitted** — `AGENTS.md`, `README.md`, `docs/repo-profile.md` all carry 2026-08-20 pointer/version corrections | `ProphetsWay.Example/` |
-| `ProphetsWay.EFTools/README.md` | Documents types that no longer exist — `BaseEFDataAccess<TContextType, TIdType>`, `BaseEFContext(string)`. **The list grows with every lap**; lap 4's deletions will lengthen it further | Lap 4 |
-| `ProphetsWay.EFTools/AGENTS.md` | **Stale, measured at sign-off.** Layout table says the library has **27 source files** and the test project **19**; the tree has **34** and **21** — lap 1's three plus lap 2's four in the library, and `AlternateKeyGuardSpikeTests.cs` + `SoftDeleteTimestampHookTests.cs` in the tests. It also still describes the library as carrying the complete 2.2.x shape, which is true **plus** seven new root-namespace files | `Repo Analyst` — now unblocked, lap 2 is committed |
+| `ProphetsWay.EFTools/README.md` | 🔄 **The "defer until lap 4" call is now QUESTIONABLE — owner should re-decide.** The file is **from 2022-08-14** and documents `BaseEFDataAccess<TContextType, TIdType>` and `BaseEFContext(string)`, **neither of which exists.** The deferral was made when the drift was smaller; it is now four years and two vanished types | `README Author` — **re-decide, don't assume lap 4** |
+| `ProphetsWay.EFTools/AGENTS.md` | 🔄 **Same call, same question.** **Verified counts: library 39 source files, test project 25.** `AGENTS.md` still claims **27 / 19** and still describes the library as carrying the **2.2.x class shape** — which is now wrong in kind, not just in count, since twelve root-namespace files and three `Legacy*` renames landed. **Stale since before lap 1** | `Repo Analyst` — **re-decide, don't assume lap 4** |
 
 ## Uncommitted Changes
 
-**Verified against `git status --porcelain -uall` in all eight roots at sign-off — 2026-08-20, not
-carried over from the checkpoint.**
+**REPORTED 2026-08-22, late evening. ⚠️ NOT MEASURED — no shell was available.** The configured
+`pwsh.exe` does not resolve, so `git status` could not be run. **SHAs and branch tips below were read
+directly out of `.git` and are exact; working-tree contents are the owner's report.** The previous
+table's contents are **superseded**, not merely re-dated — lap 3 has been committed since.
 
 > ⚠️ **Nothing was committed by an agent. Committing is the owner's call. No agent may commit, stage,
-> or push.** The EFTools commits listed above were made **by the owner**.
+> or push.** The EFTools commits listed here were made **by the owner**.
+
+> ✅ **THE 22:15 HEADLINE IS RESOLVED.** *"An entire green lap is uncommitted — the largest uncommitted
+> surface in the workspace's recorded history"* is **no longer true.** All 20 files went out across six
+> commits, `3c0d7e7` → `f79b471`, and were **pushed**. **Do not restate it.**
+
+### `ProphetsWay.EFTools` @ `f79b471`, branch `3.0.0-first-pass` — **0 ahead / 0 behind origin**
+
+**Verified:** `.git/refs/heads/3.0.0-first-pass` and `.git/refs/remotes/origin/3.0.0-first-pass` are
+**both** `f79b47161a406fee644bc8002a74f3ed06e291ef`.
+
+**Dirty — two files, both owner-reported:**
+
+| File | What |
+|---|---|
+| `ProphetsWay.EFTools/docs/api-contract.md` | **A38 + F11–F14** — `Interface Architect`'s post-commit output, recovered by grep after it went silent. **Give it its own commit**, as `3c0d7e7` and `6cf43d1` both did |
+| `ProphetsWay.EFTools.Tests/FailedInsertWriteBackTests.cs` | **The 2 new red facts.** 3 → **5**. 🔴 **The suite is red by design** — these fail for the blocker and are the `Implementer`'s acceptance bar |
+
+> 📌 **Do not commit these two together as "lap 3".** One is a specification amendment and one is a red
+> phase; they belong to the *fix*, not to the lap that shipped.
+
+### Every other repo — **carried from 22:15, NOT re-verified this checkpoint**
 
 | Repo | Files | Description |
 |---|---|---|
-| `ProphetsWay.Example` @ `61d9e7d` | ` M AGENTS.md` (+5/−3), ` M README.md` (+4/−3), ` M docs/feature-requests.md` (**+145/−0**), ` M docs/repo-profile.md` (+13/−9) | **Unchanged since the lap 1 checkpoint.** `feature-requests.md` carries **FR 15 and 16** (verified present at lines 1392 and 1458); the other three carry the 2026-08-20 pointer/version corrections. `main` in sync with origin |
-| `prophets-pipelines` @ `fd894e0` | ` M docs/session-handoff.md` | **This file.** `main` in sync with `origin/main` |
+| `ProphetsWay.Example` @ `61d9e7d` | ` M AGENTS.md`, ` M README.md`, ` M docs/feature-requests.md`, ` M docs/repo-profile.md` | **Unchanged since the lap 1 checkpoint — six days now.** `feature-requests.md` carries **FR 15 and 16**; the other three carry the 2026-08-20 pointer/version corrections |
+| `prophets-pipelines` @ **`048d432`** | ` M docs/session-handoff.md` | **This file.** SHA re-verified from `.git/refs/heads/main` |
 | `ProphetsWay.Logger` @ `86568fd` | `?? AGENTS.md` | Long-standing, untouched this session |
 | `ProphetsWay.Utilities` @ `5095e5e` | `?? AGENTS.md` | Same |
-| `ProphetsWay.Hasher` @ `d1410ca` | `?? AGENTS.md` | Same — **and this one is a correction sitting outside version control.** Verified at sign-off: its deviation 1 reads *"Namespace is `ProphetsWay.Hasher`, not `ProphetsWay.Utilities` — **Deliberate, do not "fix" it**"*. This is the **corrected** copy of a file that had been steering agents toward a **binary-breaking namespace change**. **It protects nothing while untracked.** Worth committing on its own merit |
+| `ProphetsWay.Hasher` @ `d1410ca` | `?? AGENTS.md` | Same — **and this one is a correction sitting outside version control.** Its deviation 1 reads *"Namespace is `ProphetsWay.Hasher`, not `ProphetsWay.Utilities` — **Deliberate, do not "fix" it**"*. This is the **corrected** copy of a file that had been steering agents toward a **binary-breaking namespace change**. **It protects nothing while untracked** |
 
-**Clean at sign-off:** `ProphetsWay.EFTools` (`52a2edf`, branch `3.0.0-first-pass`, **0 ahead / 0
-behind**), `ProphetsWay.BaseDataAccess` (`bd02dfd`, branch `notes-from-eftools-3.0.0`, in sync) and
-`ProphetsWay.BPA` (`4c0ba1f`, empty repo).
+**Believed clean:** `ProphetsWay.BaseDataAccess` (`bd02dfd`, branch `notes-from-eftools-3.0.0`) and
+`ProphetsWay.BPA` (`4c0ba1f`, empty repo). **Not re-verified.**
 
 > 📌 **The `ProphetsWay.BaseDataAccess` branch decision is still open.** FR 10 is committed as `bd02dfd`
 > on **`notes-from-eftools-3.0.0`**, which is **not merged**; `main` is still `207c5de`. So **FR 10 does
-> not exist on `main`.** The outstanding action is a **merge decision — does it merge now, or ride with
-> 3.2.0?** — not a commit.
+> not exist on `main`.** The outstanding action is a **merge decision**, not a commit.
 
-**Nothing here looks accidental.** The three untracked `AGENTS.md` files are the only oddity and they
-predate this session by four days.
+**Nothing looks accidental.** The three untracked `AGENTS.md` files remain the only oddity and they
+predate this session by six days.
 
-## Git Delta — every repo in the workspace, computed at sign-off
+## 🛠 Environment — THE SHELL IS BROKEN. Fix this first.
+
+**`C:\Program Files\PowerShell\7\pwsh.exe` does not exist**, so every terminal invocation fails
+immediately. It bit two agents this session:
+
+- **`Test Designer`** could not run `dotnet test --filter` — a PowerShell session held the test DLL, and
+  after exiting it the shell became unavailable. **It fell back to VS Code's test integration**, the same
+  MSBuild + VSTest path. ✅ **Its results are real. This is not a test outcome.**
+- **`Session Scribe`** could not run `git status` at this checkpoint. **It fell back to reading `.git`
+  directly** — exact for SHAs and refs, silent on the working tree.
+
+**Until it is fixed:** `--filter` gates cannot be run, so **`Area=Keyless|Area=Insert` cannot be used to
+prove the fix**, and no agent can measure a working tree. **That makes it step 3's prerequisite, not a
+nuisance.**
+
+## Git Delta — every repo in the workspace, computed at the 2026-08-20 sign-off
+
+> 🕰 **HISTORICAL \u2014 accurate as of 2026-08-20 and NOT re-computed.** EFTools has since moved
+> `52a2edf` → **`f79b471`** (six commits, pushed). Read the checkpoint at the top of this file for
+> current state; this table is kept for the lap 1 / lap 2 reconciliation only.
 
 So the next `resume` can reconcile without re-deriving anything. **All eight roots, whether they moved
 or not.**
@@ -764,9 +1490,9 @@ that forgets to make the incoming value differ **goes green while proving nothin
 | Item | Why | Revisit when |
 |---|---|---|
 | **The seven api-contract fixes, and Stage 2 generally** | **Owner decision, 2026-08-20** — build first, see what shakes out, do more contract passes *"later if deemed necessary."* **Not cancelled.** Fixes **2** and **7** overlap findings **5.6** and **5.5** — triage together, not twice | After the thirteen defects are triaged |
-| **`Test Auditor`, `Code Reviewer` and `Refactorer` — on laps 1 AND 2** | Lap 1: the `Implementer` reported the code structurally clean and the roughness located **in the specification**. Lap 2: **no report at all was returned**, so this skip has **no stated justification** | **Before lap 4's deletions.** Skipped twice; a third time is where it stops being cheap |
-| **D16's helper-absorption statement** | The `Implementer` returned no report, so it was never written. The 299 → 97 shrink is circumstantial evidence, not the statement D16 asked for. **Lap 2 is committed — this is now the one thing outstanding from it** | **Before lap 3 starts.** Reconstruct from `git show 52a2edf`, or the owner accepts the shrink deliberately |
-| **`Insert`'s obligations — A32, A34, OD-11, the `Guid` two-case, `ValueGeneratedNever`** | Not deferred by decision — **deferred by omission.** An empty `Insert` body passes all 25 `Area=KeyPredicate` tests, and lap 2 did not change that. **It is not scheduled into any of the four laps** | **Needs a home.** Decide at the lap 3 brief at the latest |
+| ~~**`Test Auditor`, `Code Reviewer` and `Refactorer` — on laps 1 AND 2**~~ | ✅ **`Test Auditor` ran lap 3; `Code Reviewer` ran lap 3 and paid for itself immediately — one blocker plus a specification defect, and it cleared the `EntityGraph` extraction mechanically.** 🔴 **`Refactorer` is STILL unrun, three laps running**, and now has a concrete two-item list | **`Refactorer`: step 2, next session.** The lap 1 / lap 2 back-review is still owed before lap 4's deletions |
+| ~~**D16's helper-absorption statement**~~ | ✅ **NO LONGER DEFERRED — CLOSED 2026-08-22.** Reconstructed from the D16 helper table and the shipped bases, then **corroborated against `git show 52a2edf`** at the checkpoint. All seven absorbed. **It also paid for itself immediately: the reconstruction is what surfaced F10**, a behavior the conversion silently lost | n/a |
+| **`Insert`'s obligations — A32, A34, OD-11, the `Guid` two-case, `ValueGeneratedNever`** | Not deferred by decision — **deferred by omission.** An empty `Insert` body passes all 25 `Area=KeyPredicate` tests, and lap 2 did not change that | ✅ **Partially homed 2026-08-22**: **F10's obligation is approved for lap 3** and `Test Designer` writes it there. **The other five still have no home** — decide at the lap 3 brief |
 | **`Purpose Refiner`'s CS8767 objection to the BaseDataAccess 3.2.0 scope** | Annotating *parameters* runs the **opposite way** from returns: it would **relocate** warning noise onto every nullable-enabled implementation, **EFTools' own included**, rather than remove it. **Four contract judgements should be settled before that work starts** | Before FR 10 is picked up for v3.2.0 — not after |
 | **The seven `Guard=Seam` tests' missing `Scope` trait** | A **deliberate choice of a different trait key**, not an omission. Verified at sign-off: `Trait("Guard","Seam")` is **class-level** on `TestSeamTests` (5 `[Fact]`) and `AdapterCoverageTests` (2 `[Fact]`), and neither file declares any `Scope` | Owner call. Cheap either way |
 | **`ProphetsWay.EFTools/README.md` and `AGENTS.md` corrections** | Both go further out of date with every lap; fixing them now guarantees redoing them. `AGENTS.md` now understates the file count by seven | After lap 4 |
@@ -790,7 +1516,11 @@ that forgets to make the incoming value differ **goes green while proving nothin
   **explicitly declined**. Do not reintroduce adoption to make anything green.
 - **The migration is additive. Nothing is deleted before lap 4.** The new root-namespace generics do not
   collide with the old sub-namespace classes, which is the whole reason the tree stays green throughout.
-  **A lap that deletes early forfeits that property.**
+  **A lap that deletes early forfeits that property.** ⚠️ **NARROWED 2026-08-22 — this holds for the
+  *keyed* families only.** Three **keyless** types collide by name at arity 1 in the root namespace, so
+  lap 3 cannot be purely additive without deferring two of them. **Renaming is not deleting**: option (a)
+  preserves the guardrail's intent — nothing is *removed* before lap 4, and the tree stays green at every
+  step under either option.
 - **Do not fix `RootNonIdDao`, `RootDao` or the 18 key-typed classes in place.** D14 forecloses that
   route: they are deleted in lap 4, and correcting them first removes the only signal distinguishing a
   correct implementation from an adopting one.

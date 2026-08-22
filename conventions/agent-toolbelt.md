@@ -4,7 +4,7 @@
 > building, changing, or debugging agent customizations. Do not add it to `AGENTS.md` — it
 > is administrative context, irrelevant to day-to-day coding sessions.
 
-**Built:** 2026-08-08 · **Revised:** 2026-08-13 · **Owner:** G. Gordon Nasseri (ProphetManX)
+**Built:** 2026-08-08 · **Revised:** 2026-08-22 · **Owner:** G. Gordon Nasseri (ProphetManX)
 **Covers:** 26 custom agents, 2 prompts, and the `AGENTS.md` conventions system across 8 repos.
 
 > **2026-08-12 — `Vanguard` is now the single front door.** One lead covers all project work, from
@@ -40,7 +40,7 @@ cosmetic — the `name:` frontmatter field controls what appears in the UI.
 
 | File | Agent | Tools | Model |
 |---|---|---|---|
-| `proj-a-vanguard.agent.md` | **Vanguard** | read, search, edit (feature-request append only), agent, todo, runTask/runTests/testFailure, GitHub PR tools | Opus 5 |
+| `proj-a-vanguard.agent.md` | **Vanguard** | read, search, edit (feature-request append only), **execute (read-only inspection by charter)**, agent, todo, runTask/runTests/testFailure, GitHub PR tools | Opus 5 |
 | `proj-a-session-scribe.agent.md` | Session Scribe | read, search, edit, execute | Sonnet 4.5 |
 | `proj-a-solution-architect.agent.md` | Solution Architect | read, search, edit | Opus 5 |
 
@@ -242,14 +242,25 @@ the independent validator of whether those tests meaningfully constrain the impl
 Every agent's tool list is the minimum for its job. Orchestrators (`Vanguard`, `TDD Lead`) may edit
 only to append a deduplicated `Proposed` entry to `docs/feature-requests.md`; every authored project
 artifact remains delegated. This narrow exception implements shared capture without making leads builders.
-`Vanguard` also holds no general terminal, only test/task runners and read-only GitHub tools; the
-artifact ledger's `git log` work is delegated to `Session Scribe` rather than widening the lead.
+`Vanguard` now also holds `execute`, restricted by its charter to read-only orchestration evidence:
+`git status` / `diff` / `log` / `show`, branch and revision inspection, directory listings, and file
+hashes. It may not write through the shell, mutate git, install packages, run generators, manage
+services, or touch cloud resources. Builds and tests remain on the dedicated task/test tools.
+
+This restriction is instruction-enforced: VS Code exposes `execute` as one alias, not a read-only
+subset. That broader technical capability is an accepted tradeoff and a reason to keep the allowed
+command classes explicit in the agent itself.
 
 ### Subagents start with empty context
 
 A subagent cannot see the parent conversation. Every agent's Approach section therefore begins with
 "read the repo's `AGENTS.md` first," and orchestrators are instructed to pass forward everything a
 subagent needs. This is why the conventions had to live in files rather than in an agent's head.
+
+`Vanguard` passes a bounded one-shot task packet: objective, absolute repo root, included and excluded
+scope, authoritative paths, quoted owner decisions, unresolved inputs, allowed writes, definition of
+done, and the required final report. A question or progress update is not completion. One report-only
+recovery invocation is allowed; a second malformed return becomes `FAILED` rather than an infinite loop.
 
 ### Descriptions are the discovery surface
 
@@ -273,6 +284,53 @@ with 500 students," never "fast."
 
 Layers are scoped top-down — Core, then DataAccess, then Api/Web/Win. When a lower layer contradicts
 the one above, the agent stops and fixes the higher layer first rather than working around it.
+
+In a delegated run it does not wait for a conversation turn that cannot arrive. It completes every
+supported requirement, records unknowns as Open Questions, and returns `PARTIAL` or `BLOCKED` with
+the downstream agent each decision prevents.
+
+### Conversational specialists also finish as one-shot subagents
+
+**Chosen:** dual invocation modes for `Interface Architect`, `Repo Analyst`, `Solution Architect`,
+`API Designer`, and `Purpose Refiner`.
+**Rejected:** separate conversational and subagent copies of each role, and forcing direct owner
+sessions into one-shot behavior.
+
+Direct invocation remains conversational. Delegated invocation treats Vanguard's task packet and the
+named repository artifacts as the complete available context: no questions, no confirmation pause,
+all unblocked work completed now, and a mandatory final status:
+
+| Status | Meaning |
+| --- | --- |
+| `COMPLETE` | Requested artifact and validation finished |
+| `PARTIAL` | Every unblocked part finished; every omission named |
+| `BLOCKED` | No sound artifact can be written without an owner decision |
+| `NO CHANGE` | Existing artifact satisfies the request after re-verification |
+| `FAILED` | A tool or environment failure prevented completion |
+
+The domain-specific fail-closed behavior matters. `Interface Architect` omits unspecified members;
+`Solution Architect` leaves unknowns as Open Questions; `API Designer` never invents authorization;
+`Repo Analyst` reports exactly which evidence classes it did not inspect; and `Purpose Refiner`
+treats `Cannot tell` as a completed verdict while requiring a quoted owner decision for any request
+status transition.
+
+The existing independent checks remain: `Contract Reviewer` validates Interface Architect and API
+Designer output. No new validator was added for repository profiles, requirements documents, or
+purpose analysis; those still rely on source citations plus Vanguard/owner stage gates. That is a
+known design boundary, not independent verification.
+
+### Vanguard has guarded terminal access
+
+**Chosen:** grant `Vanguard` the `execute` alias for direct, read-only repository and environment
+inspection.
+**Rejected:** keeping it unable to verify simple git evidence itself, and unrestricted shell use for
+builds, edits, package operations, services, or deployment.
+
+The grant improves recovery and synthesis without changing authorship: Vanguard still cannot produce
+project artifacts, mutate git, or bypass leaf agents. Dedicated runTask/runTests tools still own
+validation. Because tool-level read-only enforcement is unavailable for `execute`, the command
+boundary is explicit in Vanguard's Absolute Constraints and should be checked in Chat diagnostics
+after loading.
 
 ### Session continuity is a file, not memory
 
@@ -342,8 +400,9 @@ nothing. On a healthy repo Stage 1 collapses to a single all-clear line — and 
 feature. It also means a neglected repo *self-diagnoses* rather than relying on anyone remembering
 what was never done.
 
-The ledger scan lives in `Session Scribe`, not `Vanguard`, because it needs `git log` and the lead
-holds no general terminal. One `resume` call returns recap, delta, and ledger together.
+The ledger scan remains in `Session Scribe`, not because Vanguard lacks `git log`, but because recap,
+delta reconciliation, and artifact freshness form one continuity responsibility. One `resume` call
+still returns all three; Vanguard's terminal is for direct evidence and recovery, not a competing ledger.
 
 ### Commit and PR prose is a fourth documentation audience
 
@@ -386,13 +445,16 @@ scope / widens the scope / out of scope / cannot tell. Catching a scope violatio
 costs a conversation; catching it after implementation costs a deprecation.
 
 The `cannot tell` verdict is deliberate. A purpose too vague to judge against is itself the finding,
-and the fix is to settle the purpose before writing anything.
+and the fix is to settle the purpose before writing anything. In delegated mode it is a completed
+gate result with the exact decision needed next, never an unanswered conversational prompt.
 
 It also owns the **single-owner triage** side of `docs/feature-requests.md`. Any agent or the owner may
 append a deduplicated `Proposed` entry so findings are not lost, but only Purpose Refiner may change
 status. Entries are never deleted or renumbered because their reasoning and stable numbers are durable
 assets. At every Stage 1 run it re-verifies every entry against current source and reports pending
 candidates for the release; this closes the prior gap where request claims could rot without an owner.
+A delegated packet may carry an owner decision verbatim; Vanguard's own recommendation never counts
+as authorization to change a status.
 
 ### Repo Analyst owns the per-repo AGENTS.md section
 
@@ -402,6 +464,9 @@ section below it had no author. Every subagent reads that file at step 0, so a r
 
 It may write only *below* the `END SHARED BLOCK` marker. Hand-editing the block is silently
 overwritten by the next sync.
+
+Its one-shot report now includes an evidence-coverage matrix. A profile cannot claim `COMPLETE` when
+source, tests, project metadata, examples, or repository documents required by its charter went unread.
 
 ### Four review agents, not one
 
