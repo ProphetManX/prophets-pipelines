@@ -55,6 +55,32 @@ stages:
               artifactName: 'changelog'
               downloadPath: '$(build.artifactstagingdirectory)'
 
+          # first because both are cheap and failable and nothing below is: Beta and Release create and delete GitHub
+          # releases, and the push at the bottom cannot be un-published on any PackageType. Alpha runs no GitHub step
+          # at all, so this is a fail-fast gate for the whole stage rather than a prerequisite of the release steps
+          - ${{ if eq( variables.PostTargetToNuGet, 'yes' )}}:
+            # pinned, not floated: nuget.exe is whatever the hosted image ships, and its version decides whether the
+            # single push below also publishes an adjacent .snupkg, so an image refresh could change what reaches the
+            # feed with no commit anywhere. 6.4.0 is the spec the 2026-08-23T04:45 log resolved unpinned, reporting
+            # file version 6.4.0.123, so this holds today's behaviour rather than changing it
+            # deliberately fatal: a wrong nuget.exe changes publish behaviour quietly, a missing one fails loudly
+            - task: NuGetToolInstaller@1
+              displayName: 'Pin NuGet CLI to 6.4.0'
+              inputs:
+                versionSpec: '6.4.0'
+
+            # ahead of the release below rather than beside the push further down: create-github-release.yml globs
+            # this folder for its assets, and downloading afterwards attached nothing while still reporting success.
+            # it is also what puts any .snupkg beside its .nupkg for the push below, so narrowing this to *.nupkg
+            # would stop symbol publication with no error anywhere
+            - task: DownloadBuildArtifacts@0
+              displayName: 'Download ${{ parameters.PackageType }} Artifact'
+              inputs:
+                buildType: 'current'
+                downloadType: 'single'
+                artifactName: '${{ parameters.PackageType}}'
+                downloadPath: '$(build.artifactstagingdirectory)'
+
           - ${{ if eq( parameters.PackageType, 'Beta') }}:
             - template: '../steps/create-github-release.yml'
               parameters: 
@@ -82,47 +108,20 @@ stages:
                 VersionNumber: ${{ variables.SemanticVersion }}
                 PostTargetToNuGet: ${{ variables.PostTargetToNuGet }}
 
+          # deliberately a second guard rather than a merge with the one above: a NuGet push cannot be un-published,
+          # so it has to stay below the GitHub release steps that sit between the two blocks. Merging them would
+          # publish before those steps can fail, stranding a version no re-run can replace
           - ${{ if eq( variables.PostTargetToNuGet, 'yes' )}}:
-            - task: DownloadBuildArtifacts@0
-              displayName: Download Artifact
-              inputs:
-                buildType: 'current'
-                downloadType: 'single'
-                artifactName: '${{ parameters.PackageType}}'
-                downloadPath: '$(build.artifactstagingdirectory)'
-                
-            # only a project setting IncludeSymbols produces a .snupkg, so detect one rather than assume it
-            # ordered ahead of the package push and non-fatal: detection must never fail a release it cannot un-publish
-            - task: PowerShell@2
-              displayName: 'Detect ${{ parameters.PackageType}} Symbol Package'
-              continueOnError: true
-              inputs:
-                targetType: 'inline'
-                script: |
-                  $dir = '$(build.artifactstagingdirectory)/${{ parameters.PackageType}}'
-                  # @() so .Count is meaningful for 0, 1, and n
-                  $symbols = @(Get-ChildItem -Path $dir -Filter '*.snupkg' -File -ErrorAction SilentlyContinue)
-                  Write-Host "Found $($symbols.Count) symbol package(s) in $dir"
-                  $found = if($symbols.Count -gt 0){ 'true' } else { 'false' }
-                  Write-Host "##vso[task.setvariable variable=HasSymbolPackage]$found"
-
+            # one push, symbols included: on 6.4.0 a single push of the .nupkg also pushes the .snupkg beside it,
+            # measured not inferred - the 2026-08-23 Push NuGet Alpha Package log shows an unprompted PUT to
+            # /symbolpackage/ returning Created. The pin and the co-located download above keep that true
+            # unguarded, accepted: the symbol half rides inside this fatal push, so a feed with no symbol endpoint
+            # fails it with the .nupkg already public - strands the version. Do not add continueOnError
             - task: NuGetCommand@2
               displayName: 'Push NuGet ${{ parameters.PackageType}} Package'
               inputs:
                 command: 'push'
                 packagesToPush: '$(build.artifactstagingdirectory)/${{ parameters.PackageType}}/*.nupkg'
-                nuGetFeedType: 'external'
-                publishFeedCredentials: ${{ variables.NuGetFeedCredentialName }}
-
-            # kept off the package push and non-fatal: nuget.exe may already have pushed this .snupkg alongside
-            # the .nupkg, and a feed with no symbol endpoint must not take the release down with it
-            - task: NuGetCommand@2
-              displayName: 'Push NuGet ${{ parameters.PackageType}} Symbol Package'
-              condition: and( succeeded(), eq( variables['HasSymbolPackage'], 'true' ))
-              continueOnError: true
-              inputs:
-                command: 'push'
-                packagesToPush: '$(build.artifactstagingdirectory)/${{ parameters.PackageType}}/*.snupkg'
                 nuGetFeedType: 'external'
                 publishFeedCredentials: ${{ variables.NuGetFeedCredentialName }}
 
