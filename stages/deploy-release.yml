@@ -91,11 +91,38 @@ stages:
                 artifactName: '${{ parameters.PackageType}}'
                 downloadPath: '$(build.artifactstagingdirectory)'
                 
+            # only a project setting IncludeSymbols produces a .snupkg, so detect one rather than assume it
+            # ordered ahead of the package push and non-fatal: detection must never fail a release it cannot un-publish
+            - task: PowerShell@2
+              displayName: 'Detect ${{ parameters.PackageType}} Symbol Package'
+              continueOnError: true
+              inputs:
+                targetType: 'inline'
+                script: |
+                  $dir = '$(build.artifactstagingdirectory)/${{ parameters.PackageType}}'
+                  # @() so .Count is meaningful for 0, 1, and n
+                  $symbols = @(Get-ChildItem -Path $dir -Filter '*.snupkg' -File -ErrorAction SilentlyContinue)
+                  Write-Host "Found $($symbols.Count) symbol package(s) in $dir"
+                  $found = if($symbols.Count -gt 0){ 'true' } else { 'false' }
+                  Write-Host "##vso[task.setvariable variable=HasSymbolPackage]$found"
+
             - task: NuGetCommand@2
               displayName: 'Push NuGet ${{ parameters.PackageType}} Package'
               inputs:
                 command: 'push'
                 packagesToPush: '$(build.artifactstagingdirectory)/${{ parameters.PackageType}}/*.nupkg'
+                nuGetFeedType: 'external'
+                publishFeedCredentials: ${{ variables.NuGetFeedCredentialName }}
+
+            # kept off the package push and non-fatal: nuget.exe may already have pushed this .snupkg alongside
+            # the .nupkg, and a feed with no symbol endpoint must not take the release down with it
+            - task: NuGetCommand@2
+              displayName: 'Push NuGet ${{ parameters.PackageType}} Symbol Package'
+              condition: and( succeeded(), eq( variables['HasSymbolPackage'], 'true' ))
+              continueOnError: true
+              inputs:
+                command: 'push'
+                packagesToPush: '$(build.artifactstagingdirectory)/${{ parameters.PackageType}}/*.snupkg'
                 nuGetFeedType: 'external'
                 publishFeedCredentials: ${{ variables.NuGetFeedCredentialName }}
 
