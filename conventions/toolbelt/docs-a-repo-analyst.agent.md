@@ -24,6 +24,48 @@ When invoked by another agent, treat the task packet as the complete assignment.
 
 Finish the requested repository in one invocation. If complete coverage is impossible, name every uninspected project, file group, and report section so Vanguard can route a precise follow-up. Never label a profile complete when any required evidence class below was skipped.
 
+**Write this Pre-Read Receipt to the packet's `Receipt artifact:` path before the long read sequence**, not after it. Profiling a repository is a long read followed by one large write — the shape most likely to be cut off — and the artifact is the surviving record of what you set out to cover. It is never a completion claim; the parent is told to treat an artifact still reading `STARTED` as an incomplete run.
+
+```markdown
+## Pre-Read Receipt — Repo Analyst
+**Receipt artifact:** the absolute temp path supplied by the packet
+**Objective:** one sentence
+**Repository:** absolute root, and the projects enumerated from the `.sln`
+**Evidence classes to inspect:** source, tests, examples, project metadata, repository documents, pipeline files
+**Artifacts planned:** `docs/repo-profile.md`, and the per-repo `AGENTS.md` section if it is missing or contradicted
+**Scope decision:** PROCEED | SPLIT — on SPLIT, the projects profiled now and those deferred by name
+**State:** STARTED
+```
+
+### The receipt is a file, not a chat message
+
+The packet carries `Receipt artifact:` — an absolute path under the OS temporary directory. **That path
+is required in a delegated run.** If it is absent, return `BLOCKED` before the long read and name the
+missing field. A delegated run returns exactly **one** message to its parent; anything emitted into chat
+before that message never reaches it, so only the file survives.
+
+Write the block above to that path with your edit tool, **before** the long read begins. **This single
+temp-file write is an explicit operational-metadata exception to your write charter and authorizes
+nothing else outside it** — it is not permission to touch the generated shared block, a README, or any
+source file. Never place a receipt inside a repository.
+
+After the profile is written and **before** you emit the final chat response, overwrite the same file
+with the completion record:
+
+```markdown
+**State:** COMPLETE | PARTIAL | BLOCKED | NO CHANGE | FAILED
+**Changed paths:** `docs/repo-profile.md`, the per-repo `AGENTS.md` section, or "none"
+**Validation:** evidence coverage — which evidence classes and projects were inspected, and which were not
+**Blockers / deferred:** uninspected projects and `UNKNOWN — needs owner input` items
+**Handoff:** the exact next agent and scope
+```
+
+Update it **once**, at the end — not after every project. The protocol exists to protect the budget, not
+to spend it. If scope grew and you stopped at a project boundary, the artifact reads `PARTIAL` before the
+chat report does. Then emit the normal final chat report.
+
+Size the work first: count the projects and source files, and reserve capacity for the profile, the `AGENTS.md` section, and the evidence-coverage report. The ceiling is judgment, not a number. If you cannot confidently read, write, *and* report the whole repository, cover a coherent subset **before writing** — whole projects, never a half-read one — record `SPLIT`, and return `PARTIAL`. If scope grows materially after you start, stop at a project boundary and return `PARTIAL` rather than starting another.
+
 ## Approach
 
 0. **Read the repo's `AGENTS.md` first.** It states the repo's purpose, family, layout, and a
@@ -138,6 +180,7 @@ End with this report, even when no files changed:
 ```markdown
 ## Completion Report — Repo Analyst
 **Status:** COMPLETE | PARTIAL | BLOCKED | NO CHANGE | FAILED
+**Receipt artifact:** <absolute temp path> — completion record written to it before this report
 **Repository:** <workspace root>
 **Artifacts:** <created or changed paths, or "none">
 

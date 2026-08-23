@@ -222,9 +222,11 @@ whatever it happened to produce. Even split across two agents, an implementer wi
 `*Tests.cs` will "fix" a failing test rather than the code, because that's the shortest path to green.
 
 **Enforcement is by tool restriction and explicit prohibition, not by polite instruction.** When
-the Implementer believes a test is wrong it must stop and escalate to the human with: which test,
-what it asserts, what it believes is correct. The TDD Lead then routes a correction back through
-the Test Designer. The Implementer never fixes a test itself.
+the Implementer believes a test is wrong in a **direct** run it must stop and escalate to the human
+with: which test, what it asserts, what it believes is correct. In a **delegated** run there is no
+turn to wait for, so it stops at the last green boundary and returns `BLOCKED` or `PARTIAL` carrying
+the same three facts. Either way the lead routes a correction back through the Test Designer, and the
+Implementer never fixes a test itself.
 
 *If an agent ever edits a test to make it pass, the workflow has failed — report it rather than
 accepting the green build.*
@@ -259,8 +261,189 @@ subagent needs. This is why the conventions had to live in files rather than in 
 
 `Vanguard` passes a bounded one-shot task packet: objective, absolute repo root, included and excluded
 scope, authoritative paths, quoted owner decisions, unresolved inputs, allowed writes, definition of
-done, and the required final report. A question or progress update is not completion. One report-only
+done, a **`Receipt artifact:` path plus the required receipt and receipt-update instructions**, and the
+required final report. A question, progress update, or receipt is not completion. One report-only
 recovery invocation is allowed; a second malformed return becomes `FAILED` rather than an infinite loop.
+`TDD Lead` now passes the same packet fields.
+
+### A long run can outlive its own report
+
+The final report is the only thing a parent sees, and it is written **last** — after every edit, build,
+and test the run performed. That ordering is the flaw: on a heavy multi-file run the report is the
+first casualty of an exhausted output or context budget, and the parent then cannot distinguish a
+finished run from an abandoned one.
+
+Every delegated agent therefore writes a **receipt** before its first edit — or, for a read-only
+reviewer, before its long read sequence — carrying the objective, task count, candidate files, intended
+validation, rationale, and `Scope decision: PROCEED | SPLIT`. The receipt is a survivable account of
+*intent*, never of completion, and `Vanguard` is instructed never to accept one as a final report.
+
+**The receipt is a file, not a chat message — corrected 2026-08-22.** The original design had the leaf
+*emit* the receipt into chat before working. That does not work, and the correction is the whole reason
+this section changed:
+
+> **`runSubagent` returns exactly one final message.** Anything a leaf writes into chat before that
+> message is discarded. Measured on 2026-08-22: both `Interface Architect` and `Contract Reviewer`
+> reported their receipt as "issued above", and the parent received no separate receipt at all.
+
+An early chat message therefore cannot survive a missing final report — which was the single thing the
+receipt existed to do. The mechanism was prose describing a channel that does not exist.
+
+The replacement is a **durable receipt artifact**. `Vanguard` (and `TDD Lead`) composes one unused
+absolute path per invocation under the OS temporary directory and passes it in the packet as
+`Receipt artifact:`. The leaf writes that file with its own edit tool before its first production edit
+or long read, ending it `State: STARTED`; after validation and before its final chat response it
+overwrites the same file with a compact completion record — final status, changed paths or findings,
+validation result, blockers and deferred tasks, and the exact handoff. The parent then **opens the file**
+after every invocation and compares it with the response. A `STARTED` artifact is an incomplete run
+whose planned scope is reported verbatim; a final state with no chat response is recovery input for the
+existing single recovery invocation; changed files with no artifact at all is a named protocol violation.
+
+Four sub-decisions are worth recording because each had a plausible alternative:
+
+| Decision | Rejected alternative | Why |
+|---|---|---|
+| **OS temp directory** | A repo-local `.receipts/` folder | A recovery mechanism is not a project artifact. Repo-local files mean `.gitignore` churn, accidental commits, and reviewer noise in every repo, for a file whose entire useful life is one session. The tradeoff taken knowingly: temp files are **not** version-controlled and are left for normal OS cleanup, so there is no history — once the directory is cleaned the record is gone. Anything worth keeping goes to the handoff or a repo document by the normal route. |
+| **One file per invocation, unique name** | One rolling file per agent | Two invocations of the same leaf in one session would overwrite each other's evidence, which is exactly the case where recovery matters most. |
+| **Two writes — `STARTED`, then the completion record** | Update after every task | Per-task updates spend the very budget the ceiling exists to protect. Two writes bracket the run; more than that reintroduces the problem. |
+| **Parent composes the path, leaf creates the file** | Leaf invents its own path | The parent must know where to look. Composing a path is non-mutating, so it stays inside `Vanguard`'s read-only terminal boundary; creating the file is the leaf's one write. Neither parent hardcodes a user profile path — the temp directory is resolved at runtime. |
+
+Writing that one temp file is an **explicit operational-metadata exception** to each leaf's write
+charter, stated as such in all 23, and it authorizes nothing else: `Implementer` and `Refactorer`
+still cannot touch a test, the reviewers are still read-only apart from feature-request capture,
+`README Author` still cannot touch a `.cs` file, `Pipeline Engineer` still writes no Markdown,
+`Pipeline Auditor` still edits no YAML, and `Azure Infrastructure Engineer` still cannot run a mutating
+Azure command.
+
+Paired with it is a **scope ceiling**, deliberately judgment-based rather than a task count. Before
+editing, a leaf enumerates its independently verifiable tasks and reserves capacity for validation and
+the report — those come out of the same budget as the edits. If it cannot confidently finish, validate,
+and report the whole packet, it picks a coherent subset first, declares `SPLIT`, completes that subset,
+and returns `PARTIAL`. If scope grows materially mid-run it stops at the next validated boundary and
+writes `PARTIAL` to the artifact *before* the chat report. A smaller verified result beats a larger
+unverified one, and `Vanguard` accepts a declared `SPLIT` and routes the remainder — as a fresh packet
+with a **new** receipt path — rather than pushing the leaf through its own ceiling.
+
+`TDD Lead` carries the same packet fields and the same post-run artifact read. It had no delegation
+contract section at all before this; without one the fallback orchestrator would have invoked leaves
+that now demand a `Receipt artifact:` path and got an immediate `BLOCKED` from every one of them. Its
+allowlist is 16 of `Vanguard`'s 23, so both parents now name their own count explicitly rather than
+gesturing at "every leaf" — a count in the parent is checkable against the allowlist in its frontmatter,
+and that check is what caught the eight-agent gap described next.
+
+### Delegation is not approval — four leaves hold gates a parent cannot satisfy
+
+**Added 2026-08-22 with the eight-agent extension.** `Modernizer` in `modernize` mode,
+`Project Scaffolder`, `Pipeline Engineer` on a variable-contract change, and
+`Azure Infrastructure Engineer` all require human approval before acting. Delegation removes the turn in
+which that approval could be given, and the tempting reading — that a task packet *is* the approval —
+would have quietly deleted four safety gates in the name of one-shot readiness.
+
+The resolution is that delegation **narrows** what these agents may do rather than unlocking it. Each
+applies only what the packet **quotes as a settled owner decision**, withholds everything else by name,
+and returns `PARTIAL` with the decision required. Both parents are told never to write an approval into
+a packet the owner did not give them, and never to re-invoke a leaf with the approval supplied by the
+parent — the same rule that already governs a declared `SPLIT`.
+
+`Azure Infrastructure Engineer` takes the strongest form: its charter says "explicit approval **in the
+current conversation**", and a delegated run has no such conversation, so **no mutating Azure command
+runs in a delegated run at all**. It authors, builds, lints, previews with `what-if`, and returns
+`PARTIAL` naming the exact command the human must run. Three statements are now explicit in that agent
+because each is a plausible misreading: a packet is not approval, a receipt path is not approval, and
+writing the receipt is not approval. `Azure Deployment Reviewer` keeps the matching rule it already had
+— a `Ready` verdict is not deployment permission.
+
+### Toolbelt Keeper reproduced the silent run — and had no receipt to recover from
+
+**Measured 2026-08-22, and the most direct evidence in this document.** The `Toolbelt Keeper` run that
+added the durable receipt protocol to eighteen files **returned no final chat output at all**. One
+report-only recovery invocation — the single retry the protocol allows — returned `COMPLETE`, and that
+recovery is what discovered that **eight `Vanguard`-allowlisted leaves had been missed** by the update:
+`Modernizer`, `Project Scaffolder`, `Threat Modeler`, `Security Reviewer`, `Pipeline Engineer`,
+`Pipeline Auditor`, `Azure Infrastructure Engineer`, and `Azure Deployment Reviewer`.
+
+Three things follow, and they should be read separately:
+
+- **The failure mode is not confined to project leaves.** A toolbelt update is the same profile the
+  receipt was designed for — many files, three locations, a hashing sweep, and one large report written
+  last. The agent that maintains the mechanism was subject to it.
+- **Report recovery works.** The one-recovery rule was exercised for real rather than in a fixture, and
+  it returned a usable final status. That is a second, independent datapoint for the recovery path.
+- **Durable-receipt recovery was *not* exercised, and must not be claimed.** That run had **no artifact
+  at all**, because `Toolbelt Keeper` did not yet implement one — the recovery worked from the live
+  files alone. These are two different mechanisms: recovering a **missing chat report** is proven twice
+  over; recovering **from the durable artifact** is still unproven, because no failed run has yet left
+  one behind. Do not let the first stand in for the second.
+
+`Toolbelt Keeper` now carries the protocol itself. Its **direct and manual behavior is unchanged** — the
+owner's normal session is untouched. Delegated, it requires a parent-supplied absolute OS-temp path,
+writes `STARTED` before its first edit or a broad read of the prompts folder, finalizes the artifact only
+after the full live/mirror/docs validation, and returns one normalized status. Two details are specific
+to it: its completion record carries **hash counts** — files compared, matching, differing, present in
+only one location — because a mirror asserted to be in sync without a hash sweep is exactly the drift it
+exists to catch; and its `SPLIT` boundary is a **fully-synced agent, never a file**, because its first
+constraint forbids finishing with only some of the three locations updated. A scope ceiling may not
+soften that constraint, so the two are reconciled by choosing where the split may fall.
+
+`Vanguard` is forbidden from invoking `Toolbelt Keeper`, so this is the one receipt-carrying agent
+reached from outside the project workflow — by the owner, or by a parent outside it.
+
+### What the heavy stress tests actually measured
+
+**2026-08-22.** Three heavy replays in an isolated `ProphetsWay.EFTools` clone. Read these as three
+separate properties, because they did not all pass:
+
+| Run | Load | Result |
+|---|---|---|
+| `Implementer` | Four tasks, six production files, a 5,575-line spec, two tests over 1,000 lines | Returned `COMPLETE`. Independent checks: build 0 warnings / 0 errors, lap gate 68/68, full suite 270 / 259 / 11, and the preloaded test hash unchanged — it did not edit a test |
+| `Interface Architect` | Four tasks, seven files, the same 5,575-line spec | Returned `COMPLETE`. Both `netstandard2.0` and `net10.0` built; every file diagnostic-clean |
+| `Contract Reviewer` | Seven-file review of that output | Completed the long read and returned a full evidence report |
+
+**What passed:** final reporting survived one realistic heavy run in all three agents, and
+`Implementer`'s charter held under load. That is the first evidence that the report is not automatically
+the first casualty on a heavy run.
+
+**What did not:** `Contract Reviewer` found multiple untraced inventions in the `Interface Architect`
+output — `HasMore == false` for a take of zero, a batch-relative `RowIndex`, a constructor validation
+precedence, and a coupling between session state and writes. None were stated by the supplied contract.
+So `COMPLETE` overstated contract fidelity: the *reporting* was sound and the *content* was not. That is
+a different failure from the silent run, and it is why Objective B exists rather than being folded into
+the receipt work.
+
+**What was not measured at all:** the receipt. In all three runs the receipt existed only in chat and
+the parent never saw it, so none of these runs verifies receipt creation, ordering, or content. The
+separation matters — "the report survived" is not "the protocol worked."
+
+The `Interface Architect` fixture was a **disposable stress fixture in a throwaway clone**, not product
+work. Nothing from it is a proposal for any repository.
+
+### Interface Architect must trace what it wrote before claiming COMPLETE
+
+**Added 2026-08-22**, in response to the fidelity failure above.
+
+Before returning `COMPLETE` in a delegated run, `Interface Architect` runs a **Requirement Trace Audit**
+over every public behavior it wrote. Each behavioral statement in every `<summary>`, `<param>`,
+`<returns>`, `<exception>` and `<remarks>` must land in exactly one of four buckets: a directly stated
+requirement, a quoted owner decision, an inherited contract it names and cites, or an explicitly
+non-binding open question.
+
+**Silence is not a source.** It may not convert an absence into a default value, a boundary result at
+zero/empty/null, a validation precedence, a semantic frame of reference — what an index or offset is
+measured *relative to* — a coupling between members, or a claimed deliberate omission, which asserts an
+intent the contract never expressed. `Unspecified by the supplied contract` is a legitimate thing to
+write; an invented default stated as settled is not, because `Test Designer` reads those docs as the
+specification with no other context and `Implementer` is then forced to satisfy the invention.
+
+A consequential behavior that cannot be traced is omitted and raised as an Open Question. If omission
+leaves the member untestable or the contract internally contradictory, the status is `PARTIAL` or
+`BLOCKED` — never `COMPLETE`. The trace result appears in both the durable receipt's completion record
+and the final report, as a table plus totals: behaviors written, traced, and omitted as untraceable.
+
+**`Contract Reviewer` is preserved as the independent validator** and none of its charter changed. The
+audit is the author's own honesty gate, not a substitute for review — separation of authorship from
+verification still holds, and passing the audit is never a reason to skip stage 2e. It is worth being
+plain about what the gate is: an instruction to the author to check its own work, caught the first time
+only because an independent reviewer looked. It narrows the failure; it does not eliminate it.
 
 ### Descriptions are the discovery surface
 
@@ -318,6 +501,93 @@ The existing independent checks remain: `Contract Reviewer` validates Interface 
 Designer output. No new validator was added for repository profiles, requirements documents, or
 purpose analysis; those still rely on source citations plus Vanguard/owner stage gates. That is a
 known design boundary, not independent verification.
+
+### The silence was budget exhaustion, not interview dependence
+
+**Corrected 2026-08-22.** The first diagnosis was that conversational charters caused delegated
+silence: an agent built to interview would reach its "ask the owner" step, find no turn to wait for,
+and stall. That is a real gap and the five specialists were right to be fixed for it — but it is not
+the general case.
+
+**The controlling evidence is a run that had no interview loop at all.** On 2026-08-22 `Implementer`
+was delegated four tasks, modified six production files including roughly 190 lines across
+`ProphetsWay.EFTools/BaseDao.cs` and `EntityGraph.cs`, and **returned no report**. Independent
+measurement afterwards found the work was sound: 0 warnings and 0 errors, the lap gate at 68/68, and
+the full suite at 270 total / 259 passed / 11 failed with no regressions. The run did the work and
+lost the account of it.
+
+So the better local hypothesis is **output and context budget exhaustion on heavy multi-file edit
+runs**, of which interview dependence is one narrower cause. Two consequences follow:
+
+- **Terminal-only final reporting is fragile.** Anything that exists solely in a closing message is
+  lost when that message is never produced. The receipt is a deliberate second, earlier place for the
+  same intent to survive — but only once it is a **file**, not an earlier chat message. See the
+  corrected platform finding above: a subagent returns one message and everything before it is
+  discarded, so the earlier chat message was never a second place at all.
+- **Unbounded packets are the risk, not slow agents.** The fix is the scope ceiling: reserve budget
+  for validation and reporting before spending it on edits, and split rather than overrun.
+
+This does not restore the rejected option of hard task limits. A fixed number is wrong in both
+directions — it blocks a leaf that could finish ten trivial tasks and permits one that cannot finish
+two large ones. The leaf assesses; the parent accepts the assessment.
+
+**Coverage as of 2026-08-22: all 23 `Vanguard` project leaves carry receipts and ceilings, plus
+`Toolbelt Keeper` when it is invoked as a subagent outside `Vanguard`.** It arrived in two passes, and
+the second pass exists because the first was believed complete:
+
+| Pass | Agents | Note |
+|---|---|---|
+| Original five | `Interface Architect`, `Repo Analyst`, `Solution Architect`, `API Designer`, `Purpose Refiner` | Fixed first for delegated silence |
+| Second, to fifteen | `Implementer`, `Test Designer`, `Refactorer`, `Code Reviewer`, `Test Auditor`, `Contract Reviewer`, `Changelog Author`, `README Author`, `Commit Author`, `Session Scribe` | Documented at the time as full coverage — **it was not** |
+| Third, to 23 | `Modernizer`, `Project Scaffolder`, `Threat Modeler`, `Security Reviewer`, `Pipeline Engineer`, `Pipeline Auditor`, `Azure Infrastructure Engineer`, `Azure Deployment Reviewer` | The eight found by the recovery audit above |
+| Separately | `Toolbelt Keeper` | Not a `Vanguard` leaf — `Vanguard` is forbidden from invoking it |
+
+**Any earlier statement in this document that "all fifteen" leaves were covered was wrong when written**
+and is superseded; fifteen of 23 is 65% of the allowlist, so a silent failure in a `Modernizer`,
+`Security Reviewer`, or Azure run was still undetectable by the parent's post-run audit. The count now
+appears in both parents so it can be checked against the `agents:` frontmatter rather than trusted.
+
+All 23 require the packet's `Receipt artifact:` path and return `BLOCKED` without one, write that file
+`STARTED` before their first edit or long read, and overwrite it with a completion record before the
+final chat report. Both parents — `Vanguard` and `TDD Lead` — compose the path and read the file back.
+No charter was widened to do it: the temp-file write is a named operational-metadata exception and
+nothing else. `Implementer` and `Refactorer` still cannot touch a test, `Test Designer` still writes only
+tests, the reviewers stay read-only apart from feature-request capture, `Session Scribe` and
+`Commit Author` still never commit, `Pipeline Auditor` still edits no YAML, and
+`Azure Infrastructure Engineer` still cannot mutate Azure. Direct conversational escalation is unchanged
+in every one — each `stop and ask` became a fail-closed final status **for delegated runs only**.
+
+Five shapes needed tailoring rather than a copy of the same block:
+
+| Shape | Adaptation |
+|---|---|
+| Heavy read-only reviewers | The receipt artifact is written before the long **read**, and the final report must carry an evidence-coverage table, so a truncated read cannot masquerade as a completed review |
+| `Session Scribe` `checkpoint` | A one-line receipt — in the artifact *and* in chat. Checkpoint runs inside the TDD loop and its three-line chat ceiling is itself a load-bearing decision; `resume` and `wrapup` use the full form |
+| Approval-gated agents | The receipt records **changes withheld for want of approval** as a first-class field, so the gate is visible in the artifact even if the report never arrives |
+| `Threat Modeler` | Its interview step has no turn to happen in, so unanswered questions become explicit assumptions and Open Questions in the written model — never silently-adopted defaults, and never an ungrounded compliance claim |
+| `Pipeline Engineer` | A leaf **and** a parent: it must compose a fresh receipt path for its own `Pipeline Auditor` invocation and read that file back, exactly as `Vanguard` does for it |
+| `Toolbelt Keeper` | Hash counts in the completion record, and a `SPLIT` boundary of one **fully-synced agent** rather than one file, so the ceiling cannot break its all-three-locations constraint |
+
+Secret handling needed one explicit addition rather than a shape. Four of the eight routinely encounter
+credentials — `Security Reviewer`, `Pipeline Auditor`, `Pipeline Engineer`, and both Azure agents — and
+the receipt is a new place a value could be written. Each now states that the receipt carries location
+and kind only, on the same terms as its report.
+
+### Vanguard's terminal restriction held under direct pressure — once
+
+**Empirical datapoint, 2026-08-22.** In a later session `Vanguard` had shell access, and so did
+several of the subagents it invoked. It was **asked directly to commit**. It declined and routed the
+git commands back to the owner, exactly as its Absolute Constraints require.
+
+That is evidence that instruction-based enforcement of the read-only command boundary can hold under
+direct pressure. It is **not proof**: one observation, one model, one phrasing of the request. The
+boundary is still prose rather than a tool restriction, because VS Code exposes `execute` as a single
+alias with no read-only subset.
+
+The conclusion drawn is a priority, not a reversal: **technical enforcement of the terminal boundary
+ranks below reporting reliability.** A leaf that silently loses its report costs real work every time
+it happens; the terminal boundary has not yet failed once. Keep the allowed command classes explicit
+in the agent, keep watching, and revisit if a single violation appears.
 
 ### Vanguard has guarded terminal access
 
@@ -813,6 +1083,7 @@ Empirically tested this session. Do not re-litigate these.
 | **Model pin format** | `Model Name (vendor)` — e.g. `Claude Opus 5 (copilot)`. An array is a fallback chain. A typo fails **silently** to the picker default. |
 | **Extra locations** | `chat.agentFilesLocations` / `chat.promptFilesLocations` can register more folders. Untested here. |
 | **Agent Host caveat** | When Agent Host is enabled, user agents are read from `~/.copilot/agents`, **not** VS Code profile data. |
+| **A subagent returns exactly one message** | `runSubagent` delivers only the leaf's *final* message to the parent; anything the leaf writes into chat before it is discarded. Measured 2026-08-22 — `Interface Architect` and `Contract Reviewer` both reported a receipt as "issued above" and the parent received nothing. **Any state that must outlive a missing final report has to be a file.** |
 | **Diagnostics** | Right-click in Chat view → **Diagnostics** lists all loaded customizations and load errors. |
 
 ### Bugs made and fixed this session
@@ -860,6 +1131,11 @@ Then confirm every agent appears in the picker. Flat only — do not create subf
 | 16 | Verify `Vanguard`'s Stage 0 actually fires | The behavior depends on instructions running on the first turn, not on a session hook — no such hook exists. Confirm it orients before answering a direct build request. |
 | 17 | `ProphetsWay.BPA` has no `AGENTS.md` and no solution | Empty stub repo by design. First real Stage 1 + Stage 2 test: `Repo Analyst` writes the per-repo section, `Solution Architect` scopes it, `Project Scaffolder` creates the `.sln`. Not started. |
 | 18 | Handoff file does not exist yet | `prophets-pipelines/docs/session-handoff.md` is created by the first `Session Scribe` wrapup. Until then every session is a fresh start, which is correct. |
+| 19 | **Stress-test the receipt and scope ceiling** | **Partially verified 2026-08-22.** *Passed:* heavy final reporting survived in `Implementer` (four tasks, six production files, 5,575-line spec — `COMPLETE`, build 0/0, lap 68/68, full 270/259/11, test hash unchanged) and in `Interface Architect` (four tasks, seven files, both TFMs building clean); `Contract Reviewer` completed a seven-file heavy read with a full evidence report. *Failed:* the early **chat** receipt was never visible to the parent — which is what forced the durable artifact. *Separately found:* `Interface Architect`'s `COMPLETE` overstated contract fidelity, addressed by the Requirement Trace Audit. **Also measured, unplanned:** a `Toolbelt Keeper` run returned no final output at all, and the one permitted **report-only recovery** returned `COMPLETE` — so report recovery now has a second, real datapoint rather than a fixture one. **Still unverified:** whether a leaf declares `SPLIT` on its own judgment rather than overrunning, and whether `Vanguard` routes a declared `SPLIT` instead of pushing through it. Neither has been exercised, and neither should be described as working. |
+| 20 | Receipts are artifact-backed but still instruction-enforced | **Revised 2026-08-22.** The receipt is now a real file at a path the parent chose, so its existence, its ordering relative to the change set, and its final state are all **observable** — that is a genuine improvement on prose describing a chat message that never arrived. What has not changed is enforcement: nothing technical stops a leaf editing a repository before it writes the receipt, and "no receipt before edits" is still detectable only **afterwards**, by the parent noticing changed files with no artifact. Same enforcement class as the terminal boundary. **A second limit surfaced the same day:** the mechanism is only as good as its coverage, and coverage was silently 15 of 23 — an agent without the instruction produces no artifact, which is indistinguishable to the parent from an agent that skipped it. Coverage is now complete; see item 23 for keeping it that way. Acceptable for now; revisit if a leaf is seen skipping it. |
+| 21 | Requirement Trace Audit is unverified under load | Added 2026-08-22 alongside the audit itself. It has never been run: no heavy `Interface Architect` delegation has been replayed since. The questions are whether it actually suppresses an invented default rather than retroactively rationalising one, and whether it correctly downgrades to `PARTIAL` when omitting an untraceable behavior leaves a member untestable. `Contract Reviewer` remains the independent check either way — do not treat a passing audit as a reason to skip stage 2e. |
+| 22 | **Durable-receipt recovery has never actually been exercised** | Added 2026-08-22, and worth keeping separate from item 19 because the two are easy to conflate. Recovering a **missing chat report** is now observed twice. Recovering **from the durable artifact** is observed **zero** times: the one real silent run belonged to `Toolbelt Keeper`, which had no artifact to leave, so the recovery worked from live files alone. Nothing has yet demonstrated a parent opening a `STARTED` artifact and reporting its planned scope verbatim, or using a completion record as recovery input. Until a failed run leaves one behind, the artifact is a mechanism that is **present and unexercised** — do not describe it as proven, and do not cite item 19's recovery evidence for it. |
+| 23 | **Coverage claims need a count, not a word** | Added 2026-08-22. The eight-agent gap survived because the docs said "all fifteen delegated-capable leaf agents" while `Vanguard`'s allowlist held 23 — a claim that read as complete and was checkable only by counting the frontmatter by hand. Both parents now state their own leaf count inline (23 and 16). **When a leaf is added to or removed from an allowlist, that number and this document's coverage table move in the same change set**, or the same failure recurs. Consider whether a `Toolbelt Keeper` drift audit should compare the two automatically. |
 
 ---
 

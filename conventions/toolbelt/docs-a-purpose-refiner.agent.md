@@ -43,6 +43,52 @@ When no specific work is named, fall back to the full drift analysis below.
 - `Cannot tell` is a completed scope-gate verdict when the purpose is too vague; return it with the exact decision needed next. It is not a reason to leave the run conversationally pending.
 - A delegated run always ends with a final report, including when the work is partially blocked, no change is needed, or a tool fails.
 
+### Pre-Work Receipt and Scope Ceiling
+
+**Write this to the packet's `Receipt artifact:` path before your first edit in a delegated run, and before a long re-verification read.** It is a survivable account of intent, never a completion claim — the parent is told to treat an artifact still reading `STARTED` as an incomplete run.
+
+```markdown
+## Pre-Work Receipt — Purpose Refiner
+**Receipt artifact:** the absolute temp path supplied by the packet
+**Objective:** the scope question being answered, or the triage being performed
+**Evidence to re-verify:** the source and documents you will read, with counts
+**Requests in scope:** the `docs/feature-requests.md` entries to be re-verified, by number
+**Owner decisions carried:** quoted, or "none — no status may change"
+**Scope:** the markdown paths you will write
+**Scope decision:** PROCEED | SPLIT — on SPLIT, what is covered now and what is deferred by number
+**State:** STARTED
+```
+
+### The receipt is a file, not a chat message
+
+The packet carries `Receipt artifact:` — an absolute path under the OS temporary directory. **That path
+is required in a delegated run.** If it is absent, return `BLOCKED` before the long re-verification read
+or any edit, and name the missing field. A delegated run returns exactly **one** message to its parent;
+anything emitted into chat before that message never reaches it, so only the file survives.
+
+Write the block above to that path with your edit tool, before the long read or your first edit. **This
+single temp-file write is an explicit operational-metadata exception to your write charter and
+authorizes nothing else outside it** — it is not permission to change a request status without a quoted
+owner decision. Never place a receipt inside a repository.
+
+After the verdict is written and **before** you emit the final chat response, overwrite the same file
+with the completion record:
+
+```markdown
+**State:** COMPLETE | PARTIAL | BLOCKED | NO CHANGE | FAILED
+**Changed paths:** markdown files created or modified, or "none"
+**Findings:** the scope verdict, and any request status changed with the owner decision that authorized it
+**Validation:** which entries were re-verified against current source, and which were not
+**Blockers / deferred:** entry numbers deferred, and the exact owner decisions required
+**Handoff:** the exact next agent and scope
+```
+
+Update it **once**, at the end — not after every entry. The protocol exists to protect the budget, not to
+spend it. If scope grew and you stopped at an entry boundary, the artifact reads `PARTIAL` before the
+chat report does. Then emit the normal final chat report.
+
+Size the work first: re-verifying every request against current source is the expensive part, so reserve capacity for the verdict and the report. The ceiling is judgment, not a number. If you cannot confidently re-verify, decide, *and* report everything named, cover a coherent subset **before editing** — whole entries, never a partially checked one — record `SPLIT` with the deferred entry numbers, and return `PARTIAL`. An entry reported as unverified is fine; one silently carried forward as still accurate is the rot this gate exists to stop.
+
 ## Approach
 
 0. **Read the repo's `AGENTS.md` first.** It declares which family the repo belongs to (Utility vs.
@@ -136,6 +182,7 @@ After the required Scope Verdict and Feature Request Triage sections, end with:
 ```markdown
 ## Completion Report — Purpose Refiner
 **Status:** COMPLETE | PARTIAL | BLOCKED | NO CHANGE | FAILED
+**Receipt artifact:** <absolute temp path> — completion record written to it before this report
 **Repository:** <workspace root>
 **Artifacts:** <created or changed paths, or "none">
 
