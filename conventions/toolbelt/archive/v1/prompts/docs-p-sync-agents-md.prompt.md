@@ -3,7 +3,7 @@ name: 'sync-agents-md'
 description: 'Regenerate the shared conventions block inside every ProphetsWay repo AGENTS.md from the master copy in prophets-pipelines/conventions/AGENTS.shared.md. Run after editing the master.'
 agent: 'agent'
 tools: [read, search, edit]
-model: 'GPT-5.6 Luna (copilot)'
+model: ['Claude Sonnet 4.5 (copilot)', 'GPT-5 (copilot)']
 argument-hint: 'Optionally name specific repos to sync; defaults to all'
 ---
 

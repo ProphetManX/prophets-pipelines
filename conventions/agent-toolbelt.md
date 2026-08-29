@@ -4,39 +4,82 @@
 > building, changing, or debugging agent customizations. Do not add it to `AGENTS.md` — it
 > is administrative context, irrelevant to day-to-day coding sessions.
 
-**Built:** 2026-08-08 · **Revised:** 2026-08-22 · **Owner:** G. Gordon Nasseri (ProphetManX)
-**Covers:** 26 custom agents, 2 prompts, and the `AGENTS.md` conventions system across 8 repos.
+**Built:** 2026-08-08 · **Revised:** 2026-08-29 · **Owner:** G. Gordon Nasseri (ProphetManX)
+**Covers:** the customization roster and the `AGENTS.md` conventions system across 8 repos —
+**29 active v2 agents**, **26 archived v1 agents**, and **2 active prompts**.
 
-> **2026-08-12 — `Vanguard` is now the single front door.** One lead covers all project work, from
-> resuming yesterday's session to shipping. `Start Here` and `Repo Docs Lead` were retired into it;
-> `Session Wrap-Up` became `Session Scribe`; `Commit Author` was added. `TDD Lead` is retained
-> temporarily as a fallback — see Open Items.
+> **2026-08-29 — the selector cutover happened, and this document is now mostly history.** All 26 v1
+> agents were archived to `conventions/toolbelt/archive/v1/` and removed from the live folder and the
+> flat current mirror. **No v1 agent is selectable.** The active roster is v2, documented in
+> [agent-toolbelt-v2.md](agent-toolbelt-v2.md); this file keeps the v1 detail because that is the
+> generation a rollback restores, and because most of its design reasoning is still what the v2 roster
+> is built on. **Read every v1 roster table below as archived history**, not as a description of what
+> loads.
+
+**Current counts, verified 2026-08-29 by listing both roots and hashing every file.**
+
+| Set | Count | Where |
+| --- | --- | --- |
+| Active customizations | **31** — 29 agents + 2 prompts | Flat in `%APPDATA%\Code\User\prompts\` and flat in `conventions/toolbelt/` |
+| Archived v1 rollback generation | **26 agents + 2 prompt snapshots + 1 manifest** | `conventions/toolbelt/archive/v1/` |
+
+**A recursive listing of `conventions/toolbelt/` returns more than 31 files**, because it picks up the
+26 archived agents, two prompt snapshots, `SHA256SUMS.txt`, and `archive/README.md`. The snapshots and
+manifest complete the v1 rollback generation; the README documents the generation scheme and is outside
+the manifest. None of these archive files is a current customization. The current-mirror comparison is
+**root-level only**.
+
+> **2026-08-12 — `Vanguard` was the single front door.** *Archived history.* One lead covered all
+> project work, from resuming yesterday's session to shipping. `Start Here` and `Repo Docs Lead` were
+> retired into it; `Session Wrap-Up` became `Session Scribe`; `Commit Author` was added. **`Vanguard`
+> and `TDD Lead` are both archived as of 2026-08-29; the front door is now `Vanguard v2`.**
+
+**2026-08-29 — the v2 roster went from beside this one to instead of it.** Twenty-eight pilot agents and
+two convention documents were added across four slices, with **no v1 file changed**; later the same day
+the v1 generation was archived whole and `Toolbelt Keeper v2` was added as the twenty-ninth v2 agent.
+See [The v2 Roster](#the-v2-roster).
 
 ---
 
 ## 1. What Exists
 
-### Three Locations, One Truth
+### Four Locations, One Truth
 
 | # | Path | Role |
 |---|---|---|
-| 1 | `%APPDATA%\Code\User\prompts\` | **Live.** What VS Code loads. Flat, no subfolders. Not version controlled. |
-| 2 | `prophets-pipelines\conventions\toolbelt\` | **Mirror.** Version history and disaster recovery. |
-| 3 | `prophets-pipelines\conventions\agent-toolbelt.md` | **Documentation.** This file. |
+| 1 | `%APPDATA%\Code\User\prompts\` | **Current live selector.** What VS Code loads. Flat, no subfolders. Not version controlled |
+| 2 | `prophets-pipelines\conventions\toolbelt\` — flat files only | **Current mirror.** Version history and disaster recovery |
+| 3 | `prophets-pipelines\conventions\toolbelt\archive\<generation>\` | **Retired generations.** Rollback material; never loaded by VS Code |
+| 4 | `conventions\agent-toolbelt.md` and `conventions\agent-toolbelt-v2.md` | **Documentation.** This file and the v2 blueprint |
 
-Direction of truth is **#1 → #2**. Edit live, then mirror. The flow reverses only when restoring
-onto a new machine.
+Direction of truth is **#1 → #2**. Edit live, then mirror, then document. The flow reverses only when
+restoring onto a new machine or rolling a generation back.
+
+**#1 and #2 must carry identical root-level name sets and SHA-256 hashes. Location #3 is excluded from
+that comparison** — counting an archived generation as current-mirror content is a false drift report,
+and copying one into #1 registers two rosters in the picker at once.
 
 The mirror exists because Settings Sync is a convenience, not a backup — it has no history, and a
-fresh sign-in or a sync conflict can lose the whole toolbelt silently.
+fresh sign-in or a sync conflict can lose the whole toolbelt silently. The archive exists because a
+cutover that deletes the previous roster has no rollback.
 
-**The `Toolbelt Keeper` agent owns keeping all three in agreement.** Use it rather than editing
-agent files by hand.
+**The `Toolbelt Keeper v2` agent owns keeping all four in agreement.** Use it rather than editing agent
+files by hand. The generation scheme it enforces is written in
+[toolbelt/archive/README.md](toolbelt/archive/README.md).
 
 Filenames use `<domain>-<type>-<name>` so they alpha-sort into workflow groups. The filename is
 cosmetic — the `name:` frontmatter field controls what appears in the UI.
 
 ### The Front Door
+
+**`Vanguard v2` is the front door.** It is the only orchestrator that loads, and its allowlist is
+exactly the 27 project leaves — `Toolbelt Keeper v2` is deliberately outside it, because changing the
+toolbelt is a separate session from using it. See [The v2 Roster](#the-v2-roster) and
+[agent-toolbelt-v2.md](agent-toolbelt-v2.md).
+
+#### Archived — the v1 front door
+
+*Historical. None of these three is selectable; all are in `archive/v1/`.*
 
 | File | Agent | Tools | Model |
 |---|---|---|---|
@@ -44,11 +87,16 @@ cosmetic — the `name:` frontmatter field controls what appears in the UI.
 | `proj-a-session-scribe.agent.md` | Session Scribe | read, search, edit, execute | Sonnet 4.5 |
 | `proj-a-solution-architect.agent.md` | Solution Architect | read, search, edit | Opus 5 |
 
-`Vanguard` is the only agent the owner needs to start a session with. It orients, proposes a route,
-delegates every phase, and synthesizes a **Direction Check** at each gate. It holds 23 subagents and
-deliberately excludes `TDD Lead` and `Toolbelt Keeper` — orchestrators do not call orchestrators.
+`Vanguard` was the only agent the owner needed to start a session with. It oriented, proposed a route,
+delegated every phase, and synthesized a **Direction Check** at each gate. It held 23 subagents and
+deliberately excluded `TDD Lead` and `Toolbelt Keeper` — orchestrators do not call orchestrators, a rule
+`Vanguard v2` still follows.
 
 ### The Stage Model
+
+*Archived v1 design. `Vanguard v2` replaces it with an explicit state machine — see
+[agent-toolbelt-v2.md](agent-toolbelt-v2.md). The reasoning below is why that machine has the shape it
+does, so it is kept rather than deleted.*
 
 | Stage | Phases | Runs when |
 |---|---|---|
@@ -76,7 +124,11 @@ state dictates the route with no questions asked:
 
 This is what replaced fourteen phase-by-phase permission prompts with a single route approval.
 
-### Phase Reference — also the legacy `TDD Lead` roster
+### Phase Reference — the archived v1 roster
+
+*Archived history as of 2026-08-29. **Every file in this table is in `archive/v1/` and none of it
+loads.*** It is also the legacy `TDD Lead` roster. The v2 counterpart of each row is in
+[agent-toolbelt-v2.md](agent-toolbelt-v2.md) §2.
 
 | File | Agent | Phase | Tools | Model |
 |---|---|---|---|---|
@@ -166,8 +218,14 @@ route back through `Implementer`.
 | `docs-a-readme-author.agent.md` | README Author | read, search, edit | Sonnet 4.5 |
 | `docs-a-changelog-author.agent.md` | Changelog Author | read, search, edit, execute | Sonnet 4.5 |
 | `docs-a-commit-author.agent.md` | Commit Author | read, search, edit (feature-request append only), execute | Sonnet 4.5 |
-| `docs-p-sweep-workspace.prompt.md` | `/sweep-workspace` — runs as `Vanguard` | inherits | — |
-| `docs-p-sync-agents-md.prompt.md` | `/sync-agents-md` | read, search, edit | Sonnet 4.5 |
+| `docs-p-sweep-workspace.prompt.md` | `/sweep-workspace` — **active**, runs as `Vanguard v2` | inherits | — |
+| `docs-p-sync-agents-md.prompt.md` | `/sync-agents-md` — **active**, unchanged in behavior | read, search, edit | `GPT-5.6 Luna (copilot)` |
+
+**The five agent rows above are archived; the two prompt rows are active.** `/sweep-workspace` was
+retargeted at the cutover — `agent: 'Vanguard v2'`, v2 leaf names only, and repository roots discovered
+at runtime rather than a fixed ranking. `/sync-agents-md` names no custom agent, so the archive did not
+affect its routing; it now pins `GPT-5.6 Luna (copilot)`. The active selector has no legacy model pins
+or fallback arrays; the v1 archive retains its historical pins unchanged and is not selectable.
 
 **Repo Analyst** additionally owns the **per-repo section of `AGENTS.md`** — everything below the
 generated shared block. It must never hand-edit the block itself. Every other agent reads that file
@@ -179,14 +237,23 @@ deduplicated `Proposed` entry to `docs/feature-requests.md`.
 
 ### Meta
 
-| File | Agent | Tools | Model |
+| File | Agent | Model | Status |
 |---|---|---|---|
-| `meta-a-toolbelt-keeper.agent.md` | Toolbelt Keeper | read, search, edit, execute | Opus 5 |
+| `meta-a-toolbelt-keeper-v2.agent.md` | **Toolbelt Keeper v2** | `GPT-5.6 Terra (copilot)` | **Active.** The current maintenance agent |
+| `meta-a-toolbelt-keeper.agent.md` | Toolbelt Keeper | Opus 5 fallback chain | Archived in `archive/v1/` |
 
-**Toolbelt Keeper** creates, changes, and deletes agents and prompts. Performs the full three-step
-update — live file, mirror, docs — and audits for drift. Also holds the restore procedure. It is the
-only agent `Vanguard` does not cover, and that is on purpose: changing the toolbelt is a separate
-session from using it.
+**`Toolbelt Keeper v2`** creates, changes, and deletes agents and prompts across the **four** locations
+above — live, current mirror, generation archive, documentation — audits for drift by root-level hash
+with the archive excluded, and archives or restores whole named generations. An archive includes root
+agent files, generation-specific prompt snapshots, and a manifest validated before deletion or restore.
+Tools are read, search, edit, execute. It is the only agent `Vanguard v2` does not cover, and that is on
+purpose: changing the toolbelt is a separate session from using it, and an orchestrator that could
+rewrite its own subagents mid-run has no stable definition to be measured against.
+
+**The v1 `Toolbelt Keeper` is archived, and the history it produced stays in this document.** It ran a
+three-location update behind an OS-temp receipt, and the silent-run recovery recorded in §2 and §5 is
+**its** evidence. That account is accurate for the archived generation and **does not transfer** to v2's
+one-file report protocol — see item 14 in [agent-toolbelt-v2.md](agent-toolbelt-v2.md) §9.
 
 ### Conventions System
 
@@ -195,7 +262,131 @@ session from using it.
 | `prophets-pipelines/conventions/AGENTS.shared.md` | **Master copy** of the shared conventions block |
 | `<repo>/AGENTS.md` × 6 | Generated shared block + per-repo section |
 | `prophets-pipelines/AGENTS.md` | Links to the master instead of inlining it |
-| `conventions/toolbelt/` | Mirrored copies of all 28 customization files |
+| `conventions/toolbelt/` — flat files | **Current mirror** — 31 customization files: 29 v2 agents and 2 prompts |
+| `conventions/toolbelt/archive/v1/` | The complete v1 rollback generation: **26 archived agents**, two prompt snapshots under `prompts/`, and a sorted 28-entry `SHA256SUMS.txt`. Never loaded; excluded from the current-mirror comparison |
+| `conventions/toolbelt/archive/README.md` | The generation scheme, pre-cutover sequence, and rollback order. Documentation, **not a customization** |
+
+### The v2 Roster
+
+**Added 2026-08-29 in four slices, then made the sole selector generation the same day.** The roster was
+built beside v1 with **no v1 customization file modified** — every v2 file was new, and every v2 display
+name ends in the `v2` suffix. It then took the selector: all 26 v1 agents were copied to
+`conventions/toolbelt/archive/v1/`, hash-verified against their sources, and removed from the live folder
+and the flat current mirror; `Toolbelt Keeper v2` was added as the twenty-ninth agent.
+
+**`Vanguard v2` is the front door, and no v1 agent is selectable.** Rollback is a whole-generation
+restore from `archive/v1/`, never a file-by-file undo.
+
+**The cutover is a selector decision, not a verdict.** The benchmark does not exist, `Vanguard v2` has
+never orchestrated end to end, and the harness, operator, landing, and release paths remain unexercised.
+The current list of what is proven and what is not is [agent-toolbelt-v2.md](agent-toolbelt-v2.md) §9
+and §10 — **do not infer readiness from this section.** Two earlier claims here are superseded and must
+not be restated: that v1 remains the production roster, and that the v2 total is twenty-eight.
+
+**Slice 1 — orchestration, discovery, and requirements:**
+
+| Live file | Agent | Model | Role |
+| --- | --- | --- | --- |
+| `proj-a-vanguard-v2.agent.md` | **Vanguard v2** | `GPT-5.6 Sol (copilot)` | Orchestrator with an explicit state machine and run envelopes. Allowlist is exactly the twenty-seven leaves below |
+| `proj-a-product-discovery-v2.agent.md` | Product Discovery v2 | `GPT-5.6 Sol (copilot)` | **New role.** Captures intent; owns `docs/product-brief.md`, `docs/decision-log.md`, `docs/open-questions.md` |
+| `proj-a-solution-architect-v2.agent.md` | Solution Architect v2 | `GPT-5.6 Sol (copilot)` | Architecture and requirements; one automatic evidence-backed repair pass |
+| `proj-a-requirements-reviewer-v2.agent.md` | Requirements Reviewer v2 | `GPT-5.6 Sol (copilot)` | **New role.** Read-only adversary; writes only its own invocation report |
+| `proj-a-session-scribe-v2.agent.md` | Session Scribe v2 | `GPT-5.6 Luna (copilot)` | Continuity; owns the **external** active handoff `<project-parent>/.agent-runs/session-handoff-v2.md` only — never the v1 handoff |
+
+**Slice 2a — grounding and shaping**, which made `Vanguard v2`'s `GROUND` and `SHAPE` states executable:
+
+| Live file | Agent | Model | Role |
+| --- | --- | --- | --- |
+| `docs-a-repo-analyst-v2.agent.md` | Repo Analyst v2 | `GPT-5.6 Terra (copilot)` | Repository grounding **plus the former `Modernizer` recon** — dependencies, references, packaging, frameworks. Read-only on source; diagnoses, never repairs |
+| `docs-a-purpose-refiner-v2.agent.md` | Purpose Refiner v2 | `GPT-5.6 Sol (copilot)` | The scope gate, and the **only** writer of `docs/feature-requests.md` — a status change needs a quoted owner decision |
+| `ops-a-modernizer-v2.agent.md` | Modernizer v2 | `GPT-5.6 Terra (copilot)` | **Mutation only, no recon mode.** Applies an approved change list to `.csproj` / `.sqlproj`, one verifiable step at a time |
+| `ops-a-scaffolder-v2.agent.md` | Project Scaffolder v2 | `GPT-5.6 Terra (copilot)` | New projects and `.sln` entries only; structure, never behavior. Runs only after a reviewed architecture |
+| `tdd-a-interface-architect-v2.agent.md` | Interface Architect v2 | `GPT-5.6 Terra (copilot)` | C# contracts with complete XML docs, gated by the Requirement Trace Audit |
+| `tdd-a-api-designer-v2.agent.md` | API Designer v2 | `GPT-5.6 Terra (copilot)` | HTTP design documents under `docs/api/` only; authorization is consumed, never invented |
+| `tdd-a-contract-reviewer-v2.agent.md` | Contract Reviewer v2 | `GPT-5.6 Terra (copilot)` | Report-only adversary with a **required** `Mode: csharp \| http`. Unlike v1, it may not append a feature request |
+| `sec-a-threat-modeler-v2.agent.md` | Threat Modeler v2 | `GPT-5.6 Terra (copilot)` | Design-time; writes under `docs/security/` only. Sets the standard, never grades code against it |
+
+**`BUILD_LAP` is executable as of slice 2b — build:**
+
+| Live file | Agent | Model | Role |
+| --- | --- | --- | --- |
+| `tdd-a-test-designer-v2.agent.md` | Test Designer v2 | `GPT-5.6 Terra (copilot)` | Executable specification files only — test cases, assertions, and declarations local to those same files. **Narrower than v1**, which could also write standalone test-project helpers |
+| `tdd-a-test-harness-engineer-v2.agent.md` | **Test Harness Engineer v2** | `GPT-5.6 Terra (copilot)` | **New role with no v1 counterpart.** Non-specification test infrastructure only — fixtures, fakes, builders, stores, adapters, seeds, bootstrap seams — restricted to the paths its packet enumerates, forbidden any assertion or discovery attribute, and required to prove every specification file unchanged by hash. Succeeds only if the suite still reaches **red** |
+| `tdd-a-test-auditor-v2.agent.md` | Test Auditor v2 | `GPT-5.6 Terra (copilot)` | Report-only adversary. Cheat test, weak assertions, coverage, flakiness, traits — **plus a harness audit** checking the hash evidence, which v1 had no reason to have |
+| `tdd-a-implementer-v2.agent.md` | Implementer v2 | `GPT-5.6 Terra (copilot)` | Production source only. **Stricter than v1**: barred from the test project entirely, not merely from `*Tests.cs` |
+| `tdd-a-code-reviewer-v2.agent.md` | Code Reviewer v2 | `GPT-5.6 Terra (copilot)` | Report-only correctness review plus PR-comment merit triage. Unlike v1, it may not append a feature request, and it never posts a reply or changes PR state |
+| `tdd-a-refactorer-v2.agent.md` | Refactorer v2 | `GPT-5.6 Terra (copilot)` | Behavior-preserving production edits only. Observes its own green baseline rather than accepting a claimed one, and requires identical before/after counts including the total |
+
+**`LAND_PREVIEW` and `PUBLISH` are executable as of slice 2c — land, ops, and infrastructure:**
+
+| Live file | Agent | Model | Role |
+| --- | --- | --- | --- |
+| `sec-a-security-reviewer-v2.agent.md` | Security Reviewer v2 | `GPT-5.6 Terra (copilot)` | Code-time audit against the threat model where one exists. Writes `docs/security/security-review.md` and nothing else; owns the `--vulnerable` scan; reports coverage because absence of findings is not evidence of security |
+| `docs-a-commit-author-v2.agent.md` | Commit Author v2 | `GPT-5.6 Luna (copilot)` | Commit and PR prose from the actual diff. Report-only, read-only git — its message is an **input** to the operator below |
+| `docs-a-changelog-author-v2.agent.md` | Changelog Author v2 | `GPT-5.6 Luna (copilot)` | The **sole** `CHANGELOG.md` writer. Classifies against the diff and states the implied bump without changing any version |
+| `docs-a-readme-author-v2.agent.md` | README Author v2 | `GPT-5.6 Terra (copilot)` | Root `README.md` only. **Narrower than v1**, which could also write under `docs/` and touch the changelog. Re-verifies inherited claims rather than restating them |
+| `ops-a-pipeline-engineer-v2.agent.md` | Pipeline Engineer v2 | `GPT-5.6 Terra (copilot)` | The **sole** YAML writer, deployment pipelines included. **Loses v1's `agent` tool** — the parent drives audit → apply → re-audit, so the gate is no longer a subordinate of the thing it gates |
+| `ops-a-pipeline-auditor-v2.agent.md` | Pipeline Auditor v2 | `GPT-5.6 Terra (copilot)` | Read-only contract, chain, drift, permission, and secret audit, and the independent re-review of an applied change set. Unlike v1 it may not append a feature request |
+| `infra-a-engineer-v2.agent.md` | Azure Infrastructure Engineer v2 | `GPT-5.6 Terra (copilot)` | Bicep, `.bicepparam`, and infrastructure docs. **Writes no YAML** — it specifies the deployment pipeline and `Pipeline Engineer v2` writes it. **No mutating Azure command in any mode**, where v1 allowed one after in-conversation approval |
+| `infra-a-deployment-reviewer-v2.agent.md` | Azure Deployment Reviewer v2 | `GPT-5.6 Terra (copilot)` | Read-only gate on resolution, preview, cost, permissions, secrets, isolation, recovery, residency, and the deployment YAML. `Ready` is not deployment approval |
+| `ops-a-repository-operator-v2.agent.md` | **Repository Operator v2** | `GPT-5.6 Terra (copilot)` | **New role with no v1 counterpart.** The only v2 agent that executes git, PR, or release mutations, and exactly one `Operator mode:` per invocation — `prepare_branch`, `checkpoint_commit`, `publish_branch`, `open_or_update_draft_pr`, `mark_pr_ready`, `release`. Verifies an expected HEAD immediately before every mutation, stages only an exact enumerated path list, and never force-pushes, rewrites history, deletes a ref, or merges |
+
+**Landing is no longer handed back.** `Vanguard v2` now allowlists **twenty-seven leaves** and can ground,
+shape, build, review for security, write the changelog and README, draft the PR prose, push a branch, and
+open a draft PR without a human touching a command. What it hands back is **judgment**: no agent merges,
+and `PUBLISH` refuses to start without an exact owner-written release manifest. The rule is unchanged —
+name the gap, never improvise a route around an absent authorization.
+
+**Slice 2c also removed three ownership collisions v1 carried**, each a real drift source: `CHANGELOG.md`
+had two possible writers, deployment YAML had two, and git and release actions had none. Each now has
+exactly one owner. Reasoning: [agent-toolbelt-v2.md](agent-toolbelt-v2.md) §3.
+
+**The bounded Git/Release operator deferred at v2's creation was resolved here**, and like the harness
+before it, not by widening anything: mutation is concentrated in one mode-gated agent rather than
+distributed across the roster, which is what keeps every other leaf safely read-only about git.
+Reasoning: [agent-toolbelt-v2.md](agent-toolbelt-v2.md) §2 *The Operator Boundary* and §4.
+
+**Slice 4a — the selector cutover**, which archived v1 and added the roster's twenty-ninth agent:
+
+| Live file | Agent | Model | Role |
+| --- | --- | --- | --- |
+| `meta-a-toolbelt-keeper-v2.agent.md` | **Toolbelt Keeper v2** | `GPT-5.6 Terra (copilot)` | Maintains the **four** locations — live selector, current mirror, generation archive, documentation. Verifies live against the current mirror by name set and SHA-256 with the archive excluded; archives and restores **whole named generations** only, after pre- and post-hash validation; never overwrites an archive, never creates a live subfolder, never commits. **Outside `Vanguard v2`'s allowlist**, so the allowlist stays at exactly 27 project leaves |
+
+**That plan for two shared v1 customizations is half superseded.** `Toolbelt Keeper` was to stay v1 and
+serve both rosters; **it could not survive the v1 archive**, and it had no vocabulary for generations —
+so `Toolbelt Keeper v2` was written against the protocol for four locations. It is still outside every
+orchestrator's allowlist, for the same reason. `/sync-agents-md` **does** stay a prompt, unchanged in
+kind and unchanged in file: one deterministic parameterized task, where making it an agent would add a
+persona to a file copy. **Do not restate "there is no `Toolbelt Keeper v2` and none is planned."**
+
+**The guarded test-harness capability deferred at v2's creation was resolved in 2b, and not as a mode.**
+Granting `Implementer v2` any write inside a test project would have deleted the roster's most important
+constraint whatever it was called, so it shipped as a separate agent with an enumerated path list,
+hash-proved specifications, and `Test Auditor v2` reviewing the result. Reasoning:
+[agent-toolbelt-v2.md](agent-toolbelt-v2.md) §2 *The Harness Boundary* and §4.
+
+Two new convention documents carry what used to be copied into every agent:
+
+| Document | Contains |
+| --- | --- |
+| [agent-protocol-v2.md](agent-protocol-v2.md) | The single source for v2 packet fields, run artifacts, `Outcome`/`Reason`/`Continuation` semantics, autonomous envelopes, git and release guardrails, stop conditions, and the morning handoff |
+| [agent-toolbelt-v2.md](agent-toolbelt-v2.md) | The migration blueprint — a role map accounting for all 26 v1 agents and both prompts, the separations that must remain, merges and retirements, model workload classes, rollout phases, the benchmark rubric, and accepted defaults |
+
+**Three differences are worth knowing before reading v1 below**, because the v1 sections describe the
+older mechanism and are still correct *for v1*:
+
+- v1 uses an OS-temp **receipt** plus a chat report; v2 uses **one invocation report** in the run
+  directory, written `STARTED` and then completed.
+- v1 returns a single status; v2 requires **three** fields, because `PARTIAL` was carrying four
+  unrelated meanings.
+- v1 agents each carry the mechanics inline; v2 agents cite the protocol and carry only a compact
+  fail-closed fallback.
+
+**The two rosters must not be mixed inside one run, and after the archive they cannot be.** A v1 leaf
+expects a `Receipt artifact:` path and a v2 leaf expects a `Report artifact:` path, so a cross-roster
+invocation returns an immediate `BLOCKED`. `Vanguard v2` is instructed never to invoke a v1 agent, and
+there is now no v1 agent loaded for it to invoke. **That rule is what makes rollback generation-atomic**:
+a restore brings back a whole generation precisely so a half-restored mixture never reaches the picker.
 
 ---
 
@@ -1099,13 +1290,28 @@ Avoid repeating these:
 
 ### Restoring onto a new machine
 
-The user profile is not version controlled. To rebuild it from the mirror:
+The user profile is not version controlled. **Two different operations are spelled almost identically
+and must not be confused.**
+
+**Restoring the current generation** — a new machine, or a lost profile. Copy the **flat** files only:
 
 ```powershell
 Copy-Item "c:\Projects\ProphetManX\prophets-pipelines\conventions\toolbelt\*" "$env:APPDATA\Code\User\prompts\" -Force
 ```
 
-Then confirm every agent appears in the picker. Flat only — do not create subfolders.
+**`Copy-Item` without `-Recurse` copies files and skips directories, which is exactly why that command
+is correct — and it is one flag away from being wrong.** Never add `-Recurse` here, and never copy
+`toolbelt\` recursively by any other means: that sweeps every archived generation into the live folder,
+registering two rosters in the picker at once and creating the subfolders VS Code refuses to read.
+
+**Rolling back to v1** — a different operation, and generation-atomic. Archive the current generation
+first, clear its files from the live folder and the flat mirror, restore exactly one generation into
+both, retarget `/sweep-workspace`'s `agent:` field, and correct this document. The full order is in
+[toolbelt/archive/README.md](toolbelt/archive/README.md), and `Toolbelt Keeper v2` owns performing it.
+Do not copy `archive\v1\*` over the live folder: that would leave the v2 agents in place and omit the
+archived prompt snapshots, producing a mixed generation instead of a rollback.
+
+Then confirm the picker. Flat only — do not create subfolders.
 
 ---
 
@@ -1125,24 +1331,27 @@ Then confirm every agent appears in the picker. Flat only — do not create subf
 | 10 | Verify `chat.useAgentsMdFile` is enabled | If off, no `AGENTS.md` auto-loads |
 | 11 | Migrate existing test code from FluentAssertions to Shouldly | **Docs are done; code is not.** The agents now prescribe Shouldly, but no `.cs` file or `PackageReference` has been changed. Audit every test project, swap the reference, apply the syntax mapping above. `ProphetsWay.EFTools.Tests` needs nothing — it never used FluentAssertions. |
 | 12 | `AGENTS.shared.md` still names FluentAssertions | Line 122 of the conventions master, mirrored into 6 repos at line 118. Outside `Toolbelt Keeper`'s lane — requires editing the master and running `/sync-agents-md`. |
-| 13 | `TDD Lead` declares every execute tool under two namespaces | `execute/runTests` **and** `vscodeGeneral/runTests`, `execute/runTask` **and** `vscodeTasks/runTask`. Belt-and-braces from an earlier debugging session. It works, so it was left alone rather than trimmed on a guess — an unrecognized tool name fails **silently**. Verify which namespace is canonical in Chat view → **Diagnostics**, then trim. |
-| 14 | Terminal auto-approve lives only in `settings.json` | `chat.tools.terminal.autoApprove` allows `dotnet build/test/restore`, `dotnet list package`, and read-only `git`; denies `dotnet nuget/tool/publish/pack`, mutating git, all `az`, network fetch/eval, and file deletion. **Not mirrored** — the restore procedure rebuilds all 25 agents and none of this. |
-| 15 | **Retire `TDD Lead` — review by 2026-08-26** | Kept only as a fallback while `Vanguard` is shaken out. It duplicates `Vanguard`'s coverage, so two agents plausibly answer "build this feature" — the exact description-overlap failure the roster is supposed to avoid. **Decide at the review date; do not let it linger.** Deleting it is one `Toolbelt Keeper` invocation. |
+| 13 | ~~`TDD Lead` declares every execute tool under two namespaces~~ **Moot 2026-08-29 — the file is archived** | `execute/runTests` **and** `vscodeGeneral/runTests`, `execute/runTask` **and** `vscodeTasks/runTask`. Belt-and-braces from an earlier debugging session. It was left alone rather than trimmed on a guess, because an unrecognized tool name fails **silently**. The file now sits in `archive/v1/` and loads nothing, so there is nothing to trim — but the underlying question is unanswered and applies to any future duplicate: verify which namespace is canonical in Chat view → **Diagnostics** before relying on either. |
+| 14 | Terminal auto-approve lives only in `settings.json` | `chat.tools.terminal.autoApprove` allows `dotnet build/test/restore`, `dotnet list package`, and read-only `git`; denies `dotnet nuget/tool/publish/pack`, mutating git, all `az`, network fetch/eval, and file deletion. **Not mirrored** — the restore procedure rebuilds every customization file and none of this. |
+| 15 | ~~**Retire `TDD Lead` — review by 2026-08-26**~~ **Closed 2026-08-29 by the v1 archive** | It was kept as a fallback while `Vanguard` was shaken out, and it duplicated `Vanguard`'s coverage, so two agents plausibly answered "build this feature" — the description-overlap failure the roster exists to avoid. **It is archived, not deleted**: `archive/v1/tdd-a-lead.agent.md` is preserved byte-for-byte and is not selectable. The overlap is closed twice over, because `Vanguard` is archived alongside it and `Vanguard v2` is the only orchestrator that loads. **Do not restate this as an open decision or as one `Toolbelt Keeper` invocation away.** |
 | 16 | Verify `Vanguard`'s Stage 0 actually fires | The behavior depends on instructions running on the first turn, not on a session hook — no such hook exists. Confirm it orients before answering a direct build request. |
 | 17 | `ProphetsWay.BPA` has no `AGENTS.md` and no solution | Empty stub repo by design. First real Stage 1 + Stage 2 test: `Repo Analyst` writes the per-repo section, `Solution Architect` scopes it, `Project Scaffolder` creates the `.sln`. Not started. |
 | 18 | Handoff file does not exist yet | `prophets-pipelines/docs/session-handoff.md` is created by the first `Session Scribe` wrapup. Until then every session is a fresh start, which is correct. |
 | 19 | **Stress-test the receipt and scope ceiling** | **Partially verified 2026-08-22.** *Passed:* heavy final reporting survived in `Implementer` (four tasks, six production files, 5,575-line spec — `COMPLETE`, build 0/0, lap 68/68, full 270/259/11, test hash unchanged) and in `Interface Architect` (four tasks, seven files, both TFMs building clean); `Contract Reviewer` completed a seven-file heavy read with a full evidence report. *Failed:* the early **chat** receipt was never visible to the parent — which is what forced the durable artifact. *Separately found:* `Interface Architect`'s `COMPLETE` overstated contract fidelity, addressed by the Requirement Trace Audit. **Also measured, unplanned:** a `Toolbelt Keeper` run returned no final output at all, and the one permitted **report-only recovery** returned `COMPLETE` — so report recovery now has a second, real datapoint rather than a fixture one. **Still unverified:** whether a leaf declares `SPLIT` on its own judgment rather than overrunning, and whether `Vanguard` routes a declared `SPLIT` instead of pushing through it. Neither has been exercised, and neither should be described as working. |
 | 20 | Receipts are artifact-backed but still instruction-enforced | **Revised 2026-08-22.** The receipt is now a real file at a path the parent chose, so its existence, its ordering relative to the change set, and its final state are all **observable** — that is a genuine improvement on prose describing a chat message that never arrived. What has not changed is enforcement: nothing technical stops a leaf editing a repository before it writes the receipt, and "no receipt before edits" is still detectable only **afterwards**, by the parent noticing changed files with no artifact. Same enforcement class as the terminal boundary. **A second limit surfaced the same day:** the mechanism is only as good as its coverage, and coverage was silently 15 of 23 — an agent without the instruction produces no artifact, which is indistinguishable to the parent from an agent that skipped it. Coverage is now complete; see item 23 for keeping it that way. Acceptable for now; revisit if a leaf is seen skipping it. |
 | 21 | Requirement Trace Audit is unverified under load | Added 2026-08-22 alongside the audit itself. It has never been run: no heavy `Interface Architect` delegation has been replayed since. The questions are whether it actually suppresses an invented default rather than retroactively rationalising one, and whether it correctly downgrades to `PARTIAL` when omitting an untraceable behavior leaves a member untestable. `Contract Reviewer` remains the independent check either way — do not treat a passing audit as a reason to skip stage 2e. |
-| 22 | **Durable-receipt recovery has never actually been exercised** | Added 2026-08-22, and worth keeping separate from item 19 because the two are easy to conflate. Recovering a **missing chat report** is now observed twice. Recovering **from the durable artifact** is observed **zero** times: the one real silent run belonged to `Toolbelt Keeper`, which had no artifact to leave, so the recovery worked from live files alone. Nothing has yet demonstrated a parent opening a `STARTED` artifact and reporting its planned scope verbatim, or using a completion record as recovery input. Until a failed run leaves one behind, the artifact is a mechanism that is **present and unexercised** — do not describe it as proven, and do not cite item 19's recovery evidence for it. |
+| 22 | ~~**Durable-receipt recovery has never actually been exercised**~~ **Observed once, 2026-08-29** | Added 2026-08-22, when it was true, and **corrected 2026-08-29 — the "observed zero times" claim is stale and must not be restated.** What happened: the v1 `Toolbelt Keeper` landing-slice invocation **returned no chat response at all** and left its receipt at `STARTED`. The parent **read that receipt**, spent exactly **one** report-only recovery invocation — the single retry the protocol allows — and the recovery independently re-checked the live files, the mirror, the frontmatter, and Diagnostics before **finalizing the same receipt `COMPLETE`** and returning a report. That is one observed **durable-receipt-assisted** recovery: the artifact was the input, not an afterthought. It is still worth keeping separate from item 19, and the 2026-08-22 passage above stays accurate for **its own** run, which predated the receipt and recovered from live files alone. **What this is not:** evidence for v2. The v2 mechanism is a leaf's single `Report artifact:` file, a different protocol on a different roster, and **no v2 leaf has yet gone silent** — see item 14 in `agent-toolbelt-v2.md`. One v1 datapoint; do not generalize it. |
 | 23 | **Coverage claims need a count, not a word** | Added 2026-08-22. The eight-agent gap survived because the docs said "all fifteen delegated-capable leaf agents" while `Vanguard`'s allowlist held 23 — a claim that read as complete and was checkable only by counting the frontmatter by hand. Both parents now state their own leaf count inline (23 and 16). **When a leaf is added to or removed from an allowlist, that number and this document's coverage table move in the same change set**, or the same failure recurs. Consider whether a `Toolbelt Keeper` drift audit should compare the two automatically. |
+| 24 | **The v2 pilot is all but unrun** | Added 2026-08-29, and the roster grew the same day from five to **twenty-eight** across four slices. **Three have since run, report-only**: `Requirements Reviewer v2` (Sol) over four planted-defect requirements fixtures, `Test Auditor v2` (Terra) over one contract and two cheatable tests, and `Commit Author v2` (Luna) over the real 31-path toolbelt diff. Each wrote only its own report, finalized it with `State` plus `Outcome` / `Reason` / `Continuation`, and changed no product repository — the reviewer applied all nine attacks and left the correctly-deferred open question alone, the auditor named the null-only, no-assertion, hardcode and parameter-ignore cheats without inventing answers or replacement code, and the Luna run ran no mutating git and excluded the pre-existing `docs/session-handoff.md`. **That is load, agent resolution and write-boundary obedience on three of the roster, and nothing more.** The pins are verified as *configuration* — the local catalog lists `gpt-5.6-sol`, `gpt-5.6-terra` and `gpt-5.6-luna`, and the frontmatter labels are exact — but the logs expose no reliable per-invocation model ID, so this is **not** runtime model telemetry. The other twenty-four are still load-valid by **static inspection only**, `Vanguard v2` has orchestrated nothing, no benchmark fixture exists, and the active handoff — now **external**, at `<project-parent>/.agent-runs/session-handoff-v2.md` rather than in a repository — has not been created. **Superseded later the same day by a second smoke, and the corrections are exact.** `Vanguard v2` (Sol) and `Session Scribe v2` (Luna) both ran, taking it to **five of twenty-nine**. The handoff **now exists** — the Scribe's `resume` found it absent, treated that as a fresh start, wrote it and stamped it `consumed`. `Vanguard v2`'s **safe stop passed**: it read the governing files, resolved the run root without walking to a drive root, wrote only `run.md`, captured the dirty baseline, and left branch, HEAD, entry count and porcelain hash unchanged. It **could not delegate** — the delegated runner exposed no nested `agent` tool — which is a limit of **that invocation route**, not proof a manually-invoked `Vanguard v2` lacks the capability, so **nested delegation and end-to-end orchestration are still unproven and need a manual picker run**. Two real defects came out of it: the Scribe's operational Markdown failed MD010, MD022 and MD032 while the run reported success, and the earlier model smoke's `run.md` was never finalized. Both were specified against in `agent-protocol-v2.md` §2, and **both have since been answered — do not restate "not yet re-tested."** The Scribe `wrapup` re-test returned `COMPLETE` / `NONE` / `STOP_RUN`, reconciled the baseline without writing to a repository, and produced two finalized artifacts that came back **diagnostic-clean** under an independent `get_errors` check; the model smoke's `run.md` now reads `State: SIGN_OFF` with `COMPLETE` / `NONE` / `STOP_RUN`. **Neither result reaches the gaps named above and below.** That finalization was retroactive, nested delegation still needs the manual picker run, and the benchmark, the harness guards, the operator's mutations and the EFTools pilot are all still owed. Everything else below stands. **Twenty of the twenty-eight now carry `GPT-5.6 Terra (copilot)`**, five carry Sol and three carry Luna, so the workload-class hypothesis behind the Terra pin is untested at scale; the adversarial reviewers on Terra are the sharpest case, because adversarial work sits in the judgment class by that document's own table. **Two structural guards are unexercised.** `Test Harness Engineer v2` may write only enumerated paths, may write no assertion anywhere, and must prove every specification file unchanged by hash. `Repository Operator v2`, added in slice 2c, holds the roster's **only irreversible actions** — one `Operator mode:` per invocation, an expected-HEAD check immediately before every mutation, staging by exact enumerated path list, no force-push, no history rewrite, no ref deletion, and no merge in any mode — and has never executed one. **A known environmental blocker sits on top of it**: the terminal auto-approval configuration denies `git commit`, `git push`, branch checkout and switch mutations, and all `az`, so an unattended operator will legitimately return `BLOCKED` / `ENVIRONMENT`. That is **documented, not fixed** — no settings file was edited, narrowing those rules is an attended-pilot decision, and nothing here claims unattended remote automation is proven. **The two-roster overlap is closed — and the numerator did not move when the denominator did.** The v1 generation was archived the same day, so exactly one orchestrator is selectable and signal 2 no longer fires; `Toolbelt Keeper v2` then took the roster to twenty-nine while the run count stayed at five. **The cutover was taken on structural grounds and produced no benchmark number**, and item 6 of the v2 document records that it raised the cost of obtaining one, since a v1-versus-v2 comparison now needs a generation restore first. Phases, gates, and the benchmark rubric are in [agent-toolbelt-v2.md](agent-toolbelt-v2.md) §6–§7; its own Open Items list tracks the rest. |
+| 25 | ~~`/sync-agents-md` carries a v1-era model fallback chain~~ | **Closed 2026-08-29.** The prompt keeps `agent: 'agent'`, its tools, and its deterministic behavior; it now pins `GPT-5.6 Luna (copilot)` as a scalar. It remains outside the 29-agent Sol/Terra/Luna distribution, while the current selector contains no legacy model pins or fallback arrays. The v1 archive remains unchanged and non-selectable. |
+| 26 | **The rollback has never been performed** | Added 2026-08-29. The archive half is measured — 26 files copied, every one hash-equal to its pre-move source, then removed from both current locations, with live and current mirror verified identical afterwards. **The restore half is specified and unrun.** Nobody has copied `archive/v1/` back and confirmed the v1 roster reappears intact in the picker, and the operation is not symmetric: a real rollback must also re-archive the current generation first and retarget `/sweep-workspace` back to a v1 `agent:` value, or it produces the mixed-generation state the scheme exists to prevent. **"v1 is kept for rollback" is an argument from a verified archive, not from a verified restore.** |
 
 ---
 
 ## 6. Adding a New Agent
 
-**Use the `Toolbelt Keeper` agent.** It performs all of the below and keeps the mirror and this
-document in sync. Doing it by hand is how drift starts.
+**Use the `Toolbelt Keeper v2` agent.** It performs all of the below and keeps the mirror, the archive,
+and this document in sync. Doing it by hand is how drift starts.
 
 ### How many is too many?
 
@@ -1156,7 +1365,9 @@ Signals you have gone too far:
 2. Two agents would both plausibly handle the same request
 3. One has not been used in a month
 
-**`TDD Lead` currently trips signal 2 against `Vanguard`** — knowingly and temporarily. See Open Item 15.
+**Signal 2 last fired against `TDD Lead` and `Vanguard`, and again when both rosters were live.** Both
+cases are closed by the 2026-08-29 archive — one orchestrator loads. **The signal is not retired**: it is
+the reason a future v3 archives v2 at cutover instead of running two generations in one picker.
 
 The four reviewers stay distinct only because each carries an explicit *"not your job"* table naming
 the agent that owns the adjacent ground. Any new reviewer needs the same. Past roughly 30 agents,
@@ -1170,13 +1381,15 @@ The steps it follows, for reference:
    Instructions = always-on guidance.
 2. **Name the file** `<domain>-a-<name>.agent.md` (or `-p-` for a prompt), flat in the prompts folder.
 3. **Frontmatter:** `name`, `description` (keyword-rich, "Use when…" + trigger phrases), `tools`
-   (minimum viable), `model` (array with fallbacks), `argument-hint`.
+   (minimum viable), `model` (**one pin, never an array** — a fallback chain hides which model produced
+   a result), `argument-hint`.
 4. **Body:** Constraints (what it must NEVER do) → Approach (numbered, step 0 = read `AGENTS.md`)
    → Output Format.
 5. **Ask: who validates this agent's output?** If it creates something, a different agent should
    check it. If it can edit files another agent owns, restrict it.
 6. **If it's a subagent**, add its display name to the orchestrator's `agents:` list.
-7. **Mirror** to `conventions/toolbelt/` and update this file.
+7. **Mirror** the **flat** file to `conventions/toolbelt/` — never into `archive/` — and update this file
+   and [agent-toolbelt-v2.md](agent-toolbelt-v2.md), including the model distribution.
 8. Verify it appears in the picker; check **Diagnostics** if not.
 
 ### Roles deliberately not built
