@@ -1,6 +1,7 @@
 # Agent Protocol v2 — Shared Delegation Mechanics
 
-**Status:** Parallel pilot. **Created:** 2026-08-29. **Owner:** G. Gordon Nasseri (ProphetManX).
+**Status:** Parallel pilot. **Created:** 2026-08-29. **Revised:** 2026-09-06 — added the shared
+Minimum Viable First execution posture. **Owner:** G. Gordon Nasseri (ProphetManX).
 **Applies to:** every agent whose display name ends in the `v2` suffix. It does **not** apply to any v1
 customization, which continues to carry its own inline receipt protocol unchanged.
 
@@ -15,6 +16,34 @@ reachable.
 
 Companion documents: [agent-toolbelt-v2.md](agent-toolbelt-v2.md) is the migration blueprint and role
 map; [agent-toolbelt.md](agent-toolbelt.md) is the v1 documentation and remains authoritative for v1.
+
+---
+
+## Minimum Viable First
+
+Default to the **smallest complete change** that solves the stated problem. Small means no adjacent work;
+complete means the requested behavior works and has evidence.
+
+For an explicitly scoped example, prototype, spike, disposable local tool, or other artifact not intended
+to ship:
+
+- implement the direct solution and run one focused executable validation;
+- do not add discovery, architecture, threat-model, independent-review, hardening, governance, lifecycle,
+   abstraction, or broader-documentation work unless the owner requested it or the direct solution cannot
+   be made sound without it;
+- keep planning and reporting proportional: do not create a plan for a one-step task, and omit empty
+   report sections that add no completion evidence;
+- report at most three concrete, material residual risks separately from the completed work; and
+- in an attended run, ask before adding a second-pass concern; in a delegated run, name it as deferred
+   rather than expanding scope or waiting for an answer.
+
+This rule **does not override** an agent's write boundary, an explicit requirement, a required check, an
+owner decision, a mandatory stop, or an irreversible-action guard. Work intended to ship still uses its
+required author/validator separation and landing gates. A one-off action against a shared or remote
+database, cloud resource, real user data, authentication or authorization, payments, or a release is
+consequential work, not a low-assurance shortcut. When a reviewer is explicitly invoked, it reports every
+in-scope finding required by its charter; the three-risk limit applies to unsolicited residual-risk
+advice, not to requested review findings.
 
 ---
 

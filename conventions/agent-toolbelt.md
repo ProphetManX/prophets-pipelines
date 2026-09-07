@@ -4,7 +4,7 @@
 > building, changing, or debugging agent customizations. Do not add it to `AGENTS.md` — it
 > is administrative context, irrelevant to day-to-day coding sessions.
 
-**Built:** 2026-08-08 · **Revised:** 2026-08-29 · **Owner:** G. Gordon Nasseri (ProphetManX)
+**Built:** 2026-08-08 · **Revised:** 2026-09-06 · **Owner:** G. Gordon Nasseri (ProphetManX)
 **Covers:** the customization roster and the `AGENTS.md` conventions system across 8 repos —
 **29 active v2 agents**, **26 archived v1 agents**, and **2 active prompts**.
 
@@ -313,7 +313,7 @@ not be restated: that v1 remains the production roster, and that the v2 total is
 | `tdd-a-test-designer-v2.agent.md` | Test Designer v2 | `GPT-5.6 Terra (copilot)` | Executable specification files only — test cases, assertions, and declarations local to those same files. **Narrower than v1**, which could also write standalone test-project helpers |
 | `tdd-a-test-harness-engineer-v2.agent.md` | **Test Harness Engineer v2** | `GPT-5.6 Terra (copilot)` | **New role with no v1 counterpart.** Non-specification test infrastructure only — fixtures, fakes, builders, stores, adapters, seeds, bootstrap seams — restricted to the paths its packet enumerates, forbidden any assertion or discovery attribute, and required to prove every specification file unchanged by hash. Succeeds only if the suite still reaches **red** |
 | `tdd-a-test-auditor-v2.agent.md` | Test Auditor v2 | `GPT-5.6 Terra (copilot)` | Report-only adversary. Cheat test, weak assertions, coverage, flakiness, traits — **plus a harness audit** checking the hash evidence, which v1 had no reason to have |
-| `tdd-a-implementer-v2.agent.md` | Implementer v2 | `GPT-5.6 Terra (copilot)` | Production source only. **Stricter than v1**: barred from the test project entirely, not merely from `*Tests.cs` |
+| `tdd-a-implementer-v2.agent.md` | Implementer v2 | `GPT-5.6 Terra (copilot)` | Production implementation artifacts, including database `.sql` and exact packet-named `.xml` resources or publish profiles. **Stricter than v1 on tests**: barred from the test project entirely. Project/build files, generated output, credentials, and deployment remain outside its charter |
 | `tdd-a-code-reviewer-v2.agent.md` | Code Reviewer v2 | `GPT-5.6 Terra (copilot)` | Report-only correctness review plus PR-comment merit triage. Unlike v1, it may not append a feature request, and it never posts a reply or changes PR state |
 | `tdd-a-refactorer-v2.agent.md` | Refactorer v2 | `GPT-5.6 Terra (copilot)` | Behavior-preserving production edits only. Observes its own green baseline rather than accepting a claimed one, and requires identical before/after counts including the total |
 

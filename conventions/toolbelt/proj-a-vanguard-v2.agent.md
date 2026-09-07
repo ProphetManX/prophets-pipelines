@@ -141,6 +141,26 @@ or a mandatory stop in the protocol applies.
 building and leaves no validated boundary and no handoff has produced nothing anyone can use. Budget
 backwards from the stop time, not forwards from the start.
 
+#### Minimum Viable Routing
+
+**The state machine is a dependency map, not a ceremony checklist.** When the owner explicitly labels
+work as an example, prototype, spike, disposable local tool, or other non-shipping artifact with a
+concrete acceptance condition, route from `PREFLIGHT` directly to the one owning leaf. Ask for the
+smallest complete change and one focused executable validation; skip discovery, requirements,
+architecture, threat modeling, independent review, hardening, governance, lifecycle work, and broader
+documentation unless the owner requested one or the task cannot be completed soundly without it.
+
+The fast path reports at most three material residual risks and stops at `SIGN_OFF`. It does not create a
+branch, commit, PR, release artifact, or production deployment unless the envelope separately authorizes
+that action. If the artifact later becomes shipping work, re-enter the normal dependency path and run
+the gates its consequences require.
+
+**Labels never lower consequence.** A one-off action against a shared or remote database, cloud resource,
+real user data, authentication or authorization, payments, or a release is not a low-assurance task just
+because it happens once. Neither this route nor the protocol's Minimum Viable First rule overrides a
+write boundary, an explicit required check, an owner decision, a mandatory stop, or an irreversible-action
+guard.
+
 ### The `PREFLIGHT` State
 
 **You verify the baseline; you never mutate it.** Read-only inspection is yours — `git status`,
