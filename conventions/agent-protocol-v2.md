@@ -1,7 +1,7 @@
 # Agent Protocol v2 — Shared Delegation Mechanics
 
-**Status:** Parallel pilot. **Created:** 2026-08-29. **Revised:** 2026-09-06 — added the shared
-Minimum Viable First execution posture. **Owner:** G. Gordon Nasseri (ProphetManX).
+**Status:** Parallel pilot. **Created:** 2026-08-29. **Revised:** 2026-09-07 - bounded test-harness
+maintenance, mode-specific packets, and focused completion evidence. **Owner:** G. Gordon Nasseri (ProphetManX).
 **Applies to:** every agent whose display name ends in the `v2` suffix. It does **not** apply to any v1
 customization, which continues to carry its own inline receipt protocol unchanged.
 
@@ -38,12 +38,48 @@ to ship:
    rather than expanding scope or waiting for an answer.
 
 This rule **does not override** an agent's write boundary, an explicit requirement, a required check, an
-owner decision, a mandatory stop, or an irreversible-action guard. Work intended to ship still uses its
-required author/validator separation and landing gates. A one-off action against a shared or remote
+owner decision, a mandatory stop, or an irreversible-action guard. Production implementation and
+landing/publishing still use their required author/validator separation and gates; helper-only work
+uses the bounded route below and does not enter landing automatically. A one-off action against a shared or remote
 database, cloud resource, real user data, authentication or authorization, payments, or a release is
 consequential work, not a low-assurance shortcut. When a reviewer is explicitly invoked, it reports every
 in-scope finding required by its charter; the three-risk limit applies to unsolicited residual-risk
 advice, not to requested review findings.
+
+### Bounded Test-Harness Work
+
+`Test Harness Engineer v2` has two modes with the same file boundary, not two roles. Every invocation
+declares exactly one `Harness mode:` and carries the harness fields in §1.
+
+| Mode | Entry | Completion and independent verification |
+| --- | --- | --- |
+| `scaffold` | `Test Designer v2` named missing standalone infrastructure; parent supplies the designer's specification hashes and the reproducible blocker | Helpers clear the blocker and the suite reaches intended red; parent reruns it, then `Test Auditor v2` audits specifications and harness |
+| `maintain` | Owner explicitly requested a bounded change to exact non-specification helper, fixture, adapter, or connection/configuration paths | Acceptance criteria met, focused validation passes, specification inventory and hashes unchanged; parent checks the actual diff and hashes and independently reruns the focused validation |
+
+**Maintenance may be delegated directly after normal preflight.** It does not require a compile
+blocker, a designer invocation, a deliberately red result, or a non-shipping label. Do not automatically
+run discovery, requirements, shaping, the TDD/review cycle, or landing for a helper-only request. The
+parent obtains the specification inventory and SHA-256 baseline from the existing affected suite,
+including inherited or linked specifications, rather than inventing a designer report. A passing
+baseline is valid; successful focused validation is a valid maintenance outcome.
+
+Neither mode may change assertions, expected results, specification inputs, traits, skips, discovery,
+or production implementation, or conceal a production defect by altering helper behavior. A hash or
+specification name-set mismatch is a failure, never a reason to refresh the baseline. Necessary new
+regression tests belong to `Test Designer v2` in separately scoped work; the harness never writes or
+approximates them. The pre-implementation auditor's red gate applies to scaffold laps, not maintenance
+sign-off. This leaves authorship separate from verification without adding a reviewer invocation by habit.
+
+The maintenance packet fixes exact paths, observable acceptance criteria and preserved invariants,
+focused local checks and expected outcomes, and operation limits. Connection/configuration plumbing
+authorizes **no live cloud or database operations**; those require separate owner authorization.
+Use synthetic configuration for local checks and keep credentials and resolved connection strings out
+of source, command output, logs, and reports. A required check that cannot run remains a blocker.
+
+In an attended run, **ask before expanding into adjacent hardening, lifecycle, or other work**; a
+delegated leaf defers it to the parent with the decision named. Explicit required checks and reviews,
+consequential-operation controls, Git authorization, and landing/release gates still apply when their
+scope is requested. Maintenance completion is not full-suite, live-database, review, or release certification.
 
 ---
 
@@ -67,6 +103,12 @@ and names the missing field.
 | `Allowed writes:` | yes | The leaf's charter restated, plus the report artifact |
 | `Definition of done:` | yes | The evidence the parent will check |
 | `Run envelope:` | only for unattended runs | See §5. Absent means an attended run |
+| `Harness mode:` | only when invoking `Test Harness Engineer v2` | Exactly one of `scaffold` or `maintain`. Missing, unrecognized, or combined is `BLOCKED` / `PROTOCOL` |
+| `Allowed helper paths:` | both harness modes | Exact test-project file paths, never folders, globs, or implicit additions; every path must be non-specification infrastructure |
+| `Specification hashes:` | both harness modes | Complete affected specification inventory, including inherited or linked files, with SHA-256; designer evidence for `scaffold`, parent-captured current baseline for `maintain` |
+| `Acceptance criteria:` | both harness modes | Observable requested behavior and invariants to preserve, consistent with `Definition of done:` |
+| `Focused validation:` | both harness modes | Exact local checks/commands, relevant project/target/filter, expected outcomes, and operation limits; no implicit live operations |
+| `Infrastructure blocker:` | harness `scaffold` only | Designer-named missing infrastructure, reproduction check, and intended red; not required or fabricated for `maintain` |
 | `Operator mode:` | only when invoking `Repository Operator v2` | Exactly one of `prepare_branch`, `checkpoint_commit`, `publish_branch`, `open_or_update_draft_pr`, `mark_pr_ready`, `release`. Missing, unrecognized, or combined is `BLOCKED` / `PROTOCOL` |
 | `Release manifest:` | only to authorize a version change, tag, or publication | See §7 |
 
@@ -335,6 +377,12 @@ a "prepared" one.
 No unattended Azure deployment, ever. A v2 run may author, build, lint, and preview; the mutating
 command is named in the report for a human to run. Pipeline runs are allowed only when the envelope
 explicitly names them.
+
+Cloud and database operations are separately authorized from source changes, including test connection
+plumbing. A configured endpoint is not permission to connect, publish a schema, create or delete a
+database, or change identity/firewall settings. Name the operation and obtain the owner's authorization
+through the appropriate workflow; an agent's narrower prohibition still wins. Local validation uses
+synthetic configuration or explicitly scoped isolated fixtures, never an implicit live endpoint.
 
 ### A refused environment is an outcome, never a detour
 

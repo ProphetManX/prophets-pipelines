@@ -2,7 +2,7 @@
 name: 'Pipeline Auditor v2'
 description: 'Independent read-only audit of Azure DevOps pipeline configuration — whether each consumer satisfies the shared variable contract, whether the template chain resolves, whether stage dependencies conditions and artifact flows are right, whether any repository has drifted off the shared templates, and whether a secret or an over-broad permission leaked into YAML. Diagnoses and proposes; never edits YAML and never applies its own proposal. Also the independent gate that re-reviews a change set Pipeline Engineer v2 has applied. Trigger phrases: audit the pipelines, check my CI, is my pipeline right, app-variables, pipeline drift, why did my build fail to publish, review the yml, check for secrets in pipeline.'
 tools: [read, search, edit]
-model: 'GPT-5.6 Terra (copilot)'
+model: 'GPT-6 Astra (copilot)'
 argument-hint: 'The repository to audit, or "all" for the whole workspace'
 ---
 

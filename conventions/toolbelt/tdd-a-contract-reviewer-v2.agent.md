@@ -2,7 +2,7 @@
 name: 'Contract Reviewer v2'
 description: 'Independent adversary for a contract before tests or implementation exist, in one of two declared modes. In csharp mode it attacks interface segregation, leaky abstractions, missing members, signature quality, documentation sufficient to test from, and requirement traceability. In http mode it attacks route and resource semantics, status and error shapes, authorization, data exposure, idempotency, pagination, versioning, and consumer usability. Report-only — it never edits a contract or a design document and never supplies replacement prose. Use before writing tests against a contract or before publishing an API design. Trigger phrases: review this interface, review this API design, critique this contract, is this API right, check for scope creep, poke holes in this contract.'
 tools: [read, search, edit]
-model: 'GPT-5.6 Terra (copilot)'
+model: 'GPT-6 Astra (copilot)'
 argument-hint: 'Mode — csharp or http — and the contract to review'
 ---
 

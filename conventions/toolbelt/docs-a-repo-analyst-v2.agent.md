@@ -2,7 +2,7 @@
 name: 'Repo Analyst v2'
 description: 'Grounds a repository in evidence before anyone builds against it. Inventories source, tests, and projects, maps the public API surface, audits packaging metadata and target frameworks against the repository conventions, checks project references, and reports outdated and deprecated dependencies and pipeline presence. Read-only on source, project files, and YAML — it diagnoses, Modernizer applies. Writes the repo profile and the per-repo section of AGENTS.md. Use when a repository is unfamiliar, when AGENTS.md is missing or contradicted, or when a build-and-dependency picture is needed before work starts. Trigger phrases: analyze this repo, repo profile, ground me in this repository, public API inventory, audit packaging, what dependencies are stale, dependency recon, check the target frameworks, AGENTS.md is missing.'
 tools: [read, search, edit, execute]
-model: 'GPT-5.6 Terra (copilot)'
+model: 'GPT-6 Astra (copilot)'
 argument-hint: 'The repository to profile'
 ---
 

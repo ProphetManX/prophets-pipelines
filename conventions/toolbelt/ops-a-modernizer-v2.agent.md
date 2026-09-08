@@ -2,7 +2,7 @@
 name: 'Modernizer v2'
 description: 'Applies an approved build and packaging change list to existing csproj and sqlproj files, one independently verifiable change at a time, building and testing after each. Mutation only — it has no reconnaissance mode, because diagnosis belongs to Repo Analyst v2. Never touches versions, namespaces, source, tests, or YAML. Use when an owner-approved modernization plan exists and needs applying: dropping end-of-life targets, filling packaging metadata, removing a LangVersion pin, migrating a legacy database project. Trigger phrases: apply the modernization plan, fix the csproj, fill in the packaging metadata, drop the EOL target frameworks, migrate the sqlproj, pay down the approved build debt.'
 tools: [read, search, edit, execute, execute/runTests, execute/testFailure]
-model: 'GPT-5.6 Terra (copilot)'
+model: 'GPT-6 Astra (copilot)'
 argument-hint: 'The repository, and the approved change list to apply'
 ---
 

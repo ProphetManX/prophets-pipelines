@@ -2,7 +2,7 @@
 name: 'Toolbelt Keeper v2'
 description: 'Use to create, change, delete, audit, archive, or restore a custom agent or prompt in the ProphetsWay toolbelt. Keeps four locations in agreement: the flat live VS Code selector folder, the flat current mirror in prophets-pipelines/conventions/toolbelt, the versioned generation archive beneath it, and the toolbelt documentation. Verifies live against the current mirror by name set and SHA-256, excluding archived generations, and validates display names, exact single model pins, and agents allowlists. Archives and restores only whole named generations, never a mixture. Never commits or pushes. Trigger phrases: add an agent, update an agent, delete an agent, new prompt file, modify the toolbelt, sync the toolbelt, audit the toolbelt, agent drifted, archive the generation, roll back to a previous generation, restore my agents, back up my agents.'
 tools: [read, search, edit, execute]
-model: 'GPT-5.6 Terra (copilot)'
+model: 'GPT-6 Astra (copilot)'
 argument-hint: 'What to add, change, remove, audit, archive, or restore'
 ---
 

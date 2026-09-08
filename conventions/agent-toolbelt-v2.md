@@ -1,8 +1,8 @@
 # Agent Toolbelt v2 — Migration Blueprint
 
 **Status:** **Active selector generation.** v1 is archived for rollback, not deleted. **Created:**
-2026-08-29. **Revised:** 2026-09-06 — Minimum Viable First routing and database implementation-file
-ownership. **Owner:** G. Gordon Nasseri (ProphetManX). **Roster:** 29 v2 agents — `Vanguard v2`,
+2026-08-29. **Revised:** 2026-09-07 - bounded harness maintenance and mode-specific delegation and
+verification. **Owner:** G. Gordon Nasseri (ProphetManX). **Roster:** 29 v2 agents — `Vanguard v2`,
 twenty-seven project leaves in its allowlist, and `Toolbelt Keeper v2` deliberately outside it.
 
 **The selector cutover has happened; the behavioral gates have not.** As of 2026-08-29 the live picker
@@ -52,7 +52,7 @@ not something still running.
 
 | v1 agent | Target | Disposition |
 | --- | --- | --- |
-| `Vanguard` | **`Vanguard v2`** | Rewritten around an explicit state machine, envelopes, and dependency routing. **Exists now**, and is the **only** selectable front door — v1 `Vanguard` is archived |
+| `Vanguard` | **`Vanguard v2`** | Explicit state machine, envelopes, and dependency routing, including direct delegation of explicitly requested bounded harness maintenance after preflight. **Exists now**, and is the **only** selectable front door — v1 `Vanguard` is archived |
 | `TDD Lead` | **`Vanguard v2`** | **Retired into it.** It duplicated `Vanguard`'s coverage and tripped the description-overlap rule; v2 has exactly one orchestrator. **Archived 2026-08-29 with the rest of v1**, which is what actually retired it — before that it was merely planned |
 | `Session Scribe` | **`Session Scribe v2`** | Same three modes; concise linking handoff. **Exists now** |
 | `Toolbelt Keeper` | **`Toolbelt Keeper v2`** | **Exists now.** Rewritten against the protocol for **four** locations — the flat live selector, the flat current mirror, the versioned generation archive, and the documentation — with whole-generation archive and restore. It maintains customization files rather than participating in a run, so it stays **outside every orchestrator's allowlist** and `Vanguard v2` cannot invoke it: changing the toolbelt remains a separate session. **The earlier plan to keep one shared v1 copy is superseded** — a shared v1 agent could not survive the v1 archive, and it had no vocabulary for generations |
@@ -76,7 +76,7 @@ not something still running.
 | v1 agent | Target | Disposition |
 | --- | --- | --- |
 | `Test Designer` | `Test Designer v2` | Retained, **narrowed**. Writes executable specification files only — test cases, assertions, and declarations local to those same files — and observes red rather than predicting it. v1 could also write "test-project helper files"; that half moved to the harness role below. **Exists now** |
-| — | **`Test Harness Engineer v2`** | **New, and v2-only — it has no v1 counterpart.** The phase-2 harness capability in §4, built as a separate agent rather than as a widening of `Implementer v2`. **Exists now** — see *The Harness Boundary* below |
+| — | **`Test Harness Engineer v2`** | **v2-only, with no v1 counterpart.** Non-specification infrastructure with explicit `scaffold` and `maintain` modes, not a widening of `Implementer v2`. See *The Harness Boundary* below |
 | `Test Auditor` | `Test Auditor v2` | Retained, **extended to audit the harness** as well as the specification, including its hash evidence. **Exists now** |
 | `Implementer` | `Implementer v2` | Retained, **still unable to edit a test** — and now unable to touch a test project at all, because the harness gap that motivated widening it has its own agent. Its production boundary is semantic rather than C#-only: it includes database `.sql` and exact packet-named `.xml` resources or publish profiles, while `.sqlproj`, build files, generated output, credentials, and deployment remain outside it. **Exists now** |
 | `Code Reviewer` | `Code Reviewer v2` | Retained, including PR-comment merit verdicts. Report-only, and it never posts a reply or changes PR state. **Exists now** |
@@ -87,7 +87,8 @@ not something still running.
 Real laps stall on infrastructure that is not the test itself — a fixture, a fake, a builder, an
 in-memory store, an adapter, a data seed, a suite bootstrap or seam. §4 recorded the capability as wanted
 and refused to obtain it by widening `Implementer v2`. `Test Harness Engineer v2` is the shape that was
-named there: a **separate declared role with its own file boundary**, validated by `Test Auditor v2`.
+named there: a **separate declared role with its own file boundary**. Its scaffold workflow keeps the
+red-phase audit; its maintenance workflow has focused parent verification instead of a mandatory full cycle.
 
 **It does not weaken the TDD separation, and the reasons are structural rather than promissory:**
 
@@ -96,14 +97,51 @@ named there: a **separate declared role with its own file boundary**, validated 
 | It writes **only** the paths its packet enumerates | Authorization is an explicit list composed by the parent, never a folder, a glob, or the agent's own judgment |
 | It may not write an assertion or a test-discovery attribute **anywhere** | It cannot author a test case even inside its own files, so no test can be smuggled past the audit |
 | It refuses an allowed path that already contains one | A mislabeled specification file cannot be edited under a harness packet |
-| It re-hashes every specification file before and after and requires equality | Untouched specifications are **proved**, not asserted; a mismatch is `FAILED` |
-| Its success condition is **red**, not green | A suite that goes green after harness work is a failed lap by definition — the harness answered the implementation's question |
-| A helper that needs an assertion routes back to `Test Designer v2` | The boundary fails closed rather than stretching |
-| `Test Auditor v2` reviews it afterwards, hash evidence included | The author is still not the validator |
+| It re-inventories and re-hashes every specification before and after | Name-set and SHA-256 equality prove existing specifications unchanged; a mismatch is `FAILED`, never rebaselined by the author |
+| Completion is mode-specific | `scaffold` reproduces a designer-named blocker and must reach intended red; `maintain` meets explicit acceptance criteria and passes focused validation without requiring a blocker or red |
+| Expected results, specification inputs, traits, skips, discovery, and production implementation stay untouched | Maintenance cannot conceal a production defect by changing helper behavior, including through adapters or bootstrap |
+| Necessary new regression tests route to `Test Designer v2` | The harness reports the coverage need instead of writing a specification or embedding an answer in plumbing |
+| The verifier is separate from the author | Scaffold: parent reruns red, then `Test Auditor v2` audits specifications and harness. Maintain: parent checks the actual diff and specification hashes and independently reruns focused validation |
 
 The distinction it turns on is **specification versus infrastructure**, not file location. `Implementer
 v2` remains barred from the test project entirely, which is stricter than v1 — the pressure that would
 have broken that rule now has somewhere legitimate to go.
+
+**Every harness packet declares `Harness mode: scaffold | maintain`.** Both modes require exact
+`Allowed helper paths:`, complete `Specification hashes:`, observable `Acceptance criteria:`, and
+`Focused validation:` with operation limits. Only scaffold needs `Infrastructure blocker:` and the
+designer's hash report. For maintenance, Vanguard captures the existing suite's hashes directly and
+may delegate from `PREFLIGHT` to `HARNESS_MAINTAIN`, then verify and reach `SIGN_OFF`. No fabricated
+compile failure, designer invocation, non-shipping label, or automatic discovery/TDD/review cycle is needed.
+
+The current `Test Auditor v2` remains a pre-implementation scaffold gate, not a maintenance sign-off
+dependency. Explicitly required reviews and later landing gates retain their own scope. Connection and
+configuration edits grant no live cloud/database authority; local checks use synthetic values without
+printing credentials or resolved connection strings. Ask before adjacent hardening or lifecycle work;
+delegated leaves defer those decisions to the parent.
+
+#### Harness Maintenance Routing Check
+
+This is a routing fixture, **not authorization to edit the example helper or operate a database**.
+Given a clean authorized branch, the usual operational packet, and the owner's request to update
+`ProphetsWay.EFTools.Tests/TestStore.cs`, Vanguard resolves that exact path under the repository root
+and delegates `Harness mode: maintain` to the existing `Test Harness Engineer v2`.
+
+The acceptance criteria are to read `EFTOOLS_SQLSERVER_CONNECTION_STRING` through
+`SqlConnectionStringBuilder`, preserve the existing localhost fallback when the override is absent,
+and preserve per-call database selection. Focused local validation must exercise those choices with
+synthetic configuration, including different database names on successive calls, without opening a
+connection or performing any live database operation. No credential value belongs in source or output.
+
+| Routing case | Required decision |
+| --- | --- |
+| Exact helper path, criteria, focused local checks, and parent-captured specification hashes; baseline passes; no blocker | Delegate maintenance directly, independently verify the evidence, and accept passing validation |
+| Same request but missing a required harness field, using a folder/glob, or carrying stale/incomplete hashes | `BLOCKED` / `PROTOCOL`; obtain a complete bounded packet rather than inventing a blocker |
+| Work needs an assertion, expected-result change, trait/skip/discovery change, or new regression case | Refuse the harness write; route necessary specification work to `Test Designer v2` with its own scope |
+| A helper would suppress or bypass a production failure | Refuse and report the production defect; green is not evidence of correctness |
+| The connection override suggests a live run, schema publication, new credential policy, retries, or database lifecycle work | Do not expand; obtain separate owner authorization for operations and ask before adjacent work |
+
+This fixture checks routing and completion rules, not runtime delegation or provider certification.
 
 ### Land, ops, and infrastructure
 
@@ -174,7 +212,7 @@ These are load-bearing. A merge that violates one is not a simplification.
 | --- | --- | --- |
 | `Test Designer v2` | `Implementer v2` | **The critical one.** An implementer that can edit a test will fix the test, because that is the shortest path to green |
 | `Test Designer v2` | `Test Harness Engineer v2` | Specification and infrastructure are different products with different failure modes. One agent holding both can move an assertion into a helper and call it plumbing |
-| `Test Harness Engineer v2` | `Test Auditor v2` | A fake that encodes an expected value is an implementation written where nobody looks. The audit checks the hash evidence, not the claim |
+| `Test Harness Engineer v2` | `Test Auditor v2` for scaffold; invoking parent/owner for maintain | A fake that encodes an expected value is an implementation written where nobody looks. Both routes check the actual diff and hash evidence; maintenance also requires an independent focused rerun, not the author's claim |
 | `Interface Architect v2` | `Contract Reviewer v2` (`csharp`) | An agent that designed an API is a weak critic of it |
 | `API Designer v2` | `Contract Reviewer v2` (`http`) | Same reasoning, different surface |
 | `Test Designer v2` | `Test Auditor v2` | Whether tests meaningfully constrain the implementation is a separate judgment from writing them |
@@ -212,7 +250,7 @@ now built, and neither as a widening.**
 
 | Candidate | Status |
 | --- | --- |
-| **Guarded test-harness mode** for `Implementer v2` | **Resolved 2026-08-29 — and not as a mode.** The evaluation concluded that granting `Implementer v2` any write inside a test project deletes the roster's most important constraint, whatever it is called. The capability shipped instead as `Test Harness Engineer v2`: a separate agent, an enumerated path list rather than a file pattern, no assertion anywhere, hash-proved specification files, red as its success condition, and `Test Auditor v2` reviewing the result. `Implementer v2` was **tightened** rather than widened — it may not touch a test project at all. See §2 *The Harness Boundary* |
+| **Guarded test-harness mode** for `Implementer v2` | **Resolved 2026-08-29 as a separate agent, not an Implementer mode.** Granting `Implementer v2` any test-project write would delete the roster's most important constraint. `Test Harness Engineer v2` instead owns enumerated non-specification paths, no assertions, and hash-proved specifications. Its original scaffold workflow requires intended red and `Test Auditor v2`; its bounded maintain mode uses acceptance criteria, passing focused validation, and independent parent verification. `Implementer v2` remains barred from the test project. See §2 *The Harness Boundary* |
 | **Bounded Git/Release operator** | **Resolved 2026-08-29 in the 2c slice.** The protocol allows a run to branch, commit, push, and open a draft PR, and giving those to a prose orchestrator or a document-writing leaf would have been broad mutation in the wrong place. It shipped as the shape this row asked for: `Repository Operator v2`, one narrow agent whose entire charter is git and release mechanics, with one `Operator mode:` per invocation, an expected-HEAD check before every mutation, an enumerated staging list, and the release manifest as its only publication authorization. `Vanguard v2` still executes nothing itself. See §2 *The Operator Boundary* |
 
 **Nothing is deferred now.** The next unknowns are behavioral, not structural — see §9.
@@ -221,89 +259,90 @@ now built, and neither as a widening.**
 
 ## 5. Model Workload Classes
 
-Verified against the local VS Code catalog on **2026-08-29**. Only these three labels may appear in a v2
-file, exactly as written:
+**Owner-approved allocation, 2026-09-07:** every active v2 agent previously using Sol or Terra now uses
+`GPT-6 Astra (copilot)`. The harness moved first; the owner then explicitly approved the remaining
+twenty-five agents, reporting that manual Astra overrides for `Vanguard v2` were working well.
+That is owner-reported experience, not a comparative benchmark or independent runtime-model telemetry.
+
+The workload classes still describe each role's job. The model consolidation changes no tools,
+authorship/review separation, write boundary, or authorization gate. Current pins use only these labels:
 
 | Label | Class | Use for |
 | --- | --- | --- |
-| `GPT-5.6 Sol (copilot)` | **Judgment** | Orchestration, discovery, architecture, adversarial review — anything where a wrong inference is expensive and hard to detect |
-| `GPT-5.6 Terra (copilot)` | **Bounded specialist** | Narrow, well-specified, verifiable work with a clear done condition. **In use as of the phase-2a slice** |
+| `GPT-6 Astra (copilot)` | **Judgment and bounded specialist** | All twenty-six non-Luna agents, including Vanguard, the harness, the reviewers, and Toolbelt Keeper |
 | `GPT-5.6 Luna (copilot)` | **Mechanical** | Recording, summarizing, reconciling against a diff — high volume, low judgment |
 
 Rules: **one pin per agent, no fallback array.** A fallback chain hides which model produced a result,
-which makes the benchmark unreadable. No Claude, Opus, Sonnet, GPT-5, or `auto` label belongs in any v2
-file. A typo in a model label fails **silently** to the picker default, so every pin is checked in Chat
-view → **Diagnostics** after loading.
+which makes the benchmark unreadable. Sol and Terra are historical assignments, not active defaults;
+do not restore them or introduce another label without owner approval. A typo fails **silently** to
+the picker default, so check model selection and Chat Diagnostics after loading.
 
-### Current pilot pins
+### Current Model Pins
 
 | Agent | Pin | Class |
 | --- | --- | --- |
-| `Vanguard v2` | `GPT-5.6 Sol (copilot)` | Judgment |
-| `Product Discovery v2` | `GPT-5.6 Sol (copilot)` | Judgment |
-| `Requirements Reviewer v2` | `GPT-5.6 Sol (copilot)` | Judgment |
-| `Solution Architect v2` | `GPT-5.6 Sol (copilot)` | Judgment |
-| `Purpose Refiner v2` | `GPT-5.6 Sol (copilot)` | Judgment |
-| `Repo Analyst v2` | `GPT-5.6 Terra (copilot)` | Bounded specialist |
-| `Modernizer v2` | `GPT-5.6 Terra (copilot)` | Bounded specialist |
-| `Project Scaffolder v2` | `GPT-5.6 Terra (copilot)` | Bounded specialist |
-| `Interface Architect v2` | `GPT-5.6 Terra (copilot)` | Bounded specialist |
-| `API Designer v2` | `GPT-5.6 Terra (copilot)` | Bounded specialist |
-| `Contract Reviewer v2` | `GPT-5.6 Terra (copilot)` | Bounded specialist |
-| `Threat Modeler v2` | `GPT-5.6 Terra (copilot)` | Bounded specialist |
-| `Test Designer v2` | `GPT-5.6 Terra (copilot)` | Bounded specialist |
-| `Test Harness Engineer v2` | `GPT-5.6 Terra (copilot)` | Bounded specialist |
-| `Test Auditor v2` | `GPT-5.6 Terra (copilot)` | Bounded specialist |
-| `Implementer v2` | `GPT-5.6 Terra (copilot)` | Bounded specialist |
-| `Code Reviewer v2` | `GPT-5.6 Terra (copilot)` | Bounded specialist |
-| `Refactorer v2` | `GPT-5.6 Terra (copilot)` | Bounded specialist |
-| `Security Reviewer v2` | `GPT-5.6 Terra (copilot)` | Bounded specialist |
-| `Pipeline Engineer v2` | `GPT-5.6 Terra (copilot)` | Bounded specialist |
-| `Pipeline Auditor v2` | `GPT-5.6 Terra (copilot)` | Bounded specialist |
-| `Azure Infrastructure Engineer v2` | `GPT-5.6 Terra (copilot)` | Bounded specialist |
-| `Azure Deployment Reviewer v2` | `GPT-5.6 Terra (copilot)` | Bounded specialist |
-| `Repository Operator v2` | `GPT-5.6 Terra (copilot)` | Bounded specialist |
-| `README Author v2` | `GPT-5.6 Terra (copilot)` | Bounded specialist |
-| `Toolbelt Keeper v2` | `GPT-5.6 Terra (copilot)` | Bounded specialist |
+| `Vanguard v2` | `GPT-6 Astra (copilot)` | Judgment |
+| `Product Discovery v2` | `GPT-6 Astra (copilot)` | Judgment |
+| `Requirements Reviewer v2` | `GPT-6 Astra (copilot)` | Judgment |
+| `Solution Architect v2` | `GPT-6 Astra (copilot)` | Judgment |
+| `Purpose Refiner v2` | `GPT-6 Astra (copilot)` | Judgment |
+| `Repo Analyst v2` | `GPT-6 Astra (copilot)` | Bounded specialist |
+| `Modernizer v2` | `GPT-6 Astra (copilot)` | Bounded specialist |
+| `Project Scaffolder v2` | `GPT-6 Astra (copilot)` | Bounded specialist |
+| `Interface Architect v2` | `GPT-6 Astra (copilot)` | Bounded specialist |
+| `API Designer v2` | `GPT-6 Astra (copilot)` | Bounded specialist |
+| `Contract Reviewer v2` | `GPT-6 Astra (copilot)` | Bounded specialist |
+| `Threat Modeler v2` | `GPT-6 Astra (copilot)` | Bounded specialist |
+| `Test Designer v2` | `GPT-6 Astra (copilot)` | Bounded specialist |
+| `Test Harness Engineer v2` | `GPT-6 Astra (copilot)` | Bounded specialist |
+| `Test Auditor v2` | `GPT-6 Astra (copilot)` | Bounded specialist |
+| `Implementer v2` | `GPT-6 Astra (copilot)` | Bounded specialist |
+| `Code Reviewer v2` | `GPT-6 Astra (copilot)` | Bounded specialist |
+| `Refactorer v2` | `GPT-6 Astra (copilot)` | Bounded specialist |
+| `Security Reviewer v2` | `GPT-6 Astra (copilot)` | Bounded specialist |
+| `Pipeline Engineer v2` | `GPT-6 Astra (copilot)` | Bounded specialist |
+| `Pipeline Auditor v2` | `GPT-6 Astra (copilot)` | Bounded specialist |
+| `Azure Infrastructure Engineer v2` | `GPT-6 Astra (copilot)` | Bounded specialist |
+| `Azure Deployment Reviewer v2` | `GPT-6 Astra (copilot)` | Bounded specialist |
+| `Repository Operator v2` | `GPT-6 Astra (copilot)` | Bounded specialist |
+| `README Author v2` | `GPT-6 Astra (copilot)` | Bounded specialist |
+| `Toolbelt Keeper v2` | `GPT-6 Astra (copilot)` | Bounded specialist |
 | `Session Scribe v2` | `GPT-5.6 Luna (copilot)` | Mechanical |
 | `Commit Author v2` | `GPT-5.6 Luna (copilot)` | Mechanical |
 | `Changelog Author v2` | `GPT-5.6 Luna (copilot)` | Mechanical |
 
-**Distribution across the 29 active agents: Sol 5, Terra 21, Luna 3.** Re-derived 2026-08-29 by reading
-the `model:` line of every live `*-v2.agent.md`, not carried from this table. Every pin is a single
-label; no fallback array survives anywhere in the roster. **The pre-cutover 5 / 20 / 3 figure is
-superseded.**
+**Distribution across the 29 active agents: Astra 26, Luna 3; Sol 0, Terra 0.** Derived from every live
+agent's frontmatter after the approved rollout. Every pin is a single label. The earlier harness-only
+distribution (Astra 1, Sol 5, Terra 20, Luna 3) is superseded.
 
-**The current selector contains no legacy model pins or fallback arrays.** `/sync-agents-md` is the
-one Luna-pinned prompt; `/sweep-workspace` inherits `Vanguard v2`. The v1 archive retains its historical
-pins unchanged as rollback material and is not selectable.
+**Astra identity evidence:** the local VS Code `chat.cachedLanguageModels.v2` catalog contains
+`name: GPT-6 Astra`, `vendor: copilot`, `id: gpt-6-astra`, and `isUserSelectable: true`. The custom-agent
+pin is therefore **`GPT-6 Astra (copilot)`**, not either CLI provider's entry. This verifies the label
+against the cached picker catalog, not a visual picker selection or runtime model telemetry. Reload the
+window and check the changed agents' selections and Chat Diagnostics after the edits.
 
-**`Toolbelt Keeper v2` is the twenty-first Terra, and the class fits better than its ancestry suggests.**
-The v1 agent it replaces ran on a judgment-class fallback chain, but the work is enumerable and checkable
-end to end — hash sets, file counts, frontmatter fields, a stated done condition. Its failure mode is an
-incomplete sweep, which a hash comparison catches; it is not a bad inference, which nothing catches.
+Luna remains on `Session Scribe v2`, `Commit Author v2`, and `Changelog Author v2`. Documentation is not
+a blanket Luna category: `README Author v2`, `Repo Analyst v2`, and `Purpose Refiner v2` now use Astra
+along with the other former Sol/Terra roles.
 
-**The 2c pins follow the same rule and add one deliberate test.** `Commit Author v2` and
-`Changelog Author v2` are Luna because both are reconciliation against a diff — high volume, low
-judgment, and a wrong answer is visible in the artifact. `README Author v2` is Terra rather than Luna
-because its failure mode is **invention**, which is a judgment failure wearing a documentation costume.
-`Repository Operator v2` is Terra despite executing the roster's only irreversible actions, because its
-work is entirely checkable — verify a HEAD, stage a named list, run a named command — and dimension 1 of
-§7 is exactly where a wrong call there would show up. **If a bounded pin is going to fail anywhere,
-that is the agent where it matters most**, so the benchmark treats it as a disqualifying case.
+Neither prompt file changed: `/sync-agents-md` retains its Luna pin, and `/sweep-workspace` inherits
+`Vanguard v2`, now pinned to Astra. The v1 archive retains its historical pins unchanged and is not
+selectable. Model changes do not create a new agent generation.
 
-**`Purpose Refiner v2` is the one grounding leaf on the judgment class, and that is deliberate.** Its
-product is a scope verdict and an extraction argument — a wrong call there is expensive and hard to
-detect, which is the definition of the judgment class. The remaining leaves have a clear done condition
-and sit on Terra or Luna. **The split is itself a benchmark input**: if Terra under-performs on
-`Contract Reviewer v2`, `Interface Architect v2`, or either of the two adversarial build roles, that is
-the finding, not a reason to quietly re-pin.
+### Historical Allocation and Evidence
 
-**The two build reviewers on Terra are the sharpest test of that hypothesis.** `Test Auditor v2` and
-`Code Reviewer v2` are adversarial roles, which §1's table puts in the judgment class — but both work
-from a fixed checklist against a bounded artifact with a stated verdict, which is the bounded-specialist
-profile. They are pinned to Terra on purpose so the benchmark can answer it, and dimensions 3 and 4 of
-§7 are where the answer will show up.
+The original allocation used Sol for judgment, Terra for bounded specialists, and Luna for mechanical
+work. Toolbelt Keeper and Repository Operator were assigned Terra because their operations are
+enumerable and checkable; README Author was kept off Luna because source-grounded documentation can
+invent claims; Purpose Refiner used Sol because a scope verdict needs judgment. Test Auditor and Code
+Reviewer were deliberate Terra experiments despite adversarial work, to test whether a bounded
+checklist was enough. Those assignments explain the historical smoke evidence, not the current pins.
+
+The owner-approved consolidation supersedes that allocation, not the verification requirements.
+Historical Sol/Terra runs remain attributed to those models; they are not Astra benchmark evidence.
+Authors and reviewers still run separately, but a shared model can share blind spots, so independent
+executable checks and source-grounded review remain important. No new validator or broader tool grant
+is introduced by this pin-only rollout.
 
 ---
 
@@ -377,7 +416,7 @@ Dimensions 1, 2, and 9 are disqualifying at any failure. The rest are comparativ
 | Feature requests | `Purpose Refiner v2` is the only writer of `docs/feature-requests.md` and the only agent that may change a status, and only against an owner decision **quoted in the packet**. A parent's recommendation is not authorization, and a parent may not manufacture one |
 | Contract review | `Mode: csharp` or `Mode: http` is a **required** packet field; a missing mode is `BLOCKED` / `PROTOCOL` before any read. Reviewing an HTTP design against interface-segregation criteria produces confident findings against the wrong criteria |
 | Build lap | Red → audit → green → review → optional refactor → checkpoint, one coherent slice at a time, driven entirely by `Vanguard v2`. **Never proceed past a `Repair required` audit.** A behavior correction routes `Test Designer v2` → `Test Auditor v2` → `Implementer v2`; a structure-only correction may route `Refactorer v2`. Repair cycles and lap count are envelope ceilings, and reaching one is `PARTIAL` / `BUDGET`, not a failure |
-| Test harness | `Test Harness Engineer v2` is routed **only** on a named standalone infrastructure blocker, and only with `Allowed helper paths:` enumerated exactly plus `Specification hashes:` from the designer's report. It writes no assertion and no test-discovery attribute anywhere, proves every specification file unchanged by hash, and **succeeds only if the suite still reaches red**. A green suite after harness work is a failed lap. A helper that needs an assertion routes back to `Test Designer v2` |
+| Test harness | Required `Harness mode: scaffold \| maintain`, exact `Allowed helper paths:`, complete `Specification hashes:`, `Acceptance criteria:`, and `Focused validation:`. Scaffold alone requires a designer-named `Infrastructure blocker:`, designer hashes, intended red, and the test audit. Explicit maintenance may route directly after preflight with parent-captured hashes and pass focused local validation; parent independently checks the diff, hashes, and rerun. No automatic full cycle or landing. Assertions, expected results, specification inputs, traits, skips, discovery, and production implementation remain protected; new regression tests go to `Test Designer v2`, and no helper may conceal a production defect. Cloud/database operations need separate authorization, credentials stay out of source/output, and adjacent hardening/lifecycle work needs owner approval |
 | Test edits | No agent may weaken, delete, skip, retag, or filter a test to obtain green. `Implementer v2` may not touch a test project at all; a test it believes is wrong stops that stream and is reported with the assertion and the conflicting contract statement quoted |
 | Database implementation files | `Implementer v2` owns production `.sql` and exact `.xml` database resources or publish profiles named in `Allowed writes:`. An extension is not blanket authorization: `.sqlproj`, `.sqlproj.user`, `.csproj`, `.props`, `.targets`, generated output, secrets, and deployment remain outside its charter. `Modernizer v2` retains existing `.csproj` / `.sqlproj`; `Test Harness Engineer v2` may already write an enumerated XML fixture path without any extension-wide grant |
 | Diagnosis versus repair | `Repo Analyst v2` finds build and packaging debt and proposes fixes unapplied; `Modernizer v2` applies only what an owner approved, one verifiable change at a time, and never during a deliberately red lap. An agent that both finds and fixes debt writes its own approval |
@@ -412,7 +451,7 @@ Dimensions 1, 2, and 9 are disqualifying at any failure. The rest are comparativ
 | 6 | Benchmark fixtures do not exist | **Narrowed 2026-08-29, not closed.** Synthetic *smoke* fixtures now exist under the run directory in §10 — four requirements artifacts with planted defects, and one contract plus two cheatable tests. They were built to prove a leaf loads and stays inside its boundary, **not** to score anything: they feed none of the ten §7 dimensions, cover one v1/v2 pairing nowhere, and produce no comparative number. The rubric fixtures that would let v1 and v2 run the same real workload are still outstanding and still the phase-3 gate. **This remains the critical path**, and the 2026-08-29 selector cutover raised its cost rather than lowering it: v1 is archived, so any v1-versus-v2 comparison now needs a deliberate generation restore from `archive/v1/` first. **The cutover was taken on structural grounds, without the comparative number this row is about** |
 | 7 | ~~Two rosters answer the same request~~ **Closed 2026-08-29 by the selector cutover** | `Vanguard` and `Vanguard v2` both plausibly matched "build this feature", which is exactly the description-overlap failure the roster forbids. It closed the way this row said it should rather than by lingering: **v1 was archived, not left beside v2**, so exactly one orchestrator is selectable and the `v2` suffix is no longer doing the disambiguating. Kept as a row because the reasoning still binds — a future v3 archives v2 at cutover rather than running two generations in one picker |
 | 8 | v2 has no code-time security reviewer | **Closed 2026-08-29 by the 2c slice.** `Security Reviewer v2` exists, owns `docs/security/security-review.md` and the `--vulnerable` scan, and is a required `LAND_PREVIEW` gate. `Code Reviewer v2`'s `Valid — security` verdict now routes to a real owner, and `Threat Modeler v2` sets the standard it grades against. Kept as a row so the reason it mattered survives |
-| 9 | **The harness boundary is unexercised** | Added 2026-08-29 with `Test Harness Engineer v2`. Its guards are structural and checkable — an enumerated path list, no assertion anywhere, hash equality before and after, red as the success condition — but **none has been run**. The specific unknowns: whether a designer reliably declares an infrastructure blocker instead of inlining a harness into a spec file; whether `Vanguard v2` composes an exact path list rather than a folder; and whether `Test Auditor v2` actually re-checks the hashes rather than repeating the claim. Until a real lap needs a fixture, this is a mechanism that is **present and unproven** |
+| 9 | **The harness boundary needs behavioral evidence** | The 2026-08-29 scaffold design called for a designer-named blocker, enumerated paths, no assertions, unchanged hashes, intended red, and an independent audit. The bounded maintain route also needs evidence that Vanguard delegates exact helper paths without fabricating red and independently checks the diff, hashes, and focused validation. The routing fixture in §2 specifies positive and refusal cases; static checks do not establish runtime delegation or close this behavioral gate |
 | 10 | **Terminal auto-approval denies the operator's core commands** | Added 2026-08-29. The configuration in use denies `git commit`, `git push`, branch checkout and switch mutations, and all `az`. So an **unattended** `Repository Operator v2` will legitimately return `BLOCKED` / `ENVIRONMENT` on `checkpoint_commit`, `publish_branch`, and `release`, and an unattended Azure preview cannot run either. **This is documented, not fixed** — no settings file was edited to create the v2 roster, and narrowing those rules is an owner decision taken during an attended pilot, against real observed commands rather than a guessed allowlist. **Do not read any part of this document as a claim that unattended remote automation is proven.** The correct behavior on refusal is the named human command; a second route to the same effect is a charter violation |
 | 11 | **`LAND_PREVIEW` and `PUBLISH` are executable and unexercised** | Added 2026-08-29. Every landing gate, the draft-PR path, and the release manifest path are specified and mirrored, and **not one of them has run**. The three things worth watching first: whether `Vanguard v2` evaluates the landing gates conditionally rather than routing all of them by habit; whether `Repository Operator v2` refuses a `mark_pr_ready` carrying an unresolved High finding instead of weighing it; and whether an absent release manifest genuinely stops entry to `PUBLISH` rather than producing a "prepared" release |
 | 12 | Phase-2c land, ops, and infrastructure slice | **Done 2026-08-29.** Nine leaves added — including the v2-only `Repository Operator v2` — `Vanguard v2` allowlists twenty-seven, and `LAND_PREVIEW` and `PUBLISH` are executable. **The roster is structurally complete**; what remains is behavioral evidence |

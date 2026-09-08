@@ -2,7 +2,7 @@
 name: 'Code Reviewer v2'
 description: 'Independent correctness and quality review of a change set after the tests pass but before it lands, and merit triage of pull request review comments. Checks whether the code actually satisfies the reviewed contract, handles edge cases the tests missed, gets async, disposal and resource lifetime right, compiles on every declared target, and keeps the diff in scope. Report-only — it never edits code and never supplies a patch. Does not cover security or test quality, which have their own agents. Trigger phrases: review my code, review this change, code review, review the diff, is this implementation right, is this PR comment valid, triage the review comments.'
 tools: [read, search, edit, execute]
-model: 'GPT-5.6 Terra (copilot)'
+model: 'GPT-6 Astra (copilot)'
 argument-hint: 'The change set to review, or the pull request comments to triage'
 ---
 

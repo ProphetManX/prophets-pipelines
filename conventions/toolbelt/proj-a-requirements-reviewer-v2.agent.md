@@ -2,7 +2,7 @@
 name: 'Requirements Reviewer v2'
 description: 'Independent read-only adversary for requirements and architecture documents. Attacks ambiguity, contradiction, hidden assumptions, untestable language, missing failure paths, actor and ownership gaps, accidental solutioning, cross-layer inconsistency, and insufficient downstream inputs. Never edits a requirements or product artifact — it returns findings so the author repairs its own work. Use when requirements need an independent check before build, when a specification feels vague, when reviewing an architecture document, or when deciding whether a requirement is testable. Trigger phrases: review the requirements, is this spec good enough, check this architecture doc, are these testable, requirements review, poke holes in this.'
 tools: [read, search, edit]
-model: 'GPT-5.6 Sol (copilot)'
+model: 'GPT-6 Astra (copilot)'
 argument-hint: 'The requirements or architecture document to review'
 ---
 

@@ -4,7 +4,7 @@
 > building, changing, or debugging agent customizations. Do not add it to `AGENTS.md` — it
 > is administrative context, irrelevant to day-to-day coding sessions.
 
-**Built:** 2026-08-08 · **Revised:** 2026-09-06 · **Owner:** G. Gordon Nasseri (ProphetManX)
+**Built:** 2026-08-08 · **Revised:** 2026-09-07 · **Owner:** G. Gordon Nasseri (ProphetManX)
 **Covers:** the customization roster and the `AGENTS.md` conventions system across 8 repos —
 **29 active v2 agents**, **26 archived v1 agents**, and **2 active prompts**.
 
@@ -287,49 +287,58 @@ not be restated: that v1 remains the production roster, and that the v2 total is
 
 | Live file | Agent | Model | Role |
 | --- | --- | --- | --- |
-| `proj-a-vanguard-v2.agent.md` | **Vanguard v2** | `GPT-5.6 Sol (copilot)` | Orchestrator with an explicit state machine and run envelopes. Allowlist is exactly the twenty-seven leaves below |
-| `proj-a-product-discovery-v2.agent.md` | Product Discovery v2 | `GPT-5.6 Sol (copilot)` | **New role.** Captures intent; owns `docs/product-brief.md`, `docs/decision-log.md`, `docs/open-questions.md` |
-| `proj-a-solution-architect-v2.agent.md` | Solution Architect v2 | `GPT-5.6 Sol (copilot)` | Architecture and requirements; one automatic evidence-backed repair pass |
-| `proj-a-requirements-reviewer-v2.agent.md` | Requirements Reviewer v2 | `GPT-5.6 Sol (copilot)` | **New role.** Read-only adversary; writes only its own invocation report |
+| `proj-a-vanguard-v2.agent.md` | **Vanguard v2** | `GPT-6 Astra (copilot)` | Orchestrator with a dependency-based state machine and run envelopes, including direct bounded harness maintenance after preflight. Allowlist is exactly the twenty-seven leaves below |
+| `proj-a-product-discovery-v2.agent.md` | Product Discovery v2 | `GPT-6 Astra (copilot)` | **New role.** Captures intent; owns `docs/product-brief.md`, `docs/decision-log.md`, `docs/open-questions.md` |
+| `proj-a-solution-architect-v2.agent.md` | Solution Architect v2 | `GPT-6 Astra (copilot)` | Architecture and requirements; one automatic evidence-backed repair pass |
+| `proj-a-requirements-reviewer-v2.agent.md` | Requirements Reviewer v2 | `GPT-6 Astra (copilot)` | **New role.** Read-only adversary; writes only its own invocation report |
 | `proj-a-session-scribe-v2.agent.md` | Session Scribe v2 | `GPT-5.6 Luna (copilot)` | Continuity; owns the **external** active handoff `<project-parent>/.agent-runs/session-handoff-v2.md` only — never the v1 handoff |
 
 **Slice 2a — grounding and shaping**, which made `Vanguard v2`'s `GROUND` and `SHAPE` states executable:
 
 | Live file | Agent | Model | Role |
 | --- | --- | --- | --- |
-| `docs-a-repo-analyst-v2.agent.md` | Repo Analyst v2 | `GPT-5.6 Terra (copilot)` | Repository grounding **plus the former `Modernizer` recon** — dependencies, references, packaging, frameworks. Read-only on source; diagnoses, never repairs |
-| `docs-a-purpose-refiner-v2.agent.md` | Purpose Refiner v2 | `GPT-5.6 Sol (copilot)` | The scope gate, and the **only** writer of `docs/feature-requests.md` — a status change needs a quoted owner decision |
-| `ops-a-modernizer-v2.agent.md` | Modernizer v2 | `GPT-5.6 Terra (copilot)` | **Mutation only, no recon mode.** Applies an approved change list to `.csproj` / `.sqlproj`, one verifiable step at a time |
-| `ops-a-scaffolder-v2.agent.md` | Project Scaffolder v2 | `GPT-5.6 Terra (copilot)` | New projects and `.sln` entries only; structure, never behavior. Runs only after a reviewed architecture |
-| `tdd-a-interface-architect-v2.agent.md` | Interface Architect v2 | `GPT-5.6 Terra (copilot)` | C# contracts with complete XML docs, gated by the Requirement Trace Audit |
-| `tdd-a-api-designer-v2.agent.md` | API Designer v2 | `GPT-5.6 Terra (copilot)` | HTTP design documents under `docs/api/` only; authorization is consumed, never invented |
-| `tdd-a-contract-reviewer-v2.agent.md` | Contract Reviewer v2 | `GPT-5.6 Terra (copilot)` | Report-only adversary with a **required** `Mode: csharp \| http`. Unlike v1, it may not append a feature request |
-| `sec-a-threat-modeler-v2.agent.md` | Threat Modeler v2 | `GPT-5.6 Terra (copilot)` | Design-time; writes under `docs/security/` only. Sets the standard, never grades code against it |
+| `docs-a-repo-analyst-v2.agent.md` | Repo Analyst v2 | `GPT-6 Astra (copilot)` | Repository grounding **plus the former `Modernizer` recon** — dependencies, references, packaging, frameworks. Read-only on source; diagnoses, never repairs |
+| `docs-a-purpose-refiner-v2.agent.md` | Purpose Refiner v2 | `GPT-6 Astra (copilot)` | The scope gate, and the **only** writer of `docs/feature-requests.md` — a status change needs a quoted owner decision |
+| `ops-a-modernizer-v2.agent.md` | Modernizer v2 | `GPT-6 Astra (copilot)` | **Mutation only, no recon mode.** Applies an approved change list to `.csproj` / `.sqlproj`, one verifiable step at a time |
+| `ops-a-scaffolder-v2.agent.md` | Project Scaffolder v2 | `GPT-6 Astra (copilot)` | New projects and `.sln` entries only; structure, never behavior. Runs only after a reviewed architecture |
+| `tdd-a-interface-architect-v2.agent.md` | Interface Architect v2 | `GPT-6 Astra (copilot)` | C# contracts with complete XML docs, gated by the Requirement Trace Audit |
+| `tdd-a-api-designer-v2.agent.md` | API Designer v2 | `GPT-6 Astra (copilot)` | HTTP design documents under `docs/api/` only; authorization is consumed, never invented |
+| `tdd-a-contract-reviewer-v2.agent.md` | Contract Reviewer v2 | `GPT-6 Astra (copilot)` | Report-only adversary with a **required** `Mode: csharp \| http`. Unlike v1, it may not append a feature request |
+| `sec-a-threat-modeler-v2.agent.md` | Threat Modeler v2 | `GPT-6 Astra (copilot)` | Design-time; writes under `docs/security/` only. Sets the standard, never grades code against it |
 
 **`BUILD_LAP` is executable as of slice 2b — build:**
 
 | Live file | Agent | Model | Role |
 | --- | --- | --- | --- |
-| `tdd-a-test-designer-v2.agent.md` | Test Designer v2 | `GPT-5.6 Terra (copilot)` | Executable specification files only — test cases, assertions, and declarations local to those same files. **Narrower than v1**, which could also write standalone test-project helpers |
-| `tdd-a-test-harness-engineer-v2.agent.md` | **Test Harness Engineer v2** | `GPT-5.6 Terra (copilot)` | **New role with no v1 counterpart.** Non-specification test infrastructure only — fixtures, fakes, builders, stores, adapters, seeds, bootstrap seams — restricted to the paths its packet enumerates, forbidden any assertion or discovery attribute, and required to prove every specification file unchanged by hash. Succeeds only if the suite still reaches **red** |
-| `tdd-a-test-auditor-v2.agent.md` | Test Auditor v2 | `GPT-5.6 Terra (copilot)` | Report-only adversary. Cheat test, weak assertions, coverage, flakiness, traits — **plus a harness audit** checking the hash evidence, which v1 had no reason to have |
-| `tdd-a-implementer-v2.agent.md` | Implementer v2 | `GPT-5.6 Terra (copilot)` | Production implementation artifacts, including database `.sql` and exact packet-named `.xml` resources or publish profiles. **Stricter than v1 on tests**: barred from the test project entirely. Project/build files, generated output, credentials, and deployment remain outside its charter |
-| `tdd-a-code-reviewer-v2.agent.md` | Code Reviewer v2 | `GPT-5.6 Terra (copilot)` | Report-only correctness review plus PR-comment merit triage. Unlike v1, it may not append a feature request, and it never posts a reply or changes PR state |
-| `tdd-a-refactorer-v2.agent.md` | Refactorer v2 | `GPT-5.6 Terra (copilot)` | Behavior-preserving production edits only. Observes its own green baseline rather than accepting a claimed one, and requires identical before/after counts including the total |
+| `tdd-a-test-designer-v2.agent.md` | Test Designer v2 | `GPT-6 Astra (copilot)` | Executable specification files only — test cases, assertions, and declarations local to those same files. **Narrower than v1**, which could also write standalone test-project helpers |
+| `tdd-a-test-harness-engineer-v2.agent.md` | **Test Harness Engineer v2** | `GPT-6 Astra (copilot)` | Non-specification helpers, fixtures, adapters, and connection/configuration plumbing at exact packet-named paths only. `Harness mode: scaffold \| maintain`: scaffold clears a designer-named blocker and preserves intended red; maintain meets acceptance criteria with passing focused validation and independent parent verification. Both preserve specification names/hashes, assertions, expected results, traits, skips, discovery, and production implementation; neither authorizes live operations or credential exposure |
+| `tdd-a-test-auditor-v2.agent.md` | Test Auditor v2 | `GPT-6 Astra (copilot)` | Report-only adversary. Cheat test, weak assertions, coverage, flakiness, traits — **plus a harness audit** checking the hash evidence, which v1 had no reason to have |
+| `tdd-a-implementer-v2.agent.md` | Implementer v2 | `GPT-6 Astra (copilot)` | Production implementation artifacts, including database `.sql` and exact packet-named `.xml` resources or publish profiles. **Stricter than v1 on tests**: barred from the test project entirely. Project/build files, generated output, credentials, and deployment remain outside its charter |
+| `tdd-a-code-reviewer-v2.agent.md` | Code Reviewer v2 | `GPT-6 Astra (copilot)` | Report-only correctness review plus PR-comment merit triage. Unlike v1 it may not append a feature request, and it never posts a reply or changes PR state |
+| `tdd-a-refactorer-v2.agent.md` | Refactorer v2 | `GPT-6 Astra (copilot)` | Behavior-preserving production edits only. Observes its own green baseline rather than accepting a claimed one, and requires identical before/after counts including the total |
+
+**Owner-approved model rollout, 2026-09-07:** the harness moved first, then all twenty-five remaining
+v2 Sol/Terra agents moved to `GPT-6 Astra (copilot)`, verified against VS Code's cached selectable
+Copilot entry. The owner reports successful manual Astra overrides for Vanguard; this is experience,
+not a comparative benchmark. The active agent split is **Astra 26 / Luna 3**, with no Sol/Terra pin
+remaining. Session Scribe, Commit Author, and Changelog Author retain Luna. Tools, instructions,
+allowlists, both prompt files, and archived generations are unchanged. See
+[Model Workload Classes](agent-toolbelt-v2.md#5-model-workload-classes) for identity evidence and the
+distinction between catalog verification and post-reload picker/Diagnostics checks.
 
 **`LAND_PREVIEW` and `PUBLISH` are executable as of slice 2c — land, ops, and infrastructure:**
 
 | Live file | Agent | Model | Role |
 | --- | --- | --- | --- |
-| `sec-a-security-reviewer-v2.agent.md` | Security Reviewer v2 | `GPT-5.6 Terra (copilot)` | Code-time audit against the threat model where one exists. Writes `docs/security/security-review.md` and nothing else; owns the `--vulnerable` scan; reports coverage because absence of findings is not evidence of security |
+| `sec-a-security-reviewer-v2.agent.md` | Security Reviewer v2 | `GPT-6 Astra (copilot)` | Code-time audit against the threat model where one exists. Writes `docs/security/security-review.md` and nothing else; owns the `--vulnerable` scan; reports coverage because absence of findings is not evidence of security |
 | `docs-a-commit-author-v2.agent.md` | Commit Author v2 | `GPT-5.6 Luna (copilot)` | Commit and PR prose from the actual diff. Report-only, read-only git — its message is an **input** to the operator below |
 | `docs-a-changelog-author-v2.agent.md` | Changelog Author v2 | `GPT-5.6 Luna (copilot)` | The **sole** `CHANGELOG.md` writer. Classifies against the diff and states the implied bump without changing any version |
-| `docs-a-readme-author-v2.agent.md` | README Author v2 | `GPT-5.6 Terra (copilot)` | Root `README.md` only. **Narrower than v1**, which could also write under `docs/` and touch the changelog. Re-verifies inherited claims rather than restating them |
-| `ops-a-pipeline-engineer-v2.agent.md` | Pipeline Engineer v2 | `GPT-5.6 Terra (copilot)` | The **sole** YAML writer, deployment pipelines included. **Loses v1's `agent` tool** — the parent drives audit → apply → re-audit, so the gate is no longer a subordinate of the thing it gates |
-| `ops-a-pipeline-auditor-v2.agent.md` | Pipeline Auditor v2 | `GPT-5.6 Terra (copilot)` | Read-only contract, chain, drift, permission, and secret audit, and the independent re-review of an applied change set. Unlike v1 it may not append a feature request |
-| `infra-a-engineer-v2.agent.md` | Azure Infrastructure Engineer v2 | `GPT-5.6 Terra (copilot)` | Bicep, `.bicepparam`, and infrastructure docs. **Writes no YAML** — it specifies the deployment pipeline and `Pipeline Engineer v2` writes it. **No mutating Azure command in any mode**, where v1 allowed one after in-conversation approval |
-| `infra-a-deployment-reviewer-v2.agent.md` | Azure Deployment Reviewer v2 | `GPT-5.6 Terra (copilot)` | Read-only gate on resolution, preview, cost, permissions, secrets, isolation, recovery, residency, and the deployment YAML. `Ready` is not deployment approval |
-| `ops-a-repository-operator-v2.agent.md` | **Repository Operator v2** | `GPT-5.6 Terra (copilot)` | **New role with no v1 counterpart.** The only v2 agent that executes git, PR, or release mutations, and exactly one `Operator mode:` per invocation — `prepare_branch`, `checkpoint_commit`, `publish_branch`, `open_or_update_draft_pr`, `mark_pr_ready`, `release`. Verifies an expected HEAD immediately before every mutation, stages only an exact enumerated path list, and never force-pushes, rewrites history, deletes a ref, or merges |
+| `docs-a-readme-author-v2.agent.md` | README Author v2 | `GPT-6 Astra (copilot)` | Root `README.md` only. **Narrower than v1**, which could also write under `docs/` and touch the changelog. Re-verifies inherited claims rather than restating them |
+| `ops-a-pipeline-engineer-v2.agent.md` | Pipeline Engineer v2 | `GPT-6 Astra (copilot)` | The **sole** YAML writer, deployment pipelines included. **Loses v1's `agent` tool** — the parent drives audit → apply → re-audit, so the gate is no longer a subordinate of the thing it gates |
+| `ops-a-pipeline-auditor-v2.agent.md` | Pipeline Auditor v2 | `GPT-6 Astra (copilot)` | Read-only contract, chain, drift, permission, and secret audit, and the independent re-review of an applied change set. Unlike v1 it may not append a feature request |
+| `infra-a-engineer-v2.agent.md` | Azure Infrastructure Engineer v2 | `GPT-6 Astra (copilot)` | Bicep, `.bicepparam`, and infrastructure docs. **Writes no YAML** — it specifies the deployment pipeline and `Pipeline Engineer v2` writes it. **No mutating Azure command in any mode**, where v1 allowed one after in-conversation approval |
+| `infra-a-deployment-reviewer-v2.agent.md` | Azure Deployment Reviewer v2 | `GPT-6 Astra (copilot)` | Read-only gate on resolution, preview, cost, permissions, secrets, isolation, recovery, residency, and the deployment YAML. `Ready` is not deployment approval |
+| `ops-a-repository-operator-v2.agent.md` | **Repository Operator v2** | `GPT-6 Astra (copilot)` | **New role with no v1 counterpart.** The only v2 agent that executes git, PR, or release mutations, and exactly one `Operator mode:` per invocation — `prepare_branch`, `checkpoint_commit`, `publish_branch`, `open_or_update_draft_pr`, `mark_pr_ready`, `release`. Verifies an expected HEAD immediately before every mutation, stages only an exact enumerated path list, and never force-pushes, rewrites history, deletes a ref, or merges |
 
 **Landing is no longer handed back.** `Vanguard v2` now allowlists **twenty-seven leaves** and can ground,
 shape, build, review for security, write the changelog and README, draft the PR prose, push a branch, and
@@ -350,7 +359,7 @@ Reasoning: [agent-toolbelt-v2.md](agent-toolbelt-v2.md) §2 *The Operator Bounda
 
 | Live file | Agent | Model | Role |
 | --- | --- | --- | --- |
-| `meta-a-toolbelt-keeper-v2.agent.md` | **Toolbelt Keeper v2** | `GPT-5.6 Terra (copilot)` | Maintains the **four** locations — live selector, current mirror, generation archive, documentation. Verifies live against the current mirror by name set and SHA-256 with the archive excluded; archives and restores **whole named generations** only, after pre- and post-hash validation; never overwrites an archive, never creates a live subfolder, never commits. **Outside `Vanguard v2`'s allowlist**, so the allowlist stays at exactly 27 project leaves |
+| `meta-a-toolbelt-keeper-v2.agent.md` | **Toolbelt Keeper v2** | `GPT-6 Astra (copilot)` | Maintains the **four** locations — live selector, current mirror, generation archive, documentation. Verifies live against the current mirror by name set and SHA-256 with the archive excluded; archives and restores **whole named generations** only, after pre- and post-hash validation; never overwrites an archive, never creates a live subfolder, never commits. **Outside `Vanguard v2`'s allowlist**, so the allowlist stays at exactly 27 project leaves |
 
 **That plan for two shared v1 customizations is half superseded.** `Toolbelt Keeper` was to stay v1 and
 serve both rosters; **it could not survive the v1 archive**, and it had no vocabulary for generations —
@@ -359,11 +368,18 @@ orchestrator's allowlist, for the same reason. `/sync-agents-md` **does** stay a
 kind and unchanged in file: one deterministic parameterized task, where making it an agent would add a
 persona to a file copy. **Do not restate "there is no `Toolbelt Keeper v2` and none is planned."**
 
-**The guarded test-harness capability deferred at v2's creation was resolved in 2b, and not as a mode.**
+**The guarded test-harness capability deferred at v2's creation was resolved in 2b, not as an Implementer mode.**
 Granting `Implementer v2` any write inside a test project would have deleted the roster's most important
 constraint whatever it was called, so it shipped as a separate agent with an enumerated path list,
-hash-proved specifications, and `Test Auditor v2` reviewing the result. Reasoning:
-[agent-toolbelt-v2.md](agent-toolbelt-v2.md) §2 *The Harness Boundary* and §4.
+hash-proved specifications, and `Test Auditor v2` reviewing scaffold laps. The existing harness agent
+now also has a bounded `maintain` mode: Vanguard may delegate an explicit helper-only request directly
+after preflight, capture the existing specification hashes itself, and independently verify the diff,
+hashes, and focused validation. Passing checks are valid; a compile blocker, designer invocation, red
+result, or complete discovery/TDD/review cycle is not automatically required. Necessary regression
+tests still belong to `Test Designer v2`; adjacent hardening/lifecycle work and cloud/database
+operations require their own owner authorization. Reasoning and the TestStore routing fixture:
+[agent-toolbelt-v2.md](agent-toolbelt-v2.md) §2 *The Harness Boundary* and §4. No agent was added and no
+archived customization changed for this extension.
 
 Two new convention documents carry what used to be copied into every agent:
 

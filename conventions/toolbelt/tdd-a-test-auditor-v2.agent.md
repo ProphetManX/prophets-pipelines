@@ -2,7 +2,7 @@
 name: 'Test Auditor v2'
 description: 'Independent adversary for a test suite and its harness before implementation begins. Asks whether a deliberately cheating implementation could pass, and finds tautological assertions, uncovered branches and failure paths, order and shared-state flakiness, harness files that encode expected outputs, wrong or missing traits, and over-constrained mocks. Report-only — it never edits a test, a harness, or source, and never supplies replacement code. Use after tests are written and before any implementation. Trigger phrases: audit these tests, are these tests good enough, would a fake implementation pass, review the test suite, check the harness, are my tests actually testing anything.'
 tools: [read, search, edit]
-model: 'GPT-5.6 Terra (copilot)'
+model: 'GPT-6 Astra (copilot)'
 argument-hint: 'The test suite to audit, and any harness written for it'
 ---
 

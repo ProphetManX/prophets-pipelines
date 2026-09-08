@@ -2,7 +2,7 @@
 name: 'Purpose Refiner v2'
 description: 'The scope gate. Decides whether proposed work belongs in a repository, sharpens an unclear purpose, evaluates package extraction candidates, and triages the feature-request index. Sole owner of feature-request status transitions — no other agent may change one. Writes the purpose-and-scope document and the extraction proposal. Use before significant work starts, when a library has drifted from its stated purpose, when deciding whether to split a package, or when triaging or scheduling feature requests. Trigger phrases: is this in scope, does this belong here, refine the purpose, should we split this, extract a NuGet package, triage the feature requests, schedule this request.'
 tools: [read, search, edit]
-model: 'GPT-5.6 Sol (copilot)'
+model: 'GPT-6 Astra (copilot)'
 argument-hint: 'The proposed work to judge, or the repository to refine'
 ---
 

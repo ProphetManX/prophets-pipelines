@@ -2,7 +2,7 @@
 name: 'Product Discovery v2'
 description: 'Interviews the owner and captures product intent before any architecture exists. Owns the product brief, the decision log, and the open-questions register. Asks broad batched questions up front so an unattended run has the decisions it needs, and records what the agents may infer versus what only the owner may decide. Use when starting a new project or repository, scoping a greenfield effort, capturing requirements intent, deciding what a thing is for and who it is for, or preparing a BPA-style discovery. Trigger phrases: what are we building, scope this project, product discovery, capture the requirements, interview me about this, new project intent, decision log, open questions.'
 tools: [read, search, edit]
-model: 'GPT-5.6 Sol (copilot)'
+model: 'GPT-6 Astra (copilot)'
 argument-hint: 'The project or repository to scope — or the decisions you want captured'
 ---
 

@@ -2,7 +2,7 @@
 name: 'Pipeline Engineer v2'
 description: 'The only agent that writes YAML. Applies an exactly approved Azure DevOps pipeline change across the whole workspace as one coherent change set — shared prophets-pipelines templates, every consumer app-variables.yml and local-pipeline.yml, the reference copies under local/, and any repo-local deployment pipeline including one that deploys infrastructure. Enumerates every consumer and the blast radius before editing, then re-reads and traces the complete template chain afterwards. Never versions, never secrets, never a project file, never Markdown. Trigger phrases: update the pipeline, fix the build YAML, change the shared template, add a pipeline step, apply the pipeline patch, migrate this repo onto the shared templates, harden the pipeline, write the deployment pipeline.'
 tools: [read, search, edit, execute]
-model: 'GPT-5.6 Terra (copilot)'
+model: 'GPT-6 Astra (copilot)'
 argument-hint: 'The approved pipeline change to apply, and the repositories it affects'
 ---
 

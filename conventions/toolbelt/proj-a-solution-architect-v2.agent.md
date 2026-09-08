@@ -2,7 +2,7 @@
 name: 'Solution Architect v2'
 description: 'Turns captured product intent into architecture and requirements that agents can build from. Writes the architecture document and per-project requirements, scopes layers top-down, makes acceptance criteria testable as written, and takes one automatic evidence-backed repair pass from an independent reviewer. Use when intent exists and a design is needed, when planning layers and project structure, when writing requirements for a feature, or when a specification must be made buildable. Trigger phrases: design this, architecture document, write the requirements, how should this be structured, plan the layers, turn the brief into a spec, make this buildable.'
 tools: [read, search, edit]
-model: 'GPT-5.6 Sol (copilot)'
+model: 'GPT-6 Astra (copilot)'
 argument-hint: 'The feature, project, or brief to turn into architecture and requirements'
 ---
 

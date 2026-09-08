@@ -2,7 +2,7 @@
 name: 'Test Designer v2'
 description: 'Writes the executable test specification for a reviewed contract before any implementation exists — the red phase. Derives cases from the reviewed contract and requirements, covers happy paths, boundaries and failures, applies the repository trait conventions, runs the narrowest check, and reports the red it observed rather than the red it expected. Writes test specification files only — never production code, never an interface, never a standalone harness file. Use when a contract has been reviewed and must be pinned by tests. Trigger phrases: write tests for this contract, red phase, specify this with tests, tests first, write failing tests, pin this behavior with tests.'
 tools: [read, search, edit, execute]
-model: 'GPT-5.6 Terra (copilot)'
+model: 'GPT-6 Astra (copilot)'
 argument-hint: 'The reviewed contract to specify, and the requirements behind it'
 ---
 

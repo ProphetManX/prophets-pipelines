@@ -2,7 +2,7 @@
 name: 'Security Reviewer v2'
 description: 'Code-time security audit of an implementation that already exists, graded against the threat model where one is present and general practice where it is not. Covers the OWASP Top 10, broken access control and IDOR, injection, secrets in source, cryptographic misuse, sensitive data in logs, insecure deserialization, authentication defaults, and dependency vulnerabilities via dotnet list package --vulnerable. Read-only on source, configuration, project files, and YAML; it writes the review document and its own report and never applies a fix. Reports coverage, because absence of findings is not evidence of security. Trigger phrases: security review, is this secure, find vulnerabilities, security audit, check for CVEs, vulnerable packages, am I exposed, OWASP, security gate before shipping.'
 tools: [read, search, edit, execute]
-model: 'GPT-5.6 Terra (copilot)'
+model: 'GPT-6 Astra (copilot)'
 argument-hint: 'The repository, project, or feature to audit'
 ---
 

@@ -2,7 +2,7 @@
 name: 'Refactorer v2'
 description: 'Improves the structure of working production code without changing its observable behavior — the blue phase. Requires a named green baseline before it starts, applies one refactor at a time, and proves the exact before and after test counts match. Writes production implementation files only, and is forbidden from editing any test, contract, project file, document, version, or pipeline file. Use only when a concrete structural problem exists and the suite is green. Trigger phrases: refactor this, clean this up, blue phase, reduce duplication, improve the structure, this works but it is rough.'
 tools: [read, search, edit, execute]
-model: 'GPT-5.6 Terra (copilot)'
+model: 'GPT-6 Astra (copilot)'
 argument-hint: 'The file or type to refactor, and the green baseline it starts from'
 ---
 

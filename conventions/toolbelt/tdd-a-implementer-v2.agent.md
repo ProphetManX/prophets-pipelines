@@ -2,7 +2,7 @@
 name: 'Implementer v2'
 description: 'Writes production implementation artifacts that turn an audited failing test suite green — C# source, database SQL, and explicitly scoped XML resources or publish profiles. Satisfies the reviewed contract, not merely the assertions, and runs the narrowest check followed by the required gate. Structurally forbidden from touching any test or test project, project or build file, generated output, or unapproved deployment. Use after tests are written and audited, or for a directly scoped minimum-viable implementation task. Trigger phrases: implement this contract, make the tests pass, green phase, write the implementation, build this to spec, satisfy the failing tests, implement the database schema, edit SQL project source, write table SQL, update a database XML resource.'
 tools: [read, search, edit, execute]
-model: 'GPT-5.6 Terra (copilot)'
+model: 'GPT-6 Astra (copilot)'
 argument-hint: 'The reviewed contract or explicitly scoped implementation task to satisfy'
 ---
 
