@@ -1,50 +1,52 @@
-# Agent Protocol v2 — Shared Delegation Mechanics
+# Agent Protocol v2 - Shared Delegation Mechanics
 
-**Status:** Parallel pilot. **Created:** 2026-08-29. **Revised:** 2026-09-07 - bounded test-harness
-maintenance, mode-specific packets, and focused completion evidence. **Owner:** G. Gordon Nasseri (ProphetManX).
-**Applies to:** every agent whose display name ends in the `v2` suffix. It does **not** apply to any v1
-customization, which continues to carry its own inline receipt protocol unchanged.
+**Applies to:** the active v2 roster. **Revised:** 2026-09-08. **Owner:** G. Gordon Nasseri (ProphetManX).
 
-This file exists so that v2 agents can be short. Every mechanic that used to be copied verbatim into
-twenty-odd agent files lives here once. A v2 agent carries only its charter, its write boundary, its
-approach, and a compact fail-closed fallback — and a line telling it to read this file when it is
-reachable.
+This revision governs **new runs only**. Existing invocations and continuations retain their recorded
+protocol, acceptance revision, budgets, and gates until the owner explicitly closes or re-scopes them.
+Toolbelt changes require confirmation that affected agents are idle; old STARTED records alone cannot
+prove activity or inactivity. Never interrupt a run to apply a customization change.
 
-> **Read order for a v2 agent.** (1) the repository's `AGENTS.md`; (2) this protocol; (3) the
-> authoritative artifacts named in its packet. If this file cannot be read, apply the *Fail-Closed
-> Fallback* at the end and say in the report that the protocol was unavailable.
+Read the repository's `AGENTS.md`, this protocol, then the authoritative inputs for the slice. If this
+protocol is unreachable, apply §8 and say so. Read nearby controlling code rather than broad unrelated
+surfaces. Once a sound local approach and discriminating check are clear, act; stop investigating
+alternatives for reassurance. Rationale and examples: [agent-toolbelt-v2.md](agent-toolbelt-v2.md).
+Roster and archived-generation history: [agent-toolbelt.md](agent-toolbelt.md).
 
-Companion documents: [agent-toolbelt-v2.md](agent-toolbelt-v2.md) is the migration blueprint and role
-map; [agent-toolbelt.md](agent-toolbelt.md) is the v1 documentation and remains authoritative for v1.
+## Minimum Complete Scope
 
----
+Vanguard fixes **one shared acceptance target per coherent work slice**, in an immutable revision under
+the run directory. Record approved observable behavior, preserved invariants, exclusions, owning author
+and write scope, required checks/reviews with risk rationale, operation authority, and effort ceilings.
+Every author and verifier uses that same revision and applicable inherited contracts.
 
-## Minimum Viable First
+Implement the **smallest complete solution**. Do not add speculative abstractions, extension points,
+configuration, providers, retries, or lifecycle features. Necessary safety and correctness are part of
+the minimum, not optional extras. If they need a semantic decision or extra authority, stop dependent
+work and name the decision; neither silently omit them nor expand the target.
 
-Default to the **smallest complete change** that solves the stated problem. Small means no adjacent work;
-complete means the requested behavior works and has evidence.
+Specification changes require an explicitly authorized new revision and baseline, preserving previous
+evidence. Findings and passing implementations never rewrite acceptance. Optional improvements are
+nonblocking deferred work, not new requirements or grounds for an automatic second pass.
 
-For an explicitly scoped example, prototype, spike, disposable local tool, or other artifact not intended
-to ship:
+### Risk-Proportional Routing
 
-- implement the direct solution and run one focused executable validation;
-- do not add discovery, architecture, threat-model, independent-review, hardening, governance, lifecycle,
-   abstraction, or broader-documentation work unless the owner requested it or the direct solution cannot
-   be made sound without it;
-- keep planning and reporting proportional: do not create a plan for a one-step task, and omit empty
-   report sections that add no completion evidence;
-- report at most three concrete, material residual risks separately from the completed work; and
-- in an attended run, ask before adding a second-pass concern; in a delegated run, name it as deferred
-   rather than expanding scope or waiting for an answer.
+**Bounded delivery is the default** for understood, reversible local work, including production work.
+After normal preflight, use the existing implementation owner and independent focused final verification
+by Vanguard or the invoking owner. Do not automatically invoke discovery, architecture, the full review
+cycle, documentation authors, or landing. A passing baseline is valid; no non-shipping label is required.
 
-This rule **does not override** an agent's write boundary, an explicit requirement, a required check, an
-owner decision, a mandatory stop, or an irreversible-action guard. Production implementation and
-landing/publishing still use their required author/validator separation and gates; helper-only work
-uses the bounded route below and does not enter landing automatically. A one-off action against a shared or remote
-database, cloud resource, real user data, authentication or authorization, payments, or a release is
-consequential work, not a low-assurance shortcut. When a reviewer is explicitly invoked, it reports every
-in-scope finding required by its charter; the three-risk limit applies to unsolicited residual-risk
-advice, not to requested review findings.
+Add `Test Designer v2` when new approved behavior or a concrete regression risk needs specifications.
+`Test Auditor v2` independently checks the changed specifications and relevant harness before the
+implementation owner proceeds. Reuse specifications that already discriminate a defect; an import
+correction is not a reason to manufacture a new red phase.
+
+Retain relevant specialist gates for public contracts, architectural decisions, security-sensitive
+behavior, consequential operations, and releases. Contract and requirements authors retain independent
+reviewers. Database lifecycle, ownership, concurrency, or shared-state changes require explicit risk
+review and appropriate code/test/security specialists; a file called a helper is not automatically low
+risk. Pipeline and infrastructure author/reviewer gates remain intact. Explicit owner checks and
+narrower charter limits always apply. Bounded completion is not release certification.
 
 ### Bounded Test-Harness Work
 
@@ -53,64 +55,56 @@ declares exactly one `Harness mode:` and carries the harness fields in §1.
 
 | Mode | Entry | Completion and independent verification |
 | --- | --- | --- |
-| `scaffold` | `Test Designer v2` named missing standalone infrastructure; parent supplies the designer's specification hashes and the reproducible blocker | Helpers clear the blocker and the suite reaches intended red; parent reruns it, then `Test Auditor v2` audits specifications and harness |
+| `scaffold` | Designer-named missing infrastructure; generated specification baseline and reproducible blocker | Blocker cleared; approved regression executes and exposes the intended unmet behavior; parent verifies, then Test Auditor audits |
 | `maintain` | Owner explicitly requested a bounded change to exact non-specification helper, fixture, adapter, or connection/configuration paths | Acceptance criteria met, focused validation passes, specification inventory and hashes unchanged; parent checks the actual diff and hashes and independently reruns the focused validation |
 
-**Maintenance may be delegated directly after normal preflight.** It does not require a compile
-blocker, a designer invocation, a deliberately red result, or a non-shipping label. Do not automatically
-run discovery, requirements, shaping, the TDD/review cycle, or landing for a helper-only request. The
-parent obtains the specification inventory and SHA-256 baseline from the existing affected suite,
-including inherited or linked specifications, rather than inventing a designer report. A passing
-baseline is valid; successful focused validation is a valid maintenance outcome.
+Both modes use the shared acceptance target and a generated baseline covering affected, inherited,
+linked, and shared specifications and their inputs. Maintenance needs no designer report or fabricated
+blocker. Unexpected scaffold green requires investigation: it may reveal pre-existing correct behavior
+or a bypass, but never authorizes manufactured red or silently relabeling the lap. Unexplained green or
+a bypass blocks completion; any change to the expected result needs an authorized target revision.
 
-Neither mode may change assertions, expected results, specification inputs, traits, skips, discovery,
-or production implementation, or conceal a production defect by altering helper behavior. A hash or
-specification name-set mismatch is a failure, never a reason to refresh the baseline. Necessary new
-regression tests belong to `Test Designer v2` in separately scoped work; the harness never writes or
-approximates them. The pre-implementation auditor's red gate applies to scaffold laps, not maintenance
-sign-off. This leaves authorship separate from verification without adding a reviewer invocation by habit.
-
-The maintenance packet fixes exact paths, observable acceptance criteria and preserved invariants,
-focused local checks and expected outcomes, and operation limits. Connection/configuration plumbing
-authorizes **no live cloud or database operations**; those require separate owner authorization.
-Use synthetic configuration for local checks and keep credentials and resolved connection strings out
-of source, command output, logs, and reports. A required check that cannot run remains a blocker.
-
-In an attended run, **ask before expanding into adjacent hardening, lifecycle, or other work**; a
-delegated leaf defers it to the parent with the decision named. Explicit required checks and reviews,
-consequential-operation controls, Git authorization, and landing/release gates still apply when their
-scope is requested. Maintenance completion is not full-suite, live-database, review, or release certification.
+Neither mode changes assertions, expected results, specification inputs, traits, skips, discovery, or
+production implementation, directly or indirectly. Hash equality alone does not prove a helper preserved
+production exercise: inspect its diff and actual test membership. New specifications belong to Test
+Designer. A mismatch is a blocker, never an invitation to rebaseline. Apply §6 even to local fixtures;
+connection plumbing grants no live operation authority. Required checks remain required.
 
 ---
 
 ## 1. The Task Packet
 
-A parent invoking a v2 leaf sends exactly these fields. A leaf that receives a packet missing a
-**required** field returns `Outcome: BLOCKED` / `Reason: PROTOCOL` before reading or editing anything,
-and names the missing field.
+A parent sends the required fields below. Values may link to an exact section of the **same immutable
+acceptance target**, rather than duplicate it. A leaf with a missing or unreadable required input returns
+`BLOCKED` / `PROTOCOL`, naming the input before substantive work. Include only applicable specialist fields.
 
 | Field | Required | Meaning |
 | --- | --- | --- |
-| `Mode:` | yes | `delegated one-shot run` |
+| `Mode:` | yes | `delegated one-shot run`, unless the leaf charter owns this field for its operation (such as contract review `csharp`/`http`); retain that operation mode and use `Invocation:` below |
+| `Invocation:` | when the charter owns `Mode:` | `delegated one-shot run`; never send two conflicting `Mode:` fields |
 | `Objective:` | yes | One concrete deliverable, one sentence |
 | `Repository root:` | yes | Absolute path. Never inferred from a filename |
 | `Run directory:` | yes | Absolute path to `<project-parent>/.agent-runs/<run-id>/` — see §2 |
 | `Report artifact:` | yes | Absolute path to this invocation's Markdown report inside the run directory |
+| `Acceptance target:` | yes | Immutable shared target path and revision; all authors and verifiers use it |
 | `Scope:` | yes | What is included **and** what is excluded |
 | `Authoritative inputs:` | yes | `AGENTS.md` plus the exact artifact paths that define the work |
 | `Settled owner decisions:` | yes | Quoted. A recommendation restated as a decision is a protocol violation by the parent |
 | `Known unresolved inputs:` | yes | Named, not hidden. `none` is a legitimate value |
-| `Allowed writes:` | yes | The leaf's charter restated, plus the report artifact |
-| `Definition of done:` | yes | The evidence the parent will check |
+| `Allowed writes:` | yes | Intersection of target and charter, plus operational evidence; reference boundaries rather than restating them |
+| `Definition of done:` | yes | Link to shared target checks/reviews and expected outcomes, not a second target |
 | `Run envelope:` | only for unattended runs | See §5. Absent means an attended run |
 | `Harness mode:` | only when invoking `Test Harness Engineer v2` | Exactly one of `scaffold` or `maintain`. Missing, unrecognized, or combined is `BLOCKED` / `PROTOCOL` |
 | `Allowed helper paths:` | both harness modes | Exact test-project file paths, never folders, globs, or implicit additions; every path must be non-specification infrastructure |
-| `Specification hashes:` | both harness modes | Complete affected specification inventory, including inherited or linked files, with SHA-256; designer evidence for `scaffold`, parent-captured current baseline for `maintain` |
-| `Acceptance criteria:` | both harness modes | Observable requested behavior and invariants to preserve, consistent with `Definition of done:` |
-| `Focused validation:` | both harness modes | Exact local checks/commands, relevant project/target/filter, expected outcomes, and operation limits; no implicit live operations |
+| `Specification hashes:` | when specifications must be protected | **Path to generated baseline**, revision and inventory selectors; never copied hashes. Include inherited/linked files and inputs |
+| `Focused validation:` | implementation/test/harness/refactor work | Exact checks or target section, project/target/filter/configuration, expected outcomes, and operation limits; no implicit live operations |
 | `Infrastructure blocker:` | harness `scaffold` only | Designer-named missing infrastructure, reproduction check, and intended red; not required or fabricated for `maintain` |
 | `Operator mode:` | only when invoking `Repository Operator v2` | Exactly one of `prepare_branch`, `checkpoint_commit`, `publish_branch`, `open_or_update_draft_pr`, `mark_pr_ready`, `release`. Missing, unrecognized, or combined is `BLOCKED` / `PROTOCOL` |
-| `Release manifest:` | only to authorize a version change, tag, or publication | See §7 |
+| `Release manifest:` | only to authorize a version change, tag, or publication | See §6 |
+
+Do not copy the protocol, full evidence tables, previous reports, or histories into packets. Other
+specialists' explicit mode/approval fields remain required by their charters. Supply narrow context,
+including the affected inherited contracts.
 
 **The packet is not approval.** It scopes work; it does not grant permission the owner never gave. A
 parent may not write an approval into a packet on the owner's behalf, and may not re-issue a packet
@@ -121,103 +115,58 @@ closed — the leaf stops, reports, and names the exact decision or command a hu
 
 ## 2. Run Artifacts
 
-**One directory per run, outside every repository.** The run directory is
-`<project-parent>/.agent-runs/<run-id>/`, resolved at runtime and never hardcoded into an agent.
-`<run-id>` is `<yyyyMMdd>-<HHmm>-<slug>`.
-
-**`<project-parent>` is the common parent of the *repository roots* named in the run** — the envelope's
-`Allowed repositories:` on an unattended run, or the `Repository root:` values in play on an attended
-one. It is **not** the common parent of the workspace folders. A multi-root workspace routinely carries
-customization roots that are not repositories — the VS Code user prompts folder under the user profile
-is one — and folding those into the calculation walks the common parent up to a drive root, which is
-wrong and may be unwritable.
-
-Exclude every non-repository customization root, then **verify the resolved parent actually contains
-every named repository**. If it does not, do not invent one and do not fall back to a drive root: stop
-and ask the owner for an explicit run root.
-
-It lives outside the repositories deliberately. A recovery and coordination record is not a project
-artifact: repo-local run files mean `.gitignore` churn, accidental commits, and reviewer noise in
-every repository for a file whose useful life is one session.
+Use `<project-parent>/.agent-runs/<yyyyMMdd-HHmm-slug>/`, **outside every repository**. Resolve the
+common parent of the repository roots named in the run, excluding non-repository customization roots
+such as the user prompts folder. Verify it contains every named repository; never fall back to a drive
+root. If no valid parent exists, obtain an explicit external run root from the owner.
 
 ```text
 <project-parent>/.agent-runs/<run-id>/
-  run.md                                  ← the parent's own state: envelope, state machine, laps
-  NN-<agent-slug>.md                      ← one invocation report per leaf invocation, numbered
-  evidence/                               ← optional: captured command output the reports cite
+   run.md                         parent state, target/report/evidence links, budgets
+   slice-NN-rN.md                  immutable shared acceptance revision
+   NN-agent-slug.md                one invocation report per leaf invocation
+   evidence/                      generated manifests, comparisons, validation records
 ```
 
 ### One artifact per invocation, two writes
 
-v1 used two separate things — an OS-temp receipt file and an ephemeral chat report — and the chat half
-does not survive, because a subagent returns exactly one message to its parent and everything written
-before it is discarded. v2 collapses both into **one Markdown file** at the packet's `Report artifact:`
-path:
+Write a short `**State:** STARTED` record before the first edit or substantive read: objective/target
+link, scope, intended check, and `Scope decision: PROCEED | SPLIT`. Finalize the same file once after
+validation with the §3 statuses, changed paths/findings, evidence links and differences, blockers/deferred
+work, and the exact next action. Omit empty sections and copied tables. A STARTED-only file is incomplete;
+changed files with no artifact are a protocol violation. Missing chat with valid completion evidence
+can be recovered from that record; allow one report-only recovery for an incomplete return, never an
+implementation retry in disguise.
 
-1. **Before substantive work** — before the first edit, or before a long read-only review — the leaf
-   writes the file ending `**State:** STARTED`, carrying objective, planned scope, candidate files or
-   evidence scope, intended validation, and `Scope decision: PROCEED | SPLIT`.
-2. **After validation, before the final chat response** — the leaf overwrites the same file with the
-   completion record: the three status fields from §3, changed paths or findings, validation results,
-   blockers and deferred work, and the exact handoff.
-
-Update it **once** at the end, not per task. Per-task updates spend the budget the ceiling exists to
-protect. A `STARTED` file with no completion record is an incomplete run whose planned scope the parent
-reports verbatim; changed files with **no** artifact at all is a named protocol violation.
-
-**Writing this one file is an operational-metadata exception to the leaf's write charter and authorizes
-nothing else.** It is not permission to touch a file outside `Allowed writes:`.
-
-Secrets are never written to a run artifact. Record location and kind — "connection string in
-`app-variables.yml` line 14" — never the value.
+Generated evidence may be written at each relevant boundary: the two-write rule concerns prose, not
+measurement. Operational metadata is not a product-file grant. Tools and narrower execution restrictions
+still bind: read-only reviewers consume evidence without acquiring execution tools. Vanguard uses its
+existing task/test tools for checks and generated evidence, not shell redirects or new permissions.
+Secrets never enter artifacts; record only location/kind, never values or resolved connection strings.
 
 ### Operational Markdown
 
-Every artifact in this section — `run.md`, each invocation report, and the active handoff — is Markdown
-a human reads under time pressure, so it lints clean or it is not finished:
-
-- **Spaces only. Never a hard tab**, in prose, in a list, or in a continuation line.
-- **A blank line above and below every heading**, and above and below every list and every fenced block.
-- **Every fenced block carries a standard language** — `text`, `markdown`, `powershell`, `csharp`,
-  `yaml`, `json`, `diff`. Never an invented one, and never a bare fence where a language applies.
-- **Re-open the finished file and validate it before the final response.** Writing it is not checking
-  it. The first v2 leaf to produce operational Markdown emitted hard-tab indentation and headings
-  running flush into their lists, and reported success — the content was right and the artifact was
-  defective, which is exactly the failure a final read catches and a confident report does not.
-
-This lives here so no agent carries a lint checklist. A v2 charter cites these rules; it does not
-restate them.
+Use spaces, blank lines around headings/lists/fences, and standard fence languages. Re-open and lint
+written reports before completion. A charter cites this rule instead of repeating a lint checklist.
 
 ### The parent's `run.md`
 
-`run.md` is the parent's own artifact and obeys the same two-write discipline as a leaf report, only
-with more transitions. **The parent updates it at every state transition** — the state entered, why, and
-what the previous one produced — **and finalizes it before its own final response.**
-
-The completion pass carries: the final state; `Outcome` / `Reason` / `Continuation`; every invocation
-report written, by path, with the status each returned; envelope budgets consumed against their
-ceilings; unresolved and deferred items with the decision each waits on; and the baseline-versus-final
-comparison for every repository in play.
-
-**An unfinalized `run.md` is incomplete operational evidence, whatever the leaves did.** A run whose
-leaves each closed cleanly but whose parent record carries no final state cannot be read afterwards as
-completed, interrupted, or abandoned — and that is the state a later `resume` has to report as unknown.
-It is a defect in the run, not a formatting detail.
+Update `run.md` at meaningful state/ownership/authorization transitions, not every compiler correction or
+file save. Keep target, active owner, budget, last verified boundary, and next action recoverable. Finalize
+before the final response with state/status, report and evidence links, remaining decisions, budgets, and
+baseline-versus-final summaries. An unfinalized record is incomplete, whatever the leaves accomplished.
 
 ### Retention
 
-Retain run directories **30 days**. Automatic deletion is permitted **only** for a run that is all of:
-completed or reviewed, older than 30 days, and not referenced by the active handoff. **Never delete an
-active, unreviewed, failed, or referenced run** — those are the runs whose evidence is worth keeping.
-The mechanism is specified here and implemented after the first pilot; until then, deletion is manual.
+Retain run directories **30 days**. Only completed/reviewed, unreferenced runs older than that are
+eligible for separately authorized manual cleanup. Never delete active, unreviewed, failed, or referenced
+runs. A retention list is not deletion authority; no automatic cleanup is introduced by this protocol.
 
 ---
 
 ## 3. Outcome, Reason, Continuation
 
-v1 had one status field, and `PARTIAL` was overloaded to mean four unrelated things — a declared scope
-split, a missing owner decision, a failing gate, and an exhausted budget all returned the same word,
-so the parent could not route on it. v2 requires **three** fields in every report, always all three:
+Every delegated completion requires all three fields:
 
 ```text
 Outcome: COMPLETE | PARTIAL | BLOCKED | NO_CHANGE | FAILED
@@ -225,30 +174,12 @@ Reason: NONE | SCOPE_SPLIT | OWNER_DECISION | VALIDATION | REVIEW | ENVIRONMENT 
 Continuation: CONTINUE | SWITCH_WORKSTREAM | STOP_RUN
 ```
 
-| `Outcome` | Meaning |
-| --- | --- |
-| `COMPLETE` | The packet's scope and its validation both finished |
-| `PARTIAL` | Every unblocked part finished; every omission named |
-| `BLOCKED` | No sound artifact could be produced |
-| `NO_CHANGE` | The existing artifact already satisfies the request, after re-verification |
-| `FAILED` | A tool or environment failure prevented completion |
-
-| `Reason` | Use when |
-| --- | --- |
-| `NONE` | Only with `COMPLETE` or `NO_CHANGE` |
-| `SCOPE_SPLIT` | The leaf chose a coherent subset under its scope ceiling |
-| `OWNER_DECISION` | A decision the leaf may not invent is missing |
-| `VALIDATION` | A build, test, or check failed |
-| `REVIEW` | A reviewer finding blocks completion |
-| `ENVIRONMENT` | A tool, path, credential, or service was unavailable |
-| `PROTOCOL` | A required packet field or artifact path was missing or malformed |
-| `BUDGET` | Context, output, or envelope budget was reached |
-
-| `Continuation` | The parent's next move |
-| --- | --- |
-| `CONTINUE` | This workstream can proceed |
-| `SWITCH_WORKSTREAM` | This stream is blocked; independent work remains elsewhere |
-| `STOP_RUN` | Nothing independent remains, or a mandatory stop applies |
+`COMPLETE` means assigned scope and checks finished; `NO_CHANGE` means existing work was reverified.
+`PARTIAL` names verified portions and every omission. `BLOCKED` means no sound deliverable can proceed.
+`FAILED` records a tool failure or violated validation invariant. A review finding is normally
+`PARTIAL` / `REVIEW`, not a failed reviewer. `NONE` accompanies only COMPLETE or NO_CHANGE. Budget
+exhaustion is `PARTIAL` / `BUDGET`, not permission for another attempt. Other reasons name the actual
+blocker, without implying that an unavailable or failed check passed.
 
 `Continuation` is the leaf's recommendation about the **run**, not about itself. A leaf that finished
 its own work but discovered a global blocker still returns `Continuation: STOP_RUN`.
@@ -274,13 +205,9 @@ An unknown blocks **what depends on it**, not the run. The default response to a
 
 Table it in the run report's blockers section — then move to the next independent workstream.
 
-**`docs/open-questions.md` has exactly one writer: `Product Discovery v2`.** No other leaf appends to
-it, whatever its own charter says about filing questions. A non-owner leaf that discovers an open
-question writes, in its invocation report, the **exact proposed question text** and the **stream it
-blocks**; the parent then delegates `Product Discovery v2` to deduplicate that proposal against the
-existing register and append it. Any agent may **cite** an existing question by its ID; **none but
-`Product Discovery v2` may add, reword, or renumber one.** The human owner supplies the decisions;
-`Product Discovery v2` owns the file.
+**Only `Product Discovery v2` writes `docs/open-questions.md`.** Other leaves report exact question text
+and the blocked stream. Batch durable promotion when useful rather than invoking Discovery for each
+routine repair. The existing document owners retain decisions, requirements, and feature-request files.
 
 **Stop the whole run only when one of these holds:**
 
@@ -292,9 +219,41 @@ existing register and append it. Any agent may **cite** an existing question by 
 Categories in (2) are never invented — not defaulted, not "reasonably assumed", not inferred from a
 sibling repository. They are elicited during discovery or deferred as a stream.
 
+### Focused Specifications And Review
+
+Tests cover approved behavior, relevant boundaries, and material failure risks. A checklist prompts
+judgment; it does not require every matrix cell to be filled. Every blocking review finding traces to
+an obligation or concrete in-scope risk, with location, consequence, and the property needed for
+correctness. Optional improvements are nonblocking. Reviewers neither author fixes nor demand a defect
+merely to fill a closing section.
+
+Implementation and harness owners never weaken specifications, conceal production defects, or
+manufacture red. Test Designer may repair its own mechanical test-code errors without changing approved
+semantics. A disputed assertion requires an authorized specification revision and independent audit,
+not changing the expected result to agree with implementation.
+
 ---
 
-## 5. The Autonomous Run Envelope
+## 5. Budgets And Productive Iterations
+
+Keep one implementation owner responsible through ordinary compile/fix cycles. Validate small increments
+before expanding. A corrected import, type name, or local implementation within the target needs neither
+fresh owner approval nor a new discovery/TDD cycle.
+
+Use a **bounded progress-aware policy**: absent a stricter owner ceiling, budget an author invocation
+at 30 minutes including checks/reporting; stop after two consecutive corrective attempts with the same
+failure and no new discriminating evidence or verified progress. New evidence must change the causal
+understanding or resolve part of the failure; rerunning or rephrasing a guess is not progress. Summarize
+only the current problem and link recorded check/failure deltas.
+
+An ordinary compiler invocation is not a parent-mediated repair cycle. A cycle is a returned failed
+gate or blocking review sent back to its owning author, followed by focused verification. Do not
+re-delegate after every compile. No blind retries, unlimited exploration, or automatic fourth-attempt
+stop. **Every explicit owner ceiling retains its stated meaning**, including command-attempt limits;
+never reinterpret or reset it on a new packet. Narrower specialist limits, including the requirements/
+contract single repair pass, remain binding. Genuine scope/semantic decisions still require the owner.
+
+### The Autonomous Run Envelope
 
 An unattended run is authorized by an envelope, and **an envelope is approval only for the exact
 actions written in it**. Anything not named is unapproved.
@@ -311,8 +270,9 @@ actions written in it**. Anything not named is unapproved.
 | `Pipeline runs:` | no | **Not allowed unless explicitly named** |
 | `Release manifest:` | no | Absent means no version change, tag, or publication |
 
-Budgets are ceilings, not targets. On reaching one, the run enters `STOP_SAFE`: finish or revert to the
-last validated boundary, write the handoff, and stop. Reaching a ceiling is a normal outcome
+Budgets are ceilings, not targets. On reaching one, enter `STOP_SAFE`: preserve the last verified
+boundary, report current unverified changes, write the handoff, and stop. Never automatically stash,
+reset, or discard work to make the ending look green. Reaching a ceiling is a normal outcome
 (`PARTIAL` / `BUDGET`), not a failure.
 
 **Always reserve time for final validation and handoff.** A run that spends its whole envelope on
@@ -335,6 +295,9 @@ building and leaves no account of what it did has produced nothing a human can u
 
 An unexplained dirty baseline is a mandatory stop. It is indistinguishable from a human's in-progress
 work, and discarding it is unrecoverable.
+
+These are project-run gates. Toolbelt maintenance is a separate owner-authorized session, preserves
+unrelated baseline changes, and never stages, commits, pushes, or changes branches.
 
 #### One executor
 
@@ -384,6 +347,14 @@ database, or change identity/firewall settings. Name the operation and obtain th
 through the appropriate workflow; an agent's narrower prohibition still wins. Local validation uses
 synthetic configuration or explicitly scoped isolated fixtures, never an implicit live endpoint.
 
+Database fixtures require explicit ownership **before execution**: which isolated resources this run
+may create, how it proves ownership, and which cleanup it may perform. Never drop/reset a pre-existing,
+shared, or ambiguously owned database. Review target selection, failure paths, and concurrency; database
+lifecycle or parallel execution in a helper is not automatically low risk. No implicit live connections,
+destructive probes, retries, or certification runs. Credentials go through the existing protected
+mechanism, never command arguments or captured diagnostics. Unsafe-to-capture output is a reported
+limitation, not permission to expose it.
+
 ### A refused environment is an outcome, never a detour
 
 A tool, terminal, or service that **denies or cannot obtain approval** for an action — an auto-approval
@@ -410,43 +381,27 @@ Stop the run — `STOP_SAFE`, then report — on any of:
 
 ---
 
-## 7. Morning Handoff
+## 7. Session Handoff
 
-Every run ends by writing the handoff, whatever its outcome. The v2 handoff is
-`<project-parent>/.agent-runs/session-handoff-v2.md`, owned by `Session Scribe v2`. The v1 handoff at
-`prophets-pipelines/docs/session-handoff.md` is untouched by v2 during the pilot.
+`Session Scribe v2` alone owns `<project-parent>/.agent-runs/session-handoff-v2.md`, beside the run
+directories and outside repositories. It is exempt from their retention. Resolve its absolute path
+once and pass it verbatim; never create a repo-local v2 handoff or touch the v1 handoff. Operational
+continuity remains writable when repository preflight blocks project work.
 
-**It is operational, not a product artifact**, and it is deliberately *not* in a repository. It sits
-beside the per-run directories, off the same `<project-parent>` resolved in §2, so it outlives them
-without being one: **the 30-day run-directory retention does not apply to it**, and it is superseded in
-place rather than aged out. Per-run retention is unchanged. `Vanguard v2` resolves the absolute path at
-`BOOTSTRAP` and passes it verbatim in every `Session Scribe v2` packet; neither agent hardcodes a machine
-path, and **there is no repo-local `docs/session-handoff-v2.md` in any repository**.
+**Batch Scribe work**: resume when session continuity needs reconciliation, checkpoint at a meaningful
+session/ownership boundary or planned pause, wrapup at sign-off. Do not invoke Scribe for every minor
+repair, compiler pass, state transition, or green increment. `run.md` provides recovery between those
+boundaries. An explicit fresh bounded request may skip resume when no prior state is being carried;
+it still ends with a final record and session-boundary handoff.
 
-The consequence worth stating plainly: because the handoff is external, writing it **dirties no working
-tree**. `resume`, `checkpoint`, and `wrapup` are therefore available even when repository preflight has
-stopped the run — a run that may change nothing can still record what it found. That is not a loosening
-of the Git guardrails. Without an authorized non-default agent branch, no repository artifact may be
-edited, **documentation included**, and an envelope whose intended work requires a repository write has
-no read-only remainder: it enters `STOP_SAFE` with the branch command named for a human.
+The handoff states current work, next action, blockers, evidence links, and at most three short recent
+entries; it must be usable in under two minutes. Reconcile referenced current work, not every recent
+run by default. Enumerate wider history or retention only for requested recovery/cleanup; never delete
+automatically. Missing handoff means fresh start; consumed means already resumed, not replay old work.
 
-It is **concise by contract**: current state, what to do next, and **at most three** short recent-session
-entries. It **links** run reports rather than embedding them — the run directory holds the detail, and
-the handoff is the index.
-
-Its acceptance test: *could someone with no memory of the session read this and be productive in under
-two minutes?* If reading it takes longer than that, it is too long, and the fix is to move detail into a
-run report or its permanent home.
-
-Durable content is pushed to its permanent home rather than left in the handoff — decisions to
-`docs/decision-log.md`, product intent to `docs/product-brief.md`, requirements and architecture to
-their documents, open questions to `docs/open-questions.md`. Anything left only in the handoff dies the
-next time it is rewritten.
-
-**Each of those files is promoted by its own owning agent, never by the Scribe.** `Session Scribe v2`
-*verifies* that the promotion happened and lists whatever has not been promoted, naming the exact owner
-and target for each item, as handoff work for the parent to route. A handoff may be stamped `fresh`
-only when every required promotion is already complete.
+Batch durable promotions to their existing owners. Scribe verifies, never authors them. `fresh` requires
+required promotions complete; otherwise record `live` and exact pending owners/paths. Optional deferred
+improvements alone do not require new product documents or block a correctly bounded completion.
 
 ---
 
@@ -463,3 +418,33 @@ that the protocol was unavailable:
    privacy, money, architecture, release commitments.
 5. Treat anything irreversible or unnamed as unapproved.
 6. Return all three fields — `Outcome`, `Reason`, `Continuation` — and the exact human action required.
+
+## 9. Mechanical Evidence
+
+Use [scripts/AgentEvidence.psm1](scripts/AgentEvidence.psm1), tested offline by
+[scripts/Test-AgentEvidence.ps1](scripts/Test-AgentEvidence.ps1), or existing tools with equivalent
+evidence. Utilities are not authorization, a sandbox, a new agent, or a tool-permission change.
+
+- Generate manifests with SHA-256; **never transcribe hashes**. Record revision, inventory selectors,
+   all affected specifications/inputs, including inherited/linked/shared ones. The parent verifies
+   selector completeness; hashing a partial inventory does not prove completeness.
+- Capture once per approved specification revision. Recompute comparisons before protected-input
+   mutation, after each author handoff, after authorized specification work, and at final verification.
+   Within an owner's unchanged specification boundary, reuse the baseline rather than rehash every
+   file save. Added, removed, and renamed files count as drift; never refresh a baseline to excuse it.
+- Record exact executable/arguments, working directory, project/target/filter and non-secret
+   configuration, start/end times, exit code, input/result fingerprints, actual test identities/counts,
+   failures and skips. Runner results establish execution, not attribute counts. Zero executed tests,
+   failed checks, unexplained skips, incomplete results, or stale inputs/results cannot count as success.
+   Deliberate red evidences a specified failure, not a green gate. Label build-only checks build-only.
+- Reuse results only while relevant inputs, configuration, tool/runtime identity, selection, and
+   environment assumptions remain valid. Mutation invalidates affected checks. External database state
+   is not proved by file hashes: separately authorized live checks need fresh environment evidence and
+   are not reusable by default.
+- Compare identities as well as totals when specifications must be unchanged, especially for adapters
+   and refactors. Equal counts can hide replaced/skipped tests. Inspect behavior and diffs alongside
+   comparisons; a manifest mismatch blocks, never silently rebaselines.
+- Authors validate increments; Vanguard or the invoking owner independently verifies final scope,
+   comparisons and focused execution. Read-only reviewers consume those records within their tools.
+   Reports link authoritative generated records and summarize results/differences, not copied tables.
+   Never claim unperformed independent review, whole-suite certification, or publishing readiness.

@@ -4,9 +4,16 @@
 > building, changing, or debugging agent customizations. Do not add it to `AGENTS.md` — it
 > is administrative context, irrelevant to day-to-day coding sessions.
 
-**Built:** 2026-08-08 · **Revised:** 2026-09-07 · **Owner:** G. Gordon Nasseri (ProphetManX)
+**Built:** 2026-08-08 · **Revised:** 2026-09-08 · **Owner:** G. Gordon Nasseri (ProphetManX)
 **Covers:** the customization roster and the `AGENTS.md` conventions system across 8 repos —
 **29 active v2 agents**, **26 archived v1 agents**, and **2 active prompts**.
+
+**Current v2 workflow:** one shared acceptance revision per coherent slice, default bounded delivery,
+focused regression/review work, progress-aware implementation iterations, generated evidence, and
+session-boundary continuity. This is a future-run instruction change, not a roster/model/tool change or
+permission to resume an existing run. The current rules and four routing examples are in
+[agent-toolbelt-v2.md](agent-toolbelt-v2.md); authoritative mechanics are in
+[agent-protocol-v2.md](agent-protocol-v2.md). Per-repository state/convention cleanup is separate.
 
 > **2026-08-29 — the selector cutover happened, and this document is now mostly history.** All 26 v1
 > agents were archived to `conventions/toolbelt/archive/v1/` and removed from the live folder and the
@@ -16,7 +23,8 @@
 > is built on. **Read every v1 roster table below as archived history**, not as a description of what
 > loads.
 
-**Current counts, verified 2026-08-29 by listing both roots and hashing every file.**
+**Current roster, checked 2026-09-08 by root-level inventory and parsed frontmatter.** Live/mirror hashes
+are checked after every customization edit and in the final sweep; archived files are counted separately.
 
 | Set | Count | Where |
 | --- | --- | --- |
@@ -239,7 +247,7 @@ deduplicated `Proposed` entry to `docs/feature-requests.md`.
 
 | File | Agent | Model | Status |
 |---|---|---|---|
-| `meta-a-toolbelt-keeper-v2.agent.md` | **Toolbelt Keeper v2** | `GPT-5.6 Terra (copilot)` | **Active.** The current maintenance agent |
+| `meta-a-toolbelt-keeper-v2.agent.md` | **Toolbelt Keeper v2** | `GPT-6 Astra (copilot)` | **Active.** The current maintenance agent |
 | `meta-a-toolbelt-keeper.agent.md` | Toolbelt Keeper | Opus 5 fallback chain | Archived in `archive/v1/` |
 
 **`Toolbelt Keeper v2`** creates, changes, and deletes agents and prompts across the **four** locations
@@ -277,21 +285,19 @@ and the flat current mirror; `Toolbelt Keeper v2` was added as the twenty-ninth 
 **`Vanguard v2` is the front door, and no v1 agent is selectable.** Rollback is a whole-generation
 restore from `archive/v1/`, never a file-by-file undo.
 
-**The cutover is a selector decision, not a verdict.** The benchmark does not exist, `Vanguard v2` has
-never orchestrated end to end, and the harness, operator, landing, and release paths remain unexercised.
-The current list of what is proven and what is not is [agent-toolbelt-v2.md](agent-toolbelt-v2.md) §9
-and §10 — **do not infer readiness from this section.** Two earlier claims here are superseded and must
-not be restated: that v1 remains the production roster, and that the v2 total is twenty-eight.
+**The cutover is a selector decision, not a behavioral verdict.** Dated migration and smoke evidence is
+retained in [agent-toolbelt-v2.md](agent-toolbelt-v2.md) §§9-10, not promoted into a claim about current
+project state. The workflow update's static/offline checks do not certify live delegation or operations.
 
 **Slice 1 — orchestration, discovery, and requirements:**
 
 | Live file | Agent | Model | Role |
 | --- | --- | --- | --- |
-| `proj-a-vanguard-v2.agent.md` | **Vanguard v2** | `GPT-6 Astra (copilot)` | Orchestrator with a dependency-based state machine and run envelopes, including direct bounded harness maintenance after preflight. Allowlist is exactly the twenty-seven leaves below |
+| `proj-a-vanguard-v2.agent.md` | **Vanguard v2** | `GPT-6 Astra (copilot)` | Shared acceptance revision, default bounded delivery through the appropriate owner, independent focused verification, and risk-selected specialist gates. Same 27-leaf allowlist |
 | `proj-a-product-discovery-v2.agent.md` | Product Discovery v2 | `GPT-6 Astra (copilot)` | **New role.** Captures intent; owns `docs/product-brief.md`, `docs/decision-log.md`, `docs/open-questions.md` |
 | `proj-a-solution-architect-v2.agent.md` | Solution Architect v2 | `GPT-6 Astra (copilot)` | Architecture and requirements; one automatic evidence-backed repair pass |
 | `proj-a-requirements-reviewer-v2.agent.md` | Requirements Reviewer v2 | `GPT-6 Astra (copilot)` | **New role.** Read-only adversary; writes only its own invocation report |
-| `proj-a-session-scribe-v2.agent.md` | Session Scribe v2 | `GPT-5.6 Luna (copilot)` | Continuity; owns the **external** active handoff `<project-parent>/.agent-runs/session-handoff-v2.md` only — never the v1 handoff |
+| `proj-a-session-scribe-v2.agent.md` | Session Scribe v2 | `GPT-5.6 Luna (copilot)` | Session-boundary continuity; external v2 handoff and operational run artifacts. References evidence instead of copying it; no per-repair call or default whole-history sweep |
 
 **Slice 2a — grounding and shaping**, which made `Vanguard v2`'s `GROUND` and `SHAPE` states executable:
 
@@ -310,12 +316,12 @@ not be restated: that v1 remains the production roster, and that the v2 total is
 
 | Live file | Agent | Model | Role |
 | --- | --- | --- | --- |
-| `tdd-a-test-designer-v2.agent.md` | Test Designer v2 | `GPT-6 Astra (copilot)` | Executable specification files only — test cases, assertions, and declarations local to those same files. **Narrower than v1**, which could also write standalone test-project helpers |
-| `tdd-a-test-harness-engineer-v2.agent.md` | **Test Harness Engineer v2** | `GPT-6 Astra (copilot)` | Non-specification helpers, fixtures, adapters, and connection/configuration plumbing at exact packet-named paths only. `Harness mode: scaffold \| maintain`: scaffold clears a designer-named blocker and preserves intended red; maintain meets acceptance criteria with passing focused validation and independent parent verification. Both preserve specification names/hashes, assertions, expected results, traits, skips, discovery, and production implementation; neither authorizes live operations or credential exposure |
-| `tdd-a-test-auditor-v2.agent.md` | Test Auditor v2 | `GPT-6 Astra (copilot)` | Report-only adversary. Cheat test, weak assertions, coverage, flakiness, traits — **plus a harness audit** checking the hash evidence, which v1 had no reason to have |
-| `tdd-a-implementer-v2.agent.md` | Implementer v2 | `GPT-6 Astra (copilot)` | Production implementation artifacts, including database `.sql` and exact packet-named `.xml` resources or publish profiles. **Stricter than v1 on tests**: barred from the test project entirely. Project/build files, generated output, credentials, and deployment remain outside its charter |
-| `tdd-a-code-reviewer-v2.agent.md` | Code Reviewer v2 | `GPT-6 Astra (copilot)` | Report-only correctness review plus PR-comment merit triage. Unlike v1 it may not append a feature request, and it never posts a reply or changes PR state |
-| `tdd-a-refactorer-v2.agent.md` | Refactorer v2 | `GPT-6 Astra (copilot)` | Behavior-preserving production edits only. Observes its own green baseline rather than accepting a claimed one, and requires identical before/after counts including the total |
+| `tdd-a-test-designer-v2.agent.md` | Test Designer v2 | `GPT-6 Astra (copilot)` | Focused specifications for approved behavior and material risks, inside specification files only. No matrix-invented requirements or manufactured red; observed results and generated baseline links |
+| `tdd-a-test-harness-engineer-v2.agent.md` | **Test Harness Engineer v2** | `GPT-6 Astra (copilot)` | Exact non-specification helper paths only; scaffold or maintain against the shared target. Preserve specifications and executed membership. Database lifecycle/concurrency gets risk review; source edits grant no operation authority |
+| `tdd-a-test-auditor-v2.agent.md` | Test Auditor v2 | `GPT-6 Astra (copilot)` | Independent scoped test/harness review using obligations, concrete risks, and generated evidence. No every-cell findings or mandatory closing defect; no execution tool added |
+| `tdd-a-implementer-v2.agent.md` | Implementer v2 | `GPT-6 Astra (copilot)` | Smallest complete scoped production solution through ordinary compile/fix cycles. Includes authorized SQL/exact XML, never tests/test infrastructure, contracts, project/build files, credentials, or database deployment |
+| `tdd-a-code-reviewer-v2.agent.md` | Code Reviewer v2 | `GPT-6 Astra (copilot)` | Risk-selected or explicitly requested correctness review and PR-comment triage. Blocking findings trace to an obligation/risk; optional improvements are nonblocking. No source edits or PR mutation |
+| `tdd-a-refactorer-v2.agent.md` | Refactorer v2 | `GPT-6 Astra (copilot)` | Concrete behavior-preserving production correction only; valid green baseline and identical test identities/outcomes/counts plus unchanged specifications. Mechanical corrections stay local |
 
 **Owner-approved model rollout, 2026-09-07:** the harness moved first, then all twenty-five remaining
 v2 Sol/Terra agents moved to `GPT-6 Astra (copilot)`, verified against VS Code's cached selectable
@@ -368,25 +374,19 @@ orchestrator's allowlist, for the same reason. `/sync-agents-md` **does** stay a
 kind and unchanged in file: one deterministic parameterized task, where making it an agent would add a
 persona to a file copy. **Do not restate "there is no `Toolbelt Keeper v2` and none is planned."**
 
-**The guarded test-harness capability deferred at v2's creation was resolved in 2b, not as an Implementer mode.**
-Granting `Implementer v2` any write inside a test project would have deleted the roster's most important
-constraint whatever it was called, so it shipped as a separate agent with an enumerated path list,
-hash-proved specifications, and `Test Auditor v2` reviewing scaffold laps. The existing harness agent
-now also has a bounded `maintain` mode: Vanguard may delegate an explicit helper-only request directly
-after preflight, capture the existing specification hashes itself, and independently verify the diff,
-hashes, and focused validation. Passing checks are valid; a compile blocker, designer invocation, red
-result, or complete discovery/TDD/review cycle is not automatically required. Necessary regression
-tests still belong to `Test Designer v2`; adjacent hardening/lifecycle work and cloud/database
-operations require their own owner authorization. Reasoning and the TestStore routing fixture:
-[agent-toolbelt-v2.md](agent-toolbelt-v2.md) §2 *The Harness Boundary* and §4. No agent was added and no
-archived customization changed for this extension.
+**Specification, infrastructure, and production ownership remain separate.** Bounded maintenance uses
+the existing Harness Engineer, never a widened Implementer. Both author and verifier use one target;
+generated specification baselines replace copied hash tables. Passing helper maintenance and ordinary
+import corrections need no artificial red or full cycle. New regressions retain separate Designer/
+Auditor work. Database operations need exact separate approval and explicit resource ownership.
+See [the routing examples](agent-toolbelt-v2.md#routing-examples) for all four cases.
 
 Two new convention documents carry what used to be copied into every agent:
 
 | Document | Contains |
 | --- | --- |
-| [agent-protocol-v2.md](agent-protocol-v2.md) | The single source for v2 packet fields, run artifacts, `Outcome`/`Reason`/`Continuation` semantics, autonomous envelopes, git and release guardrails, stop conditions, and the morning handoff |
-| [agent-toolbelt-v2.md](agent-toolbelt-v2.md) | The migration blueprint — a role map accounting for all 26 v1 agents and both prompts, the separations that must remain, merges and retirements, model workload classes, rollout phases, the benchmark rubric, and accepted defaults |
+| [agent-protocol-v2.md](agent-protocol-v2.md) | Shared targets, compact packet/report fields, progress budgets, mechanical evidence, risk routing, ownership/safety gates, and batched continuity for future v2 runs |
+| [agent-toolbelt-v2.md](agent-toolbelt-v2.md) | Role map, accepted workflow defaults, routing examples, evidence utility usage, and clearly dated migration/benchmark history |
 
 **Three differences are worth knowing before reading v1 below**, because the v1 sections describe the
 older mechanism and are still correct *for v1*:

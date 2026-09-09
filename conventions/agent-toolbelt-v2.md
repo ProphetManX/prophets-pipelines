@@ -1,19 +1,18 @@
-# Agent Toolbelt v2 — Migration Blueprint
+# Agent Toolbelt v2 - Workflow And Role Map
 
 **Status:** **Active selector generation.** v1 is archived for rollback, not deleted. **Created:**
-2026-08-29. **Revised:** 2026-09-07 - bounded harness maintenance and mode-specific delegation and
-verification. **Owner:** G. Gordon Nasseri (ProphetManX). **Roster:** 29 v2 agents — `Vanguard v2`,
+2026-08-29. **Revised:** 2026-09-08 - minimum complete targets, bounded delivery, focused review,
+progress-aware iterations, generated evidence, and batched continuity. **Owner:** G. Gordon Nasseri (ProphetManX). **Roster:** 29 v2 agents — `Vanguard v2`,
 twenty-seven project leaves in its allowlist, and `Toolbelt Keeper v2` deliberately outside it.
 
-**The selector cutover has happened; the behavioral gates have not.** As of 2026-08-29 the live picker
-carries the v2 roster and the two prompts and nothing else: all 26 v1 agents were copied to
-`conventions/toolbelt/archive/v1/`, hash-verified, and removed from the live folder and the flat current
-mirror. That closes the two-roster overlap — one front door is selectable now. **It settles nothing
-behavioral.** The full benchmark still does not exist, `Vanguard v2` has still never orchestrated end to
-end, and the harness, operator, `LAND_PREVIEW`, `PUBLISH`, EFTools-pilot and BPA-discovery gates are all
-still open on the evidence in §9 and §10. **Do not read "active" as "proven,"** and do not restate any
-of the pre-cutover claims: that v1 is the production roster, that nothing in v1 is retired, or that the
-roster is 28.
+**Future runs only.** The owner confirmed affected agents idle before this revision. It does not rewrite
+existing run requirements or resume certification. Roster, model pins, tools, file ownership, archives,
+and product repositories are unchanged by the workflow change. Static routing and offline utility
+checks do not prove runtime delegation, selector reload, live operations, or release readiness.
+
+The selector cutover and earlier smoke evidence are recorded in §§6, 9, and 10 as dated history, not
+current project state or an instruction to resume those runs. Per-repository state belongs in each
+repository's `AGENTS.md`; its cleanup is a separate pass.
 
 Rollback is a **generation restore** from `archive/v1/`, not a file-by-file undo — the scheme is written
 in [toolbelt/archive/README.md](toolbelt/archive/README.md) and owned by `Toolbelt Keeper v2`.
@@ -52,9 +51,9 @@ not something still running.
 
 | v1 agent | Target | Disposition |
 | --- | --- | --- |
-| `Vanguard` | **`Vanguard v2`** | Explicit state machine, envelopes, and dependency routing, including direct delegation of explicitly requested bounded harness maintenance after preflight. **Exists now**, and is the **only** selectable front door — v1 `Vanguard` is archived |
+| `Vanguard` | **`Vanguard v2`** | One shared acceptance revision per slice; default bounded delivery through the existing owner and independent focused verification; risk-selected specialist gates. Sole selectable project orchestrator |
 | `TDD Lead` | **`Vanguard v2`** | **Retired into it.** It duplicated `Vanguard`'s coverage and tripped the description-overlap rule; v2 has exactly one orchestrator. **Archived 2026-08-29 with the rest of v1**, which is what actually retired it — before that it was merely planned |
-| `Session Scribe` | **`Session Scribe v2`** | Same three modes; concise linking handoff. **Exists now** |
+| `Session Scribe` | **`Session Scribe v2`** | Resume/checkpoint/wrapup at meaningful session boundaries; compact evidence links, no per-repair invocation or default whole-history sweep |
 | `Toolbelt Keeper` | **`Toolbelt Keeper v2`** | **Exists now.** Rewritten against the protocol for **four** locations — the flat live selector, the flat current mirror, the versioned generation archive, and the documentation — with whole-generation archive and restore. It maintains customization files rather than participating in a run, so it stays **outside every orchestrator's allowlist** and `Vanguard v2` cannot invoke it: changing the toolbelt remains a separate session. **The earlier plan to keep one shared v1 copy is superseded** — a shared v1 agent could not survive the v1 archive, and it had no vocabulary for generations |
 
 ### Discovery, requirements, and shaping
@@ -75,12 +74,12 @@ not something still running.
 
 | v1 agent | Target | Disposition |
 | --- | --- | --- |
-| `Test Designer` | `Test Designer v2` | Retained, **narrowed**. Writes executable specification files only — test cases, assertions, and declarations local to those same files — and observes red rather than predicting it. v1 could also write "test-project helper files"; that half moved to the harness role below. **Exists now** |
+| `Test Designer` | `Test Designer v2` | Focused regression specifications for approved behavior and material risks; specification files and their local declarations only. Observes outcomes honestly, including pre-existing green; never manufactures red or fills a matrix with invented requirements |
 | — | **`Test Harness Engineer v2`** | **v2-only, with no v1 counterpart.** Non-specification infrastructure with explicit `scaffold` and `maintain` modes, not a widening of `Implementer v2`. See *The Harness Boundary* below |
-| `Test Auditor` | `Test Auditor v2` | Retained, **extended to audit the harness** as well as the specification, including its hash evidence. **Exists now** |
-| `Implementer` | `Implementer v2` | Retained, **still unable to edit a test** — and now unable to touch a test project at all, because the harness gap that motivated widening it has its own agent. Its production boundary is semantic rather than C#-only: it includes database `.sql` and exact packet-named `.xml` resources or publish profiles, while `.sqlproj`, build files, generated output, credentials, and deployment remain outside it. **Exists now** |
-| `Code Reviewer` | `Code Reviewer v2` | Retained, including PR-comment merit verdicts. Report-only, and it never posts a reply or changes PR state. **Exists now** |
-| `Refactorer` | `Refactorer v2` | Retained. Behavior-preserving, never a test file, and it observes its own green baseline rather than accepting a claimed one. **Exists now** |
+| `Test Auditor` | `Test Auditor v2` | Independent scoped specification/harness audit. Findings trace to obligations or concrete risk; generated comparison links and actual membership, not copied hash tables or mandatory empty-cell findings |
+| `Implementer` | `Implementer v2` | Smallest complete production solution through ordinary compile/fix cycles against the shared target. Includes scoped SQL/exact XML; never tests/test infrastructure, contracts, project/build files, generated output, credentials, or database deployment |
+| `Code Reviewer` | `Code Reviewer v2` | Risk-selected or explicitly requested correctness review and PR-comment merit triage. Report-only; obligations/risks can block, optional improvements cannot expand acceptance |
+| `Refactorer` | `Refactorer v2` | Concrete behavior-preserving production changes only. Requires input-valid green evidence and identical test identities/outcomes/counts; ordinary mechanical corrections remain local |
 
 #### The Harness Boundary
 
@@ -97,8 +96,8 @@ red-phase audit; its maintenance workflow has focused parent verification instea
 | It writes **only** the paths its packet enumerates | Authorization is an explicit list composed by the parent, never a folder, a glob, or the agent's own judgment |
 | It may not write an assertion or a test-discovery attribute **anywhere** | It cannot author a test case even inside its own files, so no test can be smuggled past the audit |
 | It refuses an allowed path that already contains one | A mislabeled specification file cannot be edited under a harness packet |
-| It re-inventories and re-hashes every specification before and after | Name-set and SHA-256 equality prove existing specifications unchanged; a mismatch is `FAILED`, never rebaselined by the author |
-| Completion is mode-specific | `scaffold` reproduces a designer-named blocker and must reach intended red; `maintain` meets explicit acceptance criteria and passes focused validation without requiring a blocker or red |
+| One generated baseline per approved specification revision | Recompute comparisons at mutation/ownership boundaries; name-set and SHA-256 mismatches block. Include inherited/linked specifications and inputs. No transcribed hashes or silent rebaseline |
+| Completion is mode-specific | Scaffold reproduces the designer's blocker and reaches the approved regression; unexplained green blocks but must never be manufactured into red. Maintain meets its shared target with passing focused checks, without a blocker/red prerequisite |
 | Expected results, specification inputs, traits, skips, discovery, and production implementation stay untouched | Maintenance cannot conceal a production defect by changing helper behavior, including through adapters or bootstrap |
 | Necessary new regression tests route to `Test Designer v2` | The harness reports the coverage need instead of writing a specification or embedding an answer in plumbing |
 | The verifier is separate from the author | Scaffold: parent reruns red, then `Test Auditor v2` audits specifications and harness. Maintain: parent checks the actual diff and specification hashes and independently reruns focused validation |
@@ -107,41 +106,31 @@ The distinction it turns on is **specification versus infrastructure**, not file
 v2` remains barred from the test project entirely, which is stricter than v1 — the pressure that would
 have broken that rule now has somewhere legitimate to go.
 
-**Every harness packet declares `Harness mode: scaffold | maintain`.** Both modes require exact
-`Allowed helper paths:`, complete `Specification hashes:`, observable `Acceptance criteria:`, and
-`Focused validation:` with operation limits. Only scaffold needs `Infrastructure blocker:` and the
-designer's hash report. For maintenance, Vanguard captures the existing suite's hashes directly and
-may delegate from `PREFLIGHT` to `HARNESS_MAINTAIN`, then verify and reach `SIGN_OFF`. No fabricated
-compile failure, designer invocation, non-shipping label, or automatic discovery/TDD/review cycle is needed.
+Every harness packet declares exactly one mode, exact helper paths, a shared acceptance target,
+`Specification hashes:` as a generated baseline link, and focused checks/operation limits. Scaffold
+alone needs the designer-proved blocker. Maintenance follows `PREFLIGHT` -> `BOUNDED_DELIVERY` ->
+`SIGN_OFF`, with independent parent verification; no fabricated red, designer report, or full cycle.
 
-The current `Test Auditor v2` remains a pre-implementation scaffold gate, not a maintenance sign-off
-dependency. Explicitly required reviews and later landing gates retain their own scope. Connection and
-configuration edits grant no live cloud/database authority; local checks use synthetic values without
-printing credentials or resolved connection strings. Ask before adjacent hardening or lifecycle work;
-delegated leaves defer those decisions to the parent.
+Unexpected scaffold green must be explained against the target, not manufactured into red or silently
+relabeled. Test Auditor remains the scaffold/specification gate, not an automatic maintenance gate.
+Explicit and risk-selected reviews still apply. Database ownership/lifecycle/concurrency is consequential
+even inside a helper; connection edits grant no operation authority and credentials stay protected.
 
-#### Harness Maintenance Routing Check
+#### Routing Examples
 
-This is a routing fixture, **not authorization to edit the example helper or operate a database**.
-Given a clean authorized branch, the usual operational packet, and the owner's request to update
-`ProphetsWay.EFTools.Tests/TestStore.cs`, Vanguard resolves that exact path under the repository root
-and delegates `Harness mode: maintain` to the existing `Test Harness Engineer v2`.
+These are illustrative routing checks, not authorization to edit a project, connect to a database, or
+resume an existing run. Each begins with normal preflight and one shared acceptance revision.
 
-The acceptance criteria are to read `EFTOOLS_SQLSERVER_CONNECTION_STRING` through
-`SqlConnectionStringBuilder`, preserve the existing localhost fallback when the override is absent,
-and preserve per-call database selection. Focused local validation must exercise those choices with
-synthetic configuration, including different database names on successive calls, without opening a
-connection or performing any live database operation. No credential value belongs in source or output.
-
-| Routing case | Required decision |
+| Case | Route and acceptance evidence |
 | --- | --- |
-| Exact helper path, criteria, focused local checks, and parent-captured specification hashes; baseline passes; no blocker | Delegate maintenance directly, independently verify the evidence, and accept passing validation |
-| Same request but missing a required harness field, using a folder/glob, or carrying stale/incomplete hashes | `BLOCKED` / `PROTOCOL`; obtain a complete bounded packet rather than inventing a blocker |
-| Work needs an assertion, expected-result change, trait/skip/discovery change, or new regression case | Refuse the harness write; route necessary specification work to `Test Designer v2` with its own scope |
-| A helper would suppress or bypass a production failure | Refuse and report the production defect; green is not evidence of correctness |
-| The connection override suggests a live run, schema publication, new credential policy, retries, or database lifecycle work | Do not expand; obtain separate owner authorization for operations and ask before adjacent work |
+| Passing helper maintenance | Exact standalone helper paths -> Harness Engineer `maintain` -> parent diff/specification/membership comparison and focused rerun -> SIGN_OFF. Passing baseline is valid; no manufactured blocker/red or automatic full cycle |
+| Ordinary production import correction | Implementer owns the local correction and compile/fix iterations; existing valid specifications and focused project check suffice -> independent final verification. No Designer, discovery, architecture, Code Reviewer, commit, or Scribe call per attempt |
+| New behavior needing regressions | Fix approved behavior and material risks -> Test Designer -> focused Test Auditor -> implementation owner -> independent final verification. Add contract/architecture/code/security gates only when the actual risk or explicit requirement calls for them; no speculative matrix requirements |
+| Database work needing separate approval | Source plumbing is not permission to connect, provision, publish, create/drop/reset, or certify. Establish exact operation authorization, explicit database ownership/cleanup bounds, and relevant lifecycle/concurrency/security review. Keep unapproved operations blocked; synthetic offline checks may proceed only within their own scope |
 
-This fixture checks routing and completion rules, not runtime delegation or provider certification.
+Missing target/mode/paths/evidence blocks delegation. A production bypass or changed specification blocks
+acceptance even if tests pass. An ordinary local correction does not reset budgets or require fresh
+approval; a real semantic/scope decision does. These examples check routing rules, not live delegation.
 
 ### Land, ops, and infrastructure
 
@@ -215,8 +204,8 @@ These are load-bearing. A merge that violates one is not a simplification.
 | `Test Harness Engineer v2` | `Test Auditor v2` for scaffold; invoking parent/owner for maintain | A fake that encodes an expected value is an implementation written where nobody looks. Both routes check the actual diff and hash evidence; maintenance also requires an independent focused rerun, not the author's claim |
 | `Interface Architect v2` | `Contract Reviewer v2` (`csharp`) | An agent that designed an API is a weak critic of it |
 | `API Designer v2` | `Contract Reviewer v2` (`http`) | Same reasoning, different surface |
-| `Test Designer v2` | `Test Auditor v2` | Whether tests meaningfully constrain the implementation is a separate judgment from writing them |
-| `Implementer v2` | `Code Reviewer v2` | Green proves the cases someone thought to write; the review is everything they did not |
+| `Test Designer v2` | `Test Auditor v2` | Focused independent review of newly authored specifications; not a mandatory invocation when existing specifications already cover a local correction |
+| `Implementer v2` | Invoking parent/owner; `Code Reviewer v2` for risk-selected or explicit gates | Author checks increments; parent independently verifies focused final execution and diff. Code review addresses concrete risks beyond that check, not a universal extra ceremony |
 | `Solution Architect v2` | `Requirements Reviewer v2` | **New in v2.** The gap that let vague requirements reach a build stage unchallenged |
 | `Product Discovery v2` | `Solution Architect v2` | Intent and design are different failures; an agent doing both rationalizes its own scope |
 | `Azure Infrastructure Engineer v2` | `Azure Deployment Reviewer v2` | Infrastructure mistakes spend money or alter live resources |
@@ -409,14 +398,16 @@ Dimensions 1, 2, and 9 are disqualifying at any failure. The rest are comparativ
 | --- | --- |
 | Build order | v2 was built beside v1, and v1 was left byte-unchanged throughout that build. **Superseded 2026-08-29 at the selector layer:** v1 now lives in `conventions/toolbelt/archive/v1/` rather than in the picker, so "beside" no longer describes what a human sees. The benchmark-then-switch gate for the **default** is unchanged |
 | Generations | The live folder and the flat current mirror carry **exactly one** generation. Retired generations live under `conventions/toolbelt/archive/<generation>/`, are never loaded by VS Code, and are **excluded** from the current-mirror hash comparison. Each archive contains root agent definitions, generation-specific prompt snapshots under `prompts/`, and a sorted SHA-256 manifest over those rollback customizations; the archive README is documentation outside the manifest. Archive and rollback move a whole named generation, never individual files; manifest validation precedes deletion or restoration; an archive is never overwritten and is immutable except to repair proven corruption against Git history. A wanted change to a retired generation creates a new generation instead |
-| Minimum viable first | The shared protocol defaults every v2 agent to the smallest complete change and one focused executable validation for explicitly non-shipping examples, prototypes, spikes, and disposable local tools. Optional discovery, architecture, reviews, hardening, governance, abstractions, lifecycle work, and broader documentation are skipped unless requested or needed for a sound direct solution. The rule never overrides write boundaries, explicit checks, owner decisions, mandatory stops, author/validator gates for shipping work, or consequence-based controls; a one-off remote database, cloud, data, auth, payment, or release action remains consequential |
+| Minimum complete scope | One immutable shared acceptance target per coherent slice: behavior, invariants, exclusions, owners, checks, risk gates, authorization, ceilings. No speculative abstractions, extension points, configuration, providers, retries, or lifecycle features. Necessary safety/correctness are included |
+| Default routing | Understood reversible local work, including production, goes to its existing owner and focused independent verification. Add regression authors only for a real specification need; discovery/architecture/full review are not automatic. Public contracts, architecture, security, consequential operations and releases retain relevant specialist gates |
 | Requirements flow | Discovery captures intent → Architect writes → Reviewer attacks → one automatic repair pass → Vanguard consumes. **Vanguard drives every leg** — neither leaf holds an `agent` tool, so they never invoke each other |
 | Discovery artifacts | `docs/product-brief.md`, `docs/decision-log.md`, `docs/open-questions.md`, owned solely by `Product Discovery v2`. A non-owner leaf **reports** a proposed question and the stream it blocks; Vanguard routes it to Discovery to deduplicate and append |
 | Reviewer writes | Its own invocation report only. Never a durable product artifact. **This tightened in 2a**: v1 `Contract Reviewer` could append a `Proposed` feature request, and `Contract Reviewer v2` cannot — it reports the proposal and `Purpose Refiner v2` appends it |
 | Feature requests | `Purpose Refiner v2` is the only writer of `docs/feature-requests.md` and the only agent that may change a status, and only against an owner decision **quoted in the packet**. A parent's recommendation is not authorization, and a parent may not manufacture one |
 | Contract review | `Mode: csharp` or `Mode: http` is a **required** packet field; a missing mode is `BLOCKED` / `PROTOCOL` before any read. Reviewing an HTTP design against interface-segregation criteria produces confident findings against the wrong criteria |
-| Build lap | Red → audit → green → review → optional refactor → checkpoint, one coherent slice at a time, driven entirely by `Vanguard v2`. **Never proceed past a `Repair required` audit.** A behavior correction routes `Test Designer v2` → `Test Auditor v2` → `Implementer v2`; a structure-only correction may route `Refactorer v2`. Repair cycles and lap count are envelope ceilings, and reaching one is `PARTIAL` / `BUDGET`, not a failure |
-| Test harness | Required `Harness mode: scaffold \| maintain`, exact `Allowed helper paths:`, complete `Specification hashes:`, `Acceptance criteria:`, and `Focused validation:`. Scaffold alone requires a designer-named `Infrastructure blocker:`, designer hashes, intended red, and the test audit. Explicit maintenance may route directly after preflight with parent-captured hashes and pass focused local validation; parent independently checks the diff, hashes, and rerun. No automatic full cycle or landing. Assertions, expected results, specification inputs, traits, skips, discovery, and production implementation remain protected; new regression tests go to `Test Designer v2`, and no helper may conceal a production defect. Cloud/database operations need separate authorization, credentials stay out of source/output, and adjacent hardening/lifecycle work needs owner approval |
+| Build slice | One owner through incremental compile/fix cycles. Add Designer and focused audit for missing regressions; reuse sufficient existing specifications. Risk-selected code review, concrete refactors only, independent focused final verification. No automatic commit or per-increment Scribe call |
+| Test harness | Exactly one mode, exact helper paths, shared target, generated specification baseline link, focused validation. Scaffold needs a designer-proved blocker and audit; maintenance may pass throughout. Preserve assertions/inputs/traits/skips/discovery and production exercise. Never manufacture red, silently rebaseline, or conceal a defect |
+| Test/review scope | Approved behavior, relevant boundaries, material failure risks. Every blocking finding has an obligation or concrete in-scope risk. Optional improvements are nonblocking deferred work, not new acceptance criteria; no every-cell matrix or mandatory closing defect |
 | Test edits | No agent may weaken, delete, skip, retag, or filter a test to obtain green. `Implementer v2` may not touch a test project at all; a test it believes is wrong stops that stream and is reported with the assertion and the conflicting contract statement quoted |
 | Database implementation files | `Implementer v2` owns production `.sql` and exact `.xml` database resources or publish profiles named in `Allowed writes:`. An extension is not blanket authorization: `.sqlproj`, `.sqlproj.user`, `.csproj`, `.props`, `.targets`, generated output, secrets, and deployment remain outside its charter. `Modernizer v2` retains existing `.csproj` / `.sqlproj`; `Test Harness Engineer v2` may already write an enumerated XML fixture path without any extension-wide grant |
 | Diagnosis versus repair | `Repo Analyst v2` finds build and packaging debt and proposes fixes unapplied; `Modernizer v2` applies only what an owner approved, one verifiable change at a time, and never during a deliberately red lap. An agent that both finds and fixes debt writes its own approval |
@@ -424,11 +415,12 @@ Dimensions 1, 2, and 9 are disqualifying at any failure. The rest are comparativ
 | Sole ownership | `CHANGELOG.md` → `Changelog Author v2`. Root `README.md` → `README Author v2`. Every `.yml` and `.yaml` → `Pipeline Engineer v2`. `docs/feature-requests.md` → `Purpose Refiner v2`. `docs/open-questions.md` → `Product Discovery v2`. Bicep and `.bicepparam` → `Azure Infrastructure Engineer v2`. No file has two writers |
 | Git and release execution | `Repository Operator v2` only, one `Operator mode:` per invocation, expected HEAD verified immediately before every mutation, staging by exact enumerated path list. `Vanguard v2` delegates and never executes. **No agent merges, in any mode** |
 | Environment refusal | A denied or unobtainable tool approval is `BLOCKED` / `ENVIRONMENT` and the exact human command is named. **Never a second route to the same effect** — not another tool, spelling, script file, or redirect |
-| Repair loops | Every author/reviewer pairing is parent-mediated and bounded identically: create → review → **one** repair quoting finding IDs → focused re-review. What survives is `Blocked on owner decision`, and there is no third round in any pairing |
+| Repair loops | Protocol §5 progress-aware local iterations; no automatic fourth-compile stop. Explicit owner ceilings keep their stated meaning. Parent-mediated failed-gate/review cycles are distinct from local compiles. Narrower specialist limits, including requirements/contract single repair pass, remain; semantic disputes and repeated unchanged failures escalate |
 | Unknowns | Dependency-scoped: table and continue. Stop only per the protocol's three conditions |
 | Run artifacts | `<project-parent>/.agent-runs/<run-id>/`, outside every repository, retained 30 days. `<project-parent>` is the common parent of the **repository roots named in the run**, excluding non-repository customization roots — folding in a multi-root workspace's prompts folder resolves it to a drive root |
 | Deletion | Only completed or reviewed, unreferenced, older than 30 days. Never active, unreviewed, failed, or referenced |
-| Handoff | `<project-parent>/.agent-runs/session-handoff-v2.md` — **operational, outside every repository**, beside the per-run directories and exempt from their 30-day retention. `Vanguard v2` resolves it at `BOOTSTRAP` and passes the exact path; no repo-local `docs/session-handoff-v2.md` exists, and v1's `docs/session-handoff.md` is untouched. Links reports; at most three recent entries; readable in under two minutes. Durable content is promoted by its **owning** agent — `Session Scribe v2` verifies and lists what is unpromoted, and stamps `fresh` only when none is |
+| Handoff | External active handoff, at most three short recent entries, evidence links, usable in under two minutes. Resume only when continuity needs reconciliation; checkpoint at a meaningful session/ownership boundary or pause; wrapup at sign-off. No per-repair calls, default whole-history sweep, or automatic retention action. Existing owners promote durable content in batches; Scribe verifies |
+| Evidence | Mechanically generated manifests and check summaries outside repositories. Baseline per approved specification revision, comparisons at mutation boundaries, reuse only while inputs/configuration/tool/environment assumptions hold. Actual test identities/counts/failures/skips; zero tests and stale results never pass. Reports link records and summarize differences |
 | Branch refusal | A blocked `prepare_branch` leaves **only** operational reports, the external handoff, and read-only analysis. **No repository artifact may be edited on a default or shared branch, documentation included** — a repository doc is a repository write, not an exception to one. An envelope whose work requires any repository write has no read-only remainder and enters `STOP_SAFE` with the branch command named for a human |
 | Unattended envelope | Stop by 07:00 local; 3 repair cycles per failed gate; 8 build laps; allowed repositories, paths, checks, and reviews are mandatory |
 | Git | Clean baseline required; `agent/<date>-<slug>` branch; atomic commits after validation and review; draft PR allowed; never merge unattended; never force-push or rewrite history |
@@ -569,3 +561,70 @@ This is the **first measured receipt-assisted recovery from a silent run** in th
 evidence. It is also **v1 machinery** — the `Toolbelt Keeper` receipt protocol, not a v2 leaf's one-file
 `Report artifact:`. The two are not interchangeable and citing this for v2 would overstate it; Open
 Item 14 tracks what v2 still owes.
+
+## 11. Evidence Support
+
+[AgentEvidence.psm1](scripts/AgentEvidence.psm1) uses PowerShell 7 and built-in .NET APIs, without network,
+package installation, a policy engine, or a new agent. It does not infer scope, approve an operation,
+or widen anyone's tools. Read-only reviewers consume its generated records; Vanguard uses its existing
+task/test tools to produce evidence, not shell redirects. All output is under the external run's
+`evidence/` directory, with unique names and no overwrite.
+
+**Two different snapshots:** a specification baseline is immutable per approved specification revision;
+an execution-input snapshot covers the particular source/helper/configuration/tool state being checked.
+Refresh execution inputs after an authorized implementation change, never a specification baseline to
+excuse incidental test drift. Inventory selectors must include inherited/linked specifications, data
+inputs, generated assets used by the check, and toolchain inputs as relevant. The parent checks that
+selection is complete; a digest proves bytes, not that the selected set was sufficient.
+
+From the pipeline repository root, with paths and check configuration supplied by the shared target:
+
+```powershell
+Import-Module .\conventions\scripts\AgentEvidence.psm1
+$spec = New-AgentManifest -Revision $revision -Roots $specRoots -Patterns @('*Tests.cs', '*Test.cs') -Paths $linkedInputs
+$specPath = Save-AgentEvidence $spec $runDirectory 'spec-r1.json'
+$comparison = Compare-AgentManifest $spec
+Save-AgentEvidence $comparison $runDirectory 'spec-before-owner.json'
+
+$inputs = New-AgentManifest -Revision $revision -Roots $inputRoots -Paths $toolchainInputs
+$inputPath = Save-AgentEvidence $inputs $runDirectory 'inputs-final.json'
+$trx = Join-Path $runDirectory 'evidence\final.trx'
+$arguments = @('test', $project, '--no-restore', '--framework', $framework, '--filter', $filter,
+  '--logger', 'trx;LogFileName=final.trx', '--results-directory', (Split-Path $trx))
+$check = Invoke-AgentValidation -FilePath dotnet -ArgumentList $arguments -WorkingDirectory $repositoryRoot `
+  -Configuration $configuration -InputManifestPath $inputPath -RunDirectory $runDirectory `
+  -Name final -Kind Tests -TrxPath $trx -TimeoutSeconds $remainingCheckSeconds
+Test-AgentValidation $check.Record $configuration
+```
+
+`$configuration` records non-secret project, target, build configuration, filter, runtime/toolchain
+identity, and environment assumptions. The sample assumes restore is already complete and authorized;
+it is not permission to run a project's tests or operate its databases. Run one check per project/target
+and assign unique output names. Use `Kind Command` for build-only checks; it never claims test execution.
+
+The check recorder starts the exact executable/arguments, captures times and actual exit status, verifies
+inputs/tool fingerprints before and after, and parses fresh TRX with DTD processing disabled. It records
+actual test identities/outcomes/counts and refuses stale/malformed/inconsistent results, run-level
+failure, unexpected skips, and zero executed tests. Approved skips are explicit identities and stay
+visible. `Compare-AgentTestResults` compares identities/outcomes as well as configuration and counts.
+It complements, not replaces, specification comparisons and behavioral review.
+
+`Test-AgentValidation` checks reuse **for the recorded command and expected configuration**. The caller
+must also match it to the requested command/selection and verify environment assumptions. File hashes
+cannot certify mutable external database state; live results are not reusable by default. Unsupported
+TRX result shapes fail closed and need an equivalent structured runner adapter, not an inferred pass.
+Raw stdout/stderr and TRX diagnostic bodies are not copied into JSON. The runner's TRX itself can contain
+sensitive diagnostics: only execute/capture checks already known to use safe inputs/output. This is not
+a general secret scrubber or permission to expose credentials.
+
+Run the offline support tests with an existing external run directory:
+
+```powershell
+& .\conventions\scripts\Test-AgentEvidence.ps1 -RunDirectory $runDirectory
+```
+
+The test script creates only its own synthetic input/result files under that run, records test identities
+and a generated summary there, and returns nonzero for failed or zero self-tests. It exercises manifest
+changes, linked inputs, output boundaries, input/result freshness, test membership, failure/skip/zero
+outcomes, and command-only labeling. Synthetic TRX is deliberately used to test the parser; these are
+offline utility checks, not proof that an agent ran, an application passed, or a provider was certified.
