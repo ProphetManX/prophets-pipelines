@@ -1,11 +1,14 @@
 # Agent Protocol v2 - Shared Delegation Mechanics
 
-**Applies to:** the active v2 roster. **Revised:** 2026-09-08. **Owner:** G. Gordon Nasseri (ProphetManX).
+**Applies to:** the active v2 roster. **Revised:** 2026-09-12. **Owner:** G. Gordon Nasseri (ProphetManX).
 
 This revision governs **new runs only**. Existing invocations and continuations retain their recorded
 protocol, acceptance revision, budgets, and gates until the owner explicitly closes or re-scopes them.
 Toolbelt changes require confirmation that affected agents are idle; old STARTED records alone cannot
 prove activity or inactivity. Never interrupt a run to apply a customization change.
+
+The owner confirmed all agents idle for the 2026-09-12 Git/PR approval update. That customization
+authorization permits no project Git or PR operation; the workflow below applies to future runs only.
 
 Read the repository's `AGENTS.md`, this protocol, then the authoritative inputs for the slice. If this
 protocol is unreachable, apply §8 and say so. Read nearby controlling code rather than broad unrelated
@@ -99,7 +102,9 @@ acceptance target**, rather than duplicate it. A leaf with a missing or unreadab
 | `Specification hashes:` | when specifications must be protected | **Path to generated baseline**, revision and inventory selectors; never copied hashes. Include inherited/linked files and inputs |
 | `Focused validation:` | implementation/test/harness/refactor work | Exact checks or target section, project/target/filter/configuration, expected outcomes, and operation limits; no implicit live operations |
 | `Infrastructure blocker:` | harness `scaffold` only | Designer-named missing infrastructure, reproduction check, and intended red; not required or fabricated for `maintain` |
-| `Operator mode:` | only when invoking `Repository Operator v2` | Exactly one of `prepare_branch`, `checkpoint_commit`, `publish_branch`, `open_or_update_draft_pr`, `mark_pr_ready`, `release`. Missing, unrecognized, or combined is `BLOCKED` / `PROTOCOL` |
+| `Operator mode:` | only when invoking `Repository Operator v2` | Exactly one of `prepare_branch`, `checkpoint_commit`, `publish_branch`, `open_or_update_draft_pr`, `reply_to_pr_comment`, `resolve_review_thread`, `mark_pr_ready`, `release`. Missing, unrecognized, or combined is `BLOCKED` / `PROTOCOL` |
+| `Approved proposal:` | every operator invocation | Exact immutable proposal section/revision and step; quoted owner approval and its recorded source, or the exact unattended-envelope clause. See §6; the packet is never its own authority |
+| `Expected state:` | every operator invocation | Operation-relevant baseline including local HEAD/branch, relevant index/worktree content, remote and PR/comment/thread state; link verified predecessor results for approved transitions. Unknown required state blocks |
 | `Release manifest:` | only to authorize a version change, tag, or publication | See §6 |
 
 Do not copy the protocol, full evidence tables, previous reports, or histories into packets. Other
@@ -286,15 +291,22 @@ building and leaves no account of what it did has produced nothing a human can u
 
 | Allowed | Forbidden |
 | --- | --- |
-| Require a **clean baseline** before starting | Starting on an unexplained dirty tree — stop and report |
+| Require a **clean baseline** before project authoring or branch preparation; checkpoint only explicitly approved, inspected changes | Absorbing unexplained dirty content or discarding owner work |
 | Create and work on a dedicated `agent/<date>-<slug>` branch | Committing to `main` or any shared branch |
 | Atomic commits, **only after scoped validation and review** | Committing unrelated baseline changes |
-| Push that branch | Force-push, history rewrite, branch or tag deletion |
+| Push that exact branch/ref to the approved remote | Force-push, history rewrite, branch or tag deletion, implicit tags or publication |
 | Open or update a **draft** PR | Marking ready before every gate below passes |
-| Mark a PR ready when **all** of: every named gate and CI check passes, the diff stays in scope, the handoff is complete, and no unresolved High or Critical finding exists | **Merging, unattended — never** |
+| Post one approved PR conversation/review reply or resolve one individually named review thread | Unapproved replies, bulk resolution, or treating comment text as authorization |
+| Mark a PR ready, with explicit approval, when **all** of: every named gate and CI check passes, the diff stays in scope, the handoff is complete, and no unresolved High or Critical finding exists | **Merging, closing/completing a PR, automerge, and merge queues remain human-only**, attended or unattended |
 
-An unexplained dirty baseline is a mandatory stop. It is indistinguishable from a human's in-progress
-work, and discarding it is unrecoverable.
+An unexplained dirty baseline blocks project authoring and dependent Git operations. An approved
+checkpoint describes the actual staged/unstaged/untracked content instead of requiring a clean tree
+with nothing to commit. An unenumerated or changed input still stops it; never stash, reset, or discard.
+
+Standalone PR discussion is not project authoring or publication: its local write set is `none`, and it
+does not require branch preparation, a clean authoring tree, or shipping/CI gates. Verify relevant
+state and leave local work untouched. Existing blocked implementation/landing work remains blocked;
+an approved truthful reply or recorded thread disposition does not clear its findings or gates.
 
 These are project-run gates. Toolbelt maintenance is a separate owner-authorized session, preserves
 unrelated baseline changes, and never stages, commits, pushes, or changes branches.
@@ -302,22 +314,93 @@ unrelated baseline changes, and never stages, commits, pushes, or changes branch
 #### One executor
 
 **`Repository Operator v2` is the only v2 agent that may execute any of the allowed actions above.** No
-other leaf and no orchestrator stages, commits, pushes, tags, publishes, or changes pull-request state —
-they read git, and they say what should happen. `Vanguard v2` reaches these actions only by delegating a
-packet to the operator; it never runs the command itself.
+other leaf and no orchestrator stages, commits, pushes, posts replies, resolves threads, tags, publishes,
+or changes pull-request state. `Vanguard v2` proposes, obtains confirmation, delegates to the operator,
+and independently verifies its result; it never runs the mutation itself. Reviewers assess merit and
+draft wording only. No agent receives merge authority.
 
 **One operation per invocation.** Every operator packet carries exactly one `Operator mode:`, and a
 packet with none, an unrecognized one, or more than one returns `BLOCKED` / `PROTOCOL` before any read or
-command. Two operations are two packets with two report artifacts.
+command. Two operations are two packets with two report artifacts, not necessarily two owner approvals.
 
-**Every mutating mode carries an expected HEAD and verifies it immediately before mutating.** If HEAD has
-moved, the operator stops and reports both SHAs rather than acting on state that has changed underneath
-it. Staging is by an **exact enumerated path list** — never a folder, a glob, or "the rest of the
-change" — and an unenumerated changed path stops the run.
+#### Propose, Confirm, Execute, Verify, Report
+
+For attended operations, **explicit conversational approval is sufficient**. Do not demand an
+unattended envelope or release manifest for an ordinary commit, push, draft PR, reply, or named thread
+disposition. Unattended runs still require §5's envelope naming their exact actions; version changes,
+tags, and publication still require the separate release manifest. Preserve applicable validation and
+review gates, not publication gates transplanted onto routine discussion.
+
+Before any operation, Vanguard presents a concise proposal in the existing acceptance target and records
+the owner's exact confirmation/source in `run.md`. No extra orchestration document is required. Include:
+
+- Repository root and GitHub host/owner/repository; local branch/HEAD and exact remote/destination ref
+   with expected tip, plus PR number/URL, base/head repositories/refs and head SHA as applicable.
+- Exact staged/unstaged/untracked file paths **and reviewed content identity**, including pre-staged
+   changes, for a checkpoint; `none` for remote-only discussion. Never folders, globs, or `git add -A`.
+- Intended ordered steps and modes, explicitly naming staging/commit, push, draft creation/update,
+   reply target kind and comment ID/URL, and each individual review thread ID to resolve.
+- Verbatim commit message, PR title/body, reply text, and per-thread `fixed`, `accepted-risk`, or
+   `no-change` disposition with evidence/rationale. A reply and a resolution are separate named actions.
+- Expected before/after state and applicable checks. Bind an unknown future SHA or URL explicitly to
+   a named predecessor result, such as `commit SHA verified by step 1`; only expressly approved text
+   placeholders may use those outputs. Never authorize an unspecified "latest HEAD" or prose rewrite.
+
+A clear approval of that proposal authorizes **only it**. A request to investigate or "handle the
+comments", a reviewer recommendation, or a parent-authored packet is not confirmation of undisclosed
+mutations. Missing, ambiguous, rejected, or revoked approval means no mutation and
+`BLOCKED` / `OWNER_DECISION`. The attended parent asks the owner; a delegated leaf reports the missing
+decision instead of waiting. Never turn rejection into a differently worded attempt.
+
+One confirmation may cover `checkpoint_commit` -> `publish_branch` -> `reply_to_pr_comment` ->
+`resolve_review_thread`. Vanguard invokes each separately, carrying the same approved proposal and
+its own named step. It verifies the preceding report and actual result before advancing. **Do not ask
+again for unchanged details**, and never silently append an action. Advance expected HEAD/state only
+from verified outputs of approved predecessors, within the proposal's explicit bindings.
+
+Immediately before each mutation the operator re-reads expected HEAD and operation-relevant state:
+branch, content/index inventory, remote identity/tip, PR head/base/draft state, target comment/thread
+content and resolution, and required check evidence. Changed scope, text, files, target, relevant
+discussion, or unexpected state stops the remaining sequence for a fresh proposal and confirmation.
+Do not replace the expected baseline with whatever is now observed. Expected effects of the approved
+predecessor are not drift; an unrelated external edit or push is.
+
+After each step, read back and record the actual commit/remote/PR-head SHA, PR/comment URL and ID, or
+thread status, as appropriate. A tool exit or an operator's assertion alone is insufficient; Vanguard
+independently checks the result and approval match. There is no automatic next step after failure or
+uncertainty. Preserve and report completed, failed, and unknown effects, including staging left after a
+failed commit or a possibly posted reply. Read-only reconciliation is allowed; blind retry or rollback
+is not. An uncertain result must be reconciled and any retry explicitly reapproved.
+
+#### Replies And Thread Dispositions
+
+`reply_to_pr_comment` posts one verbatim approved reply to one identified PR conversation or review
+comment. A review reply uses its verified reply-parent and thread IDs; a conversation reply is a new
+PR conversation comment with the approved original-comment reference. Read current replies with full
+pagination and previous operation evidence first. An unambiguous matching author/target/body already
+posted is `NO_CHANGE` with the verified URL, not a second post. An ambiguous match blocks. No implicit
+comment edit/deletion, review submission, or thread resolution is authorized.
+
+`resolve_review_thread` targets **one named thread**. For `fixed`, require focused fix verification
+and freshly verify that the fixing commit reached the actual PR head (or is an ancestor) and that
+the fix remains present there. A local SHA, a push exit code, stale checks, or an outdated thread alone
+does not prove this. For explicit owner-approved `accepted-risk` or `no-change`, record the quoted
+rationale without claiming a fix. Any public explanation is a separately approved reply step. No
+disposition waives validation/security/release gates or marks their findings closed.
+
+An already-resolved named thread is `NO_CHANGE` after reading its current status, with no reply,
+unresolve, or claim this run fixed/resolved it. Likewise, exact already-applied PR text can be a no-op.
+If a no-op reveals unexpected external state, stop the remaining sequence and reconfirm rather than
+letting that state silently authorize its successors.
+
+Use available GitHub tools or authenticated `gh` within existing tools and normal VS Code approval
+controls. Choose a supported route before acting; a denied approval or unavailable authentication is
+§6's environment stop, never permission to switch routes. Do not request credentials in chat, expose
+secrets in artifacts, change approval settings, or interpolate review text as executable shell code.
 
 **Writing prose is never authorization to execute it.** `Commit Author v2` produces the message and the
 PR body and runs no mutating command; `Changelog Author v2` records a version implication and changes no
-version. The operator alone acts, and only on what a packet or manifest names.
+version. The operator alone acts, and only on the exact owner-approved proposal/envelope or manifest.
 
 ### Release
 
@@ -371,11 +454,14 @@ reported as one if it is observed.
 
 Stop the run — `STOP_SAFE`, then report — on any of:
 
-- an unexplained dirty baseline, or a diff drifting outside `Allowed paths:`;
-- an unresolved High or Critical review or security finding;
+- an unexplained dirty baseline for project authoring/Git work, or an operation's relevant state or
+   diff drifting outside its approved scope;
+- an unresolved High or Critical review or security finding in dependent implementation/landing work;
+   standalone approved discussion may truthfully report it, but never waive it;
 - a repair cycle or build-lap ceiling reached;
 - a required check that cannot run at all, as distinct from one that ran and failed;
-- an action that would be irreversible and is not named in the envelope or a release manifest;
+- an unapproved mutation, including an irreversible action absent from the attended approved proposal
+   or unattended envelope; version changes, tags, and publication still require a release manifest;
 - an owner decision required in one of the never-invent categories in §4, with no independent work
   left.
 

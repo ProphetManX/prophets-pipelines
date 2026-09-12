@@ -1,13 +1,14 @@
 # Agent Toolbelt v2 - Workflow And Role Map
 
 **Status:** **Active selector generation.** v1 is archived for rollback, not deleted. **Created:**
-2026-08-29. **Revised:** 2026-09-08 - minimum complete targets, bounded delivery, focused review,
-progress-aware iterations, generated evidence, and batched continuity. **Owner:** G. Gordon Nasseri (ProphetManX). **Roster:** 29 v2 agents — `Vanguard v2`,
+2026-08-29. **Revised:** 2026-09-12 - scoped attended Git/PR approvals, review replies, named thread
+dispositions, and verified single-operation execution. **Owner:** G. Gordon Nasseri (ProphetManX). **Roster:** 29 v2 agents — `Vanguard v2`,
 twenty-seven project leaves in its allowlist, and `Toolbelt Keeper v2` deliberately outside it.
 
-**Future runs only.** The owner confirmed affected agents idle before this revision. It does not rewrite
-existing run requirements or resume certification. Roster, model pins, tools, file ownership, archives,
-and product repositories are unchanged by the workflow change. Static routing and offline utility
+**Future runs only.** The owner confirmed all agents idle on 2026-09-12 before this revision. It does not
+rewrite existing run requirements or resume certification. Roster, model pins, tools, product-file
+ownership, archives, and product repositories are unchanged. Only the existing operator gains the named
+PR actions below; Vanguard remains the orchestrator and reviewers remain report-only. Static routing and offline utility
 checks do not prove runtime delegation, selector reload, live operations, or release readiness.
 
 The selector cutover and earlier smoke evidence are recorded in §§6, 9, and 10 as dated history, not
@@ -51,7 +52,7 @@ not something still running.
 
 | v1 agent | Target | Disposition |
 | --- | --- | --- |
-| `Vanguard` | **`Vanguard v2`** | One shared acceptance revision per slice; default bounded delivery through the existing owner and independent focused verification; risk-selected specialist gates. Sole selectable project orchestrator |
+| `Vanguard` | **`Vanguard v2`** | One shared acceptance revision per slice; bounded delivery and independent verification. Presents exact Git/PR proposals for owner confirmation and delegates each approved step to the sole operator. Sole selectable project orchestrator |
 | `TDD Lead` | **`Vanguard v2`** | **Retired into it.** It duplicated `Vanguard`'s coverage and tripped the description-overlap rule; v2 has exactly one orchestrator. **Archived 2026-08-29 with the rest of v1**, which is what actually retired it — before that it was merely planned |
 | `Session Scribe` | **`Session Scribe v2`** | Resume/checkpoint/wrapup at meaningful session boundaries; compact evidence links, no per-repair invocation or default whole-history sweep |
 | `Toolbelt Keeper` | **`Toolbelt Keeper v2`** | **Exists now.** Rewritten against the protocol for **four** locations — the flat live selector, the flat current mirror, the versioned generation archive, and the documentation — with whole-generation archive and restore. It maintains customization files rather than participating in a run, so it stays **outside every orchestrator's allowlist** and `Vanguard v2` cannot invoke it: changing the toolbelt remains a separate session. **The earlier plan to keep one shared v1 copy is superseded** — a shared v1 agent could not survive the v1 archive, and it had no vocabulary for generations |
@@ -78,7 +79,7 @@ not something still running.
 | — | **`Test Harness Engineer v2`** | **v2-only, with no v1 counterpart.** Non-specification infrastructure with explicit `scaffold` and `maintain` modes, not a widening of `Implementer v2`. See *The Harness Boundary* below |
 | `Test Auditor` | `Test Auditor v2` | Independent scoped specification/harness audit. Findings trace to obligations or concrete risk; generated comparison links and actual membership, not copied hash tables or mandatory empty-cell findings |
 | `Implementer` | `Implementer v2` | Smallest complete production solution through ordinary compile/fix cycles against the shared target. Includes scoped SQL/exact XML; never tests/test infrastructure, contracts, project/build files, generated output, credentials, or database deployment |
-| `Code Reviewer` | `Code Reviewer v2` | Risk-selected or explicitly requested correctness review and PR-comment merit triage. Report-only; obligations/risks can block, optional improvements cannot expand acceptance |
+| `Code Reviewer` | `Code Reviewer v2` | Correctness review and PR-comment merit triage with target IDs/head evidence. Draft replies go through Vanguard for owner approval and operator execution; the reviewer never posts or resolves. Optional improvements cannot expand acceptance |
 | `Refactorer` | `Refactorer v2` | Concrete behavior-preserving production changes only. Requires input-valid green evidence and identical test identities/outcomes/counts; ordinary mechanical corrections remain local |
 
 #### The Harness Boundary
@@ -146,7 +147,7 @@ approval; a real semantic/scope decision does. These examples check routing rule
 | `Pipeline Auditor` | `Pipeline Auditor v2` | Retained. Read-only; never YAML; unlike v1 it may not append a feature request. **Exists now** |
 | `Azure Infrastructure Engineer` | `Azure Infrastructure Engineer v2` | Retained, **narrowed to Bicep, `.bicepparam`, and infrastructure docs — it writes no YAML at all.** v1 authored its own deployment pipeline; v2 specifies it and `Pipeline Engineer v2` writes it. **No mutating Azure command, in any mode.** **Exists now** |
 | `Azure Deployment Reviewer` | `Azure Deployment Reviewer v2` | Retained. `Ready` is not deployment permission, and it now also reviews the deployment YAML the pipeline engineer wrote. **Exists now** |
-| — | **`Repository Operator v2`** | **New, and v2-only.** The bounded Git/Release operator deferred in §4, built as one narrow mode-gated executor. **Exists now** — see *The Operator Boundary* below |
+| — | **`Repository Operator v2`** | **v2-only.** Sole mode-gated Git/PR/release executor, now including approved `reply_to_pr_comment` and `resolve_review_thread`. Conversational approval suffices when attended; publication still needs its separate manifest. See *The Operator Boundary* below |
 
 ### Prompts
 
@@ -174,22 +175,82 @@ allowlist is unchanged at 27 by this cutover. **28 is the pre-cutover figure**; 
 
 §4 wanted a bounded Git/Release operator and refused to obtain it by handing commit, push, and publish
 rights to a prose orchestrator or a document-writing leaf. `Repository Operator v2` is the shape named
-there: **one agent whose entire charter is git and release mechanics**, with the packet's
-`Operator mode:` and the release manifest as its only authorizations.
+there: **one agent whose entire charter is Git/PR/release mechanics**. `Operator mode:` selects one
+operation; it does not authorize it. Authority comes from the exact owner-approved proposal, an explicit
+unattended-envelope clause, or the separate release manifest where required.
 
 | Guard | Effect |
 | --- | --- |
-| Exactly one `Operator mode:` per invocation | A run cannot commit and then push because both were convenient. Two operations are two packets with two reports |
-| Every mutating mode verifies an **expected HEAD** immediately before acting | Closes the gap between reading state and acting on it, where an agent overwrites work that arrived in between |
-| Staging is an **exact enumerated path list** | Never a folder, a glob, or `-A`. An unenumerated changed path stops the run rather than riding along |
+| Exactly one `Operator mode:` per invocation | One confirmation may cover a specified sequence, but each step has its own packet/report. No automatic adjacent action or repeated approval of unchanged details |
+| Expected HEAD and relevant state checked immediately before; results read back after | Include reviewed content/index, remote/PR head, target discussion and applicable gates. Advance expected state only from verified approved predecessors; unexpected change stops for reconfirmation |
+| Staging is an **exact enumerated path and content list** | Never a folder, glob, or `-A`. Pre-staged changes are included in inspection; unenumerated or changed content stops the operation |
 | The commit message comes from `Commit Author v2`, verbatim | The agent that decides *what to say* is not the agent that decides *what to include* |
 | It writes no project file except the exact version fields a manifest names | Its only other write is its own report. It authors nothing |
-| No force-push, history rewrite, branch or tag deletion, or merge — in any mode | The irreversible actions are not gated, they are absent |
+| Replies and individual thread resolutions are explicit separate modes | No implicit posting/resolution; `fixed` needs current PR-head proof, while owner-approved `accepted-risk`/`no-change` records a disposition, not a fix or gate waiver |
+| No force-push, history rewrite, ref deletion, merge, close/complete, automerge, or merge queue | These actions remain outside every mode; implicit tags/publication remain prohibited |
+| Duplicate/no-op and failure reconciliation | Return verified IDs/URLs/status for already-applied results. Unknown or partial effects stop the sequence; never blindly retry or assume a failed command changed nothing |
 | A refused approval is `BLOCKED` / `ENVIRONMENT` | Naming the human command is the ending. Routing around the control is a charter violation whatever the result |
 
 **It concentrates mutation rather than distributing it**, which is what makes the rest of the roster
 safely read-only about git. `Vanguard v2` still cannot run any of these commands; it can only delegate
 one named mode at a time, and the operator refuses a gate the orchestrator has not satisfied.
+
+### Attended Git And PR Work
+
+**Propose, confirm, execute, verify, report.** Use the existing acceptance target and run record, not a
+new orchestration framework or unattended envelope. The authoritative fields and refusal rules are in
+[protocol §6](agent-protocol-v2.md#6-guardrails).
+
+Vanguard presents the exact repository/branch/PR, reviewed files/content, messages and reply text,
+comment/thread IDs, disposition, intended steps, expected state, and applicable evidence. It records
+the owner's explicit conversational approval against that proposal. Only explicitly approved bindings
+to a verified earlier result may fill an unknown SHA/URL; an approval never permits different prose,
+files, targets, or an unspecified latest HEAD.
+
+One approval can cover staging/commit, push, reply, and resolution. Vanguard delegates them separately
+through `checkpoint_commit`, `publish_branch`, `reply_to_pr_comment`, and `resolve_review_thread`,
+verifying each actual result before the next call. Draft PR creation/update uses
+`open_or_update_draft_pr`; branch preparation, readiness, and release retain their existing modes and
+applicable gates. Neither creation nor replies implicitly mark ready.
+
+Code Reviewer assesses merit and drafts wording; it cannot post even after owner approval. A review
+reply uses verified thread/reply-parent IDs; a conversation reply is a new PR conversation comment
+with the approved original-comment reference. Resolution names exactly one thread. `fixed` requires
+fresh evidence that the fix reached the PR head and remains present; `accepted-risk` or `no-change`
+requires the owner's quoted rationale without a false fix claim. Any public rationale is a separately
+approved reply. No disposition clears a security finding or waives a readiness/release gate.
+
+Routine discussion has no local file writes and no clean-authoring-tree, branch-preparation, CI, or
+publication prerequisite. Commits retain scoped validation/review, marking ready retains all named
+gates, and version/tag/NuGet publication still requires its own exact manifest. Use existing GitHub
+tools or authenticated `gh`, preserve normal tool approval controls, and never route around a refusal
+or ask for credentials in chat. Merging/completing a PR remains human-only.
+
+#### Offline Approval Scenarios
+
+These fixtures check instruction consistency, not actual agent delegation or GitHub mutations. Evaluate
+them against the live Vanguard, Repository Operator, Code Reviewer, and shared protocol. No real
+repository/PR operation, credentials, network request, or changed approval setting is needed.
+
+| Scenario | Required decision |
+| --- | --- |
+| Owner approves an exact commit -> push -> reply -> resolve proposal; applicable gates/state match | Four separate operator invocations, one approval, verified predecessor bindings; no direct Vanguard mutation or repeated confirmation |
+| Owner rejects, revokes, or ambiguously answers the proposal | No mutation; owner-decision stop, no manufactured approval or differently worded retry |
+| Files/index content, branch/HEAD, remote/PR head, reply text, or relevant thread discussion changes | Stop remaining steps and reconfirm a new proposal; never adopt observed HEAD as expected |
+| Earlier approved commit/push changes state exactly as proposed | Read back the actual SHA/PR head, bind only approved outputs, and continue without asking again |
+| Fix exists locally but has not reached the PR head, or was later reverted there | Refuse `fixed` resolution; no fallback to a non-fix disposition without explicit owner approval |
+| Owner explicitly accepts risk or chooses no change for the named thread | Resolve only that thread after state checks, record rationale without claiming a fix; public reply only if separately approved, other gates unchanged |
+| Named thread is already resolved | `NO_CHANGE` with verified status, no unresolve or claimed fix; unexpected external state stops successors |
+| Exact approved reply is already posted with unambiguous author/target/body | `NO_CHANGE` with its URL, no duplicate; ambiguous identity blocks |
+| Posting times out or success cannot be verified | Stop, reconcile read-only, report unknown/applied effects; no blind retry or successor |
+| Staging succeeds but commit fails | Report the actual staged paths and failure; no reset, unstage, retry, push, or claim nothing changed |
+| Tool approval is denied or authentication unavailable | Environment stop and named human action; no alternate tool/spelling/script or chat credentials |
+| Routine reply requested while shipping/CI gates are pending | Permit only the approved truthful reply after discussion checks; no claim of publication readiness or waiver of blocked work |
+| Merge/automerge/close requested, or NuGet publication lacks a manifest | No agent merge/close; separate exact manifest required for publication, not for ordinary discussion |
+
+Frontmatter/name-set/hash checks complement these cases; they cannot prove picker registration, tool
+approval behavior, or live execution. Reload VS Code, then verify the affected selectors and Chat
+Diagnostics. Any future live pilot needs its own exact owner-approved proposal.
 
 ---
 
@@ -411,9 +472,9 @@ Dimensions 1, 2, and 9 are disqualifying at any failure. The rest are comparativ
 | Test edits | No agent may weaken, delete, skip, retag, or filter a test to obtain green. `Implementer v2` may not touch a test project at all; a test it believes is wrong stops that stream and is reported with the assertion and the conflicting contract statement quoted |
 | Database implementation files | `Implementer v2` owns production `.sql` and exact `.xml` database resources or publish profiles named in `Allowed writes:`. An extension is not blanket authorization: `.sqlproj`, `.sqlproj.user`, `.csproj`, `.props`, `.targets`, generated output, secrets, and deployment remain outside its charter. `Modernizer v2` retains existing `.csproj` / `.sqlproj`; `Test Harness Engineer v2` may already write an enumerated XML fixture path without any extension-wide grant |
 | Diagnosis versus repair | `Repo Analyst v2` finds build and packaging debt and proposes fixes unapplied; `Modernizer v2` applies only what an owner approved, one verifiable change at a time, and never during a deliberately red lap. An agent that both finds and fixes debt writes its own approval |
-| Landing | Conditional gates with one owner each: `Security Reviewer v2` before anything ships and outright where real user data is in play; `Changelog Author v2` for a consumer-visible change; `README Author v2` when public use or documented behavior changes; `Pipeline Auditor v2` → `Pipeline Engineer v2` → `Pipeline Auditor v2` for any YAML; `Azure Infrastructure Engineer v2` → `Azure Deployment Reviewer v2` for infrastructure, with `Pipeline Engineer v2` owning the deployment YAML; `Commit Author v2` always, for the PR prose |
+| Landing | Conditional gates with one owner each: Security Reviewer before shipping and for applicable sensitive work; Changelog/README authors for relevant consumer-visible/documented changes; Pipeline Auditor -> Engineer -> Auditor for YAML; infrastructure Engineer -> Deployment Reviewer, with Pipeline Engineer owning YAML. Commit Author supplies requested commit/draft PR prose. Routine replies/dispositions do not inherit publication gates |
 | Sole ownership | `CHANGELOG.md` → `Changelog Author v2`. Root `README.md` → `README Author v2`. Every `.yml` and `.yaml` → `Pipeline Engineer v2`. `docs/feature-requests.md` → `Purpose Refiner v2`. `docs/open-questions.md` → `Product Discovery v2`. Bicep and `.bicepparam` → `Azure Infrastructure Engineer v2`. No file has two writers |
-| Git and release execution | `Repository Operator v2` only, one `Operator mode:` per invocation, expected HEAD verified immediately before every mutation, staging by exact enumerated path list. `Vanguard v2` delegates and never executes. **No agent merges, in any mode** |
+| Git and release execution | Repository Operator only, one mode per invocation. Vanguard obtains exact proposal approval, delegates, and independently verifies. Attended conversational approval may cover a sequence; each step checks expected state and records actual SHA/URL/status. No agent merges/completes a PR |
 | Environment refusal | A denied or unobtainable tool approval is `BLOCKED` / `ENVIRONMENT` and the exact human command is named. **Never a second route to the same effect** — not another tool, spelling, script file, or redirect |
 | Repair loops | Protocol §5 progress-aware local iterations; no automatic fourth-compile stop. Explicit owner ceilings keep their stated meaning. Parent-mediated failed-gate/review cycles are distinct from local compiles. Narrower specialist limits, including requirements/contract single repair pass, remain; semantic disputes and repeated unchanged failures escalate |
 | Unknowns | Dependency-scoped: table and continue. Stop only per the protocol's three conditions |
@@ -421,9 +482,9 @@ Dimensions 1, 2, and 9 are disqualifying at any failure. The rest are comparativ
 | Deletion | Only completed or reviewed, unreferenced, older than 30 days. Never active, unreviewed, failed, or referenced |
 | Handoff | External active handoff, at most three short recent entries, evidence links, usable in under two minutes. Resume only when continuity needs reconciliation; checkpoint at a meaningful session/ownership boundary or pause; wrapup at sign-off. No per-repair calls, default whole-history sweep, or automatic retention action. Existing owners promote durable content in batches; Scribe verifies |
 | Evidence | Mechanically generated manifests and check summaries outside repositories. Baseline per approved specification revision, comparisons at mutation boundaries, reuse only while inputs/configuration/tool/environment assumptions hold. Actual test identities/counts/failures/skips; zero tests and stale results never pass. Reports link records and summarize differences |
-| Branch refusal | A blocked `prepare_branch` leaves **only** operational reports, the external handoff, and read-only analysis. **No repository artifact may be edited on a default or shared branch, documentation included** — a repository doc is a repository write, not an exception to one. An envelope whose work requires any repository write has no read-only remainder and enters `STOP_SAFE` with the branch command named for a human |
+| Branch refusal | A refused `prepare_branch` leaves operational reports, the external handoff, and read-only analysis; no alternate mutation route. No repository artifact may be edited on a default/shared branch, including documentation. An approved target requiring repository writes enters `STOP_SAFE`. A separately scoped discussion-only request needs no branch preparation in the first place |
 | Unattended envelope | Stop by 07:00 local; 3 repair cycles per failed gate; 8 build laps; allowed repositories, paths, checks, and reviews are mandatory |
-| Git | Clean baseline required; `agent/<date>-<slug>` branch; atomic commits after validation and review; draft PR allowed; never merge unattended; never force-push or rewrite history |
+| Git | Clean baseline for authoring/branch preparation; explicit inspected checkpoint paths/content; `agent/<date>-<slug>` for commits; scoped validation/review; approved draft PRs/replies/named thread dispositions. No force-push, history rewrite, ref deletion, implicit tag/publication, or agent merge |
 | Release | Exact manifest only — repository, version file, exact old and new values, channel, tag, feed, artifacts, gates, cost cap. Never infer a version or channel |
 | Azure | No unattended deployment. Pipeline runs only when the envelope names them |
 | BPA decisions | Elicited during discovery where possible. If later unknown, defer the dependent stream — architecture, product scope and users, data and privacy and auth, money and integrations, acceptance semantics, and release and deployment are never invented |
