@@ -4,7 +4,7 @@
 > building, changing, or debugging agent customizations. Do not add it to `AGENTS.md` — it
 > is administrative context, irrelevant to day-to-day coding sessions.
 
-**Built:** 2026-08-08 · **Revised:** 2026-09-12 · **Owner:** G. Gordon Nasseri (ProphetManX)
+**Built:** 2026-08-08 · **Revised:** 2026-09-17 · **Owner:** G. Gordon Nasseri (ProphetManX)
 **Covers:** the customization roster and the `AGENTS.md` conventions system across 8 repos —
 **29 active v2 agents**, **26 archived v1 agents**, and **2 active prompts**.
 
@@ -13,7 +13,10 @@ focused regression/review work, progress-aware implementation iterations, genera
 session-boundary continuity. Attended Git/PR actions now use exact proposals and conversational approval:
 Vanguard confirms and verifies; Repository Operator alone executes separate approved steps, including
 review replies and individual thread dispositions. Merging/completing remains human-only; publication
-still requires its separate manifest. The owner confirmed agents idle on 2026-09-12. This is a future-run
+still requires its separate manifest. A future unattended envelope may explicitly opt into one final
+verified local checkpoint, delegating candidate selection to Vanguard and verbatim message authorship
+to Commit Author, with Operator alone executing. Default remains no Git authority. The owner confirmed
+agents idle on 2026-09-17. This is a future-run
 instruction change, not a roster/model/tool change or permission to resume or mutate an existing project/PR.
 The current rules, routing examples, and offline approval scenarios are in
 [agent-toolbelt-v2.md](agent-toolbelt-v2.md); authoritative mechanics are in
@@ -297,7 +300,7 @@ project state. The workflow update's static/offline checks do not certify live d
 
 | Live file | Agent | Model | Role |
 | --- | --- | --- | --- |
-| `proj-a-vanguard-v2.agent.md` | **Vanguard v2** | `GPT-6 Astra (copilot)` | Shared targets, bounded delivery and independent verification. Presents exact Git/PR proposals, captures owner approval, and delegates each step exclusively to Repository Operator. Same 27-leaf allowlist and tools |
+| `proj-a-vanguard-v2.agent.md` | **Vanguard v2** | `GPT-6 Astra (copilot)` | Shared targets, bounded delivery and independent verification. Captures exact Git/PR approval or verifies explicit unattended opt-in for final local-checkpoint candidate selection; delegates execution exclusively to Repository Operator. Same 27-leaf allowlist and tools |
 | `proj-a-product-discovery-v2.agent.md` | Product Discovery v2 | `GPT-6 Astra (copilot)` | **New role.** Captures intent; owns `docs/product-brief.md`, `docs/decision-log.md`, `docs/open-questions.md` |
 | `proj-a-solution-architect-v2.agent.md` | Solution Architect v2 | `GPT-6 Astra (copilot)` | Architecture and requirements; one automatic evidence-backed repair pass |
 | `proj-a-requirements-reviewer-v2.agent.md` | Requirements Reviewer v2 | `GPT-6 Astra (copilot)` | **New role.** Read-only adversary; writes only its own invocation report |
@@ -348,7 +351,7 @@ distinction between catalog verification and post-reload picker/Diagnostics chec
 | `ops-a-pipeline-auditor-v2.agent.md` | Pipeline Auditor v2 | `GPT-6 Astra (copilot)` | Read-only contract, chain, drift, permission, and secret audit, and the independent re-review of an applied change set. Unlike v1 it may not append a feature request |
 | `infra-a-engineer-v2.agent.md` | Azure Infrastructure Engineer v2 | `GPT-6 Astra (copilot)` | Bicep, `.bicepparam`, and infrastructure docs. **Writes no YAML** — it specifies the deployment pipeline and `Pipeline Engineer v2` writes it. **No mutating Azure command in any mode**, where v1 allowed one after in-conversation approval |
 | `infra-a-deployment-reviewer-v2.agent.md` | Azure Deployment Reviewer v2 | `GPT-6 Astra (copilot)` | Read-only gate on resolution, preview, cost, permissions, secrets, isolation, recovery, residency, and the deployment YAML. `Ready` is not deployment approval |
-| `ops-a-repository-operator-v2.agent.md` | **Repository Operator v2** | `GPT-6 Astra (copilot)` | Sole Git/PR/release executor; one mode per invocation: `prepare_branch`, `checkpoint_commit`, `publish_branch`, `open_or_update_draft_pr`, `reply_to_pr_comment`, `resolve_review_thread`, `mark_pr_ready`, `release`. Attended approval may cover a sequence; verify expected state before and actual SHA/URL/status after each step. No force-push, history rewrite, ref deletion, merge/close, or implicit publication |
+| `ops-a-repository-operator-v2.agent.md` | **Repository Operator v2** | `GPT-6 Astra (copilot)` | Sole Git/PR/release executor; one mode per invocation: `prepare_branch`, `checkpoint_commit`, `publish_branch`, `open_or_update_draft_pr`, `reply_to_pr_comment`, `resolve_review_thread`, `mark_pr_ready`, `release`. Attended approval may cover a sequence; explicit unattended opt-in permits one frozen final local checkpoint only. Verify expected state and actual results. No force-push, history rewrite, ref deletion, merge/close, or implicit publication |
 
 **Approved landing uses one executor.** Vanguard's unchanged twenty-seven-leaf allowlist includes the
 operator, so it can request approved staging/commits, pushes, draft PR updates, review replies, and
@@ -364,10 +367,27 @@ a PR, and version/tag/NuGet publication still needs the separate exact release m
 approval and secret controls remain; a refusal is never bypassed. See the
 [attended workflow and offline scenarios](agent-toolbelt-v2.md#attended-git-and-pr-work).
 
-This update changes only live Vanguard, Repository Operator, Code Reviewer, their flat mirrors, and the
-protocol and two toolbelt documents. No agent/tool grant is added; the archive is untouched. Static and
+The 2026-09-12 update changed live Vanguard, Repository Operator, Code Reviewer, their flat mirrors,
+and the protocol and two toolbelt documents. The 2026-09-17 exception changes only Vanguard and
+Repository Operator, their flat mirrors, and those three governing documents. No agent/tool grant is added; the archive is untouched. Static and
 offline checks do not prove live execution or picker registration: reload VS Code and check the affected
 selectors and Chat Diagnostics. No actual project Git/PR mutation is part of this customization session.
+
+**Opt-in unattended local checkpoint:** before authoring, the owner-approved envelope fixes the repository,
+agent branch, starting HEAD, exact maximum product paths, immutable target, gates and budgets, and
+explicitly delegates final verified candidate selection to Vanguard and final verbatim message authorship
+to Commit Author. Only after the complete target and required validation/independent reviews pass does
+Vanguard freeze the generated exact manifest, inspected diff, state, evidence and message. Operator
+rechecks authority, branch/HEAD/index/worktree and exact content/message before staging/committing once;
+Vanguard independently reads back commit, parent, message, contents and resulting state.
+
+No later owner turn is needed only for that expressly opted-in operation. Partial or unreviewed work,
+unlisted/unknown/changed content, or changed HEAD/message blocks it. Failure/uncertainty and tool denial
+retain their existing stops; no automatic retry, second commit, amend, branch creation, push, PR action,
+merge, tag, version, release, publication or adjacent authority follows. Attended exact proposals remain
+unchanged. See [the rule and offline scenarios](agent-toolbelt-v2.md#opt-in-unattended-local-checkpoint)
+and [the governing protocol](agent-protocol-v2.md#opt-in-unattended-local-checkpoint). The parent must
+independently verify customization maintenance before activating a new project run.
 
 **Slice 2c also removed three ownership collisions v1 carried**, each a real drift source: `CHANGELOG.md`
 had two possible writers, deployment YAML had two, and git and release actions had none. Each now has

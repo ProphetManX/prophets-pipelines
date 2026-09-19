@@ -1,14 +1,15 @@
 # Agent Protocol v2 - Shared Delegation Mechanics
 
-**Applies to:** the active v2 roster. **Revised:** 2026-09-12. **Owner:** G. Gordon Nasseri (ProphetManX).
+**Applies to:** the active v2 roster. **Revised:** 2026-09-17. **Owner:** G. Gordon Nasseri (ProphetManX).
 
 This revision governs **new runs only**. Existing invocations and continuations retain their recorded
 protocol, acceptance revision, budgets, and gates until the owner explicitly closes or re-scopes them.
 Toolbelt changes require confirmation that affected agents are idle; old STARTED records alone cannot
 prove activity or inactivity. Never interrupt a run to apply a customization change.
 
-The owner confirmed all agents idle for the 2026-09-12 Git/PR approval update. That customization
-authorization permits no project Git or PR operation; the workflow below applies to future runs only.
+The owner confirmed all agents idle for the 2026-09-17 opt-in unattended local-checkpoint update.
+That customization authorization permits no project Git or PR operation. The attended exact-proposal
+workflow is preserved; the exception below applies to future explicitly opted-in runs only.
 
 Read the repository's `AGENTS.md`, this protocol, then the authoritative inputs for the slice. If this
 protocol is unreachable, apply §8 and say so. Read nearby controlling code rather than broad unrelated
@@ -103,7 +104,7 @@ acceptance target**, rather than duplicate it. A leaf with a missing or unreadab
 | `Focused validation:` | implementation/test/harness/refactor work | Exact checks or target section, project/target/filter/configuration, expected outcomes, and operation limits; no implicit live operations |
 | `Infrastructure blocker:` | harness `scaffold` only | Designer-named missing infrastructure, reproduction check, and intended red; not required or fabricated for `maintain` |
 | `Operator mode:` | only when invoking `Repository Operator v2` | Exactly one of `prepare_branch`, `checkpoint_commit`, `publish_branch`, `open_or_update_draft_pr`, `reply_to_pr_comment`, `resolve_review_thread`, `mark_pr_ready`, `release`. Missing, unrecognized, or combined is `BLOCKED` / `PROTOCOL` |
-| `Approved proposal:` | every operator invocation | Exact immutable proposal section/revision and step; quoted owner approval and its recorded source, or the exact unattended-envelope clause. See §6; the packet is never its own authority |
+| `Approved proposal:` | every operator invocation | Exact immutable proposal section/revision and step; quoted owner approval/source, or the exact unattended-envelope clause. For the opt-in local checkpoint, also link its frozen candidate, diff, gates and verbatim message. See §6; the packet is never its own authority |
 | `Expected state:` | every operator invocation | Operation-relevant baseline including local HEAD/branch, relevant index/worktree content, remote and PR/comment/thread state; link verified predecessor results for approved transitions. Unknown required state blocks |
 | `Release manifest:` | only to authorize a version change, tag, or publication | See §6 |
 
@@ -273,6 +274,7 @@ actions written in it**. Anything not named is unapproved.
 | `Max repair cycles per failed gate:` | yes | 3 |
 | `Max build laps:` | yes | 8 |
 | `Pipeline runs:` | no | **Not allowed unless explicitly named** |
+| `Local checkpoint:` | no | **No Git authority by default.** Only §6's explicit opt-in, with both selection/authorship delegations, may authorize one final local checkpoint |
 | `Release manifest:` | no | Absent means no version change, tag, or publication |
 
 Budgets are ceilings, not targets. On reaching one, enter `STOP_SAFE`: preserve the last verified
@@ -316,7 +318,8 @@ unrelated baseline changes, and never stages, commits, pushes, or changes branch
 **`Repository Operator v2` is the only v2 agent that may execute any of the allowed actions above.** No
 other leaf and no orchestrator stages, commits, pushes, posts replies, resolves threads, tags, publishes,
 or changes pull-request state. `Vanguard v2` proposes, obtains confirmation, delegates to the operator,
-and independently verifies its result; it never runs the mutation itself. Reviewers assess merit and
+and independently verifies its result; for the opt-in checkpoint below it verifies the owner's exact
+envelope authority instead of requesting another turn. It never runs the mutation itself. Reviewers assess merit and
 draft wording only. No agent receives merge authority.
 
 **One operation per invocation.** Every operator packet carries exactly one `Operator mode:`, and a
@@ -331,8 +334,10 @@ disposition. Unattended runs still require §5's envelope naming their exact act
 tags, and publication still require the separate release manifest. Preserve applicable validation and
 review gates, not publication gates transplanted onto routine discussion.
 
-Before any operation, Vanguard presents a concise proposal in the existing acceptance target and records
-the owner's exact confirmation/source in `run.md`. No extra orchestration document is required. Include:
+In the exact-proposal route, before any operation Vanguard presents a concise proposal in the existing
+acceptance target and records the owner's exact confirmation/source in `run.md`. Only the opt-in local
+checkpoint below may defer final candidate/message selection under explicit owner delegations; it still
+freezes both before execution. No extra orchestration framework is required. Exact proposals include:
 
 - Repository root and GitHub host/owner/repository; local branch/HEAD and exact remote/destination ref
    with expected tip, plus PR number/URL, base/head repositories/refs and head SHA as applicable.
@@ -371,6 +376,50 @@ independently checks the result and approval match. There is no automatic next s
 uncertainty. Preserve and report completed, failed, and unknown effects, including staging left after a
 failed commit or a possibly posted reply. Read-only reconciliation is allowed; blind retry or rollback
 is not. An uncertain result must be reconciled and any retry explicitly reapproved.
+
+#### Opt-In Unattended Local Checkpoint
+
+Default remains no Git authority. Before authoring, a future run's owner-approved unattended envelope
+may explicitly authorize staging and exactly one local `checkpoint_commit` after its entire bounded
+acceptance target is complete, without another owner turn. It must fix the repository, exact
+`agent/<date>-<slug>` branch, starting HEAD, exact maximum product path list (no folders or globs),
+immutable target revision, required checks and independent reviews, and budgets. The owner must
+explicitly delegate final verified in-scope candidate selection to `Vanguard v2` and final verbatim
+commit message authorship to `Commit Author v2`. Neither delegation is implied by implementation
+approval, allowed paths, a task packet, or this rule. Record the approval/source and exact clause in
+`run.md`; the envelope is immutable authority, not a license to rewrite the target later.
+
+1. Vanguard completes the whole target and independently verifies the final diff and every required
+   check/review against the final content. Partial, failing, unreviewed, stale, unrun or blocked work
+   cannot be checkpointed. No green subset of an incomplete target, unresolved required review, or
+   High/Critical finding may be waived. A cutoff without a fully accepted candidate ends uncommitted.
+2. Vanguard freezes a generated exact candidate manifest and inspected diff with staged/unstaged/
+   untracked paths, additions/deletions and content identities, expected branch/HEAD/index/worktree,
+   current gate evidence and the verbatim Commit Author message for that diff. Link the immutable
+   records from `run.md` without changing the acceptance target. All changed content must be enumerated
+   and within the maximum list; unrelated baseline input, unknown content or an unlisted path blocks.
+   HEAD must still equal the envelope's starting HEAD. Deferred selection permits no unknown content
+   at execution time.
+3. Only Repository Operator executes. One `checkpoint_commit` packet links the exact approved envelope
+   clause and frozen candidate/message through `Approved proposal:`, and the frozen baseline through
+   `Expected state:`. The operator verifies that this clause has not already been attempted; a failed
+   or uncertain attempt does not restore authority. Immediately before staging and committing, it
+   rechecks authority, target completion, gates, branch, HEAD and the complete index/worktree inventory
+   and content. It stages exact paths only, inspects the staged diff against the frozen candidate and
+   expected staging effects, and commits the exact content/message once. It never chooses content or
+   rewrites the message.
+4. A changed HEAD, branch, index, content or message stops for fresh owner approval, never an unattended
+   re-freeze or retry. Refused tool approval remains `BLOCKED` / `ENVIRONMENT`; no alternate route or
+   approval-setting change. Failure or uncertainty stops the run, preserves and reports partial effects
+   (including staging), and allows read-only reconciliation only. No automatic retry or rollback.
+5. Vanguard independently reads back the actual commit SHA, parent, exact message, changed paths/content
+   and resulting index/worktree/branch state against the frozen records, then records the checkpoint as
+   consumed. An operator assertion or successful tool exit alone is not verification.
+
+This exception authorizes no partial checkpoint, second commit, amend, branch creation, push, PR action,
+merge, tag, version change, release, publication or other adjacent action. Existing attended exact-
+proposal approval and all scope, review, validation, secret, refusal and failure safeguards remain.
+Other operations retain their own authority and gates; none follows from this local checkpoint.
 
 #### Replies And Thread Dispositions
 

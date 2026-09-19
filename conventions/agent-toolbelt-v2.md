@@ -1,14 +1,15 @@
 # Agent Toolbelt v2 - Workflow And Role Map
 
 **Status:** **Active selector generation.** v1 is archived for rollback, not deleted. **Created:**
-2026-08-29. **Revised:** 2026-09-12 - scoped attended Git/PR approvals, review replies, named thread
-dispositions, and verified single-operation execution. **Owner:** G. Gordon Nasseri (ProphetManX). **Roster:** 29 v2 agents — `Vanguard v2`,
+2026-08-29. **Revised:** 2026-09-17 - opt-in unattended final local checkpoint; attended exact-proposal
+approvals and all operation safeguards preserved. **Owner:** G. Gordon Nasseri (ProphetManX). **Roster:** 29 v2 agents — `Vanguard v2`,
 twenty-seven project leaves in its allowlist, and `Toolbelt Keeper v2` deliberately outside it.
 
-**Future runs only.** The owner confirmed all agents idle on 2026-09-12 before this revision. It does not
+**Future runs only.** The owner confirmed all agents idle on 2026-09-17 before this revision. It does not
 rewrite existing run requirements or resume certification. Roster, model pins, tools, product-file
-ownership, archives, and product repositories are unchanged. Only the existing operator gains the named
-PR actions below; Vanguard remains the orchestrator and reviewers remain report-only. Static routing and offline utility
+ownership, archives, and product repositories are unchanged. Only an explicitly opted-in envelope may
+delegate final checkpoint selection/message authorship as described below. Vanguard remains the
+orchestrator, Repository Operator the sole executor, and reviewers report-only. Static routing and offline utility
 checks do not prove runtime delegation, selector reload, live operations, or release readiness.
 
 The selector cutover and earlier smoke evidence are recorded in §§6, 9, and 10 as dated history, not
@@ -52,7 +53,7 @@ not something still running.
 
 | v1 agent | Target | Disposition |
 | --- | --- | --- |
-| `Vanguard` | **`Vanguard v2`** | One shared acceptance revision per slice; bounded delivery and independent verification. Presents exact Git/PR proposals for owner confirmation and delegates each approved step to the sole operator. Sole selectable project orchestrator |
+| `Vanguard` | **`Vanguard v2`** | One shared acceptance revision per slice; bounded delivery and independent verification. Presents exact Git/PR proposals for owner confirmation; an explicit unattended opt-in may delegate final verified local-checkpoint candidate selection. Delegates execution to the sole operator. Sole selectable project orchestrator |
 | `TDD Lead` | **`Vanguard v2`** | **Retired into it.** It duplicated `Vanguard`'s coverage and tripped the description-overlap rule; v2 has exactly one orchestrator. **Archived 2026-08-29 with the rest of v1**, which is what actually retired it — before that it was merely planned |
 | `Session Scribe` | **`Session Scribe v2`** | Resume/checkpoint/wrapup at meaningful session boundaries; compact evidence links, no per-repair invocation or default whole-history sweep |
 | `Toolbelt Keeper` | **`Toolbelt Keeper v2`** | **Exists now.** Rewritten against the protocol for **four** locations — the flat live selector, the flat current mirror, the versioned generation archive, and the documentation — with whole-generation archive and restore. It maintains customization files rather than participating in a run, so it stays **outside every orchestrator's allowlist** and `Vanguard v2` cannot invoke it: changing the toolbelt remains a separate session. **The earlier plan to keep one shared v1 copy is superseded** — a shared v1 agent could not survive the v1 archive, and it had no vocabulary for generations |
@@ -147,7 +148,7 @@ approval; a real semantic/scope decision does. These examples check routing rule
 | `Pipeline Auditor` | `Pipeline Auditor v2` | Retained. Read-only; never YAML; unlike v1 it may not append a feature request. **Exists now** |
 | `Azure Infrastructure Engineer` | `Azure Infrastructure Engineer v2` | Retained, **narrowed to Bicep, `.bicepparam`, and infrastructure docs — it writes no YAML at all.** v1 authored its own deployment pipeline; v2 specifies it and `Pipeline Engineer v2` writes it. **No mutating Azure command, in any mode.** **Exists now** |
 | `Azure Deployment Reviewer` | `Azure Deployment Reviewer v2` | Retained. `Ready` is not deployment permission, and it now also reviews the deployment YAML the pipeline engineer wrote. **Exists now** |
-| — | **`Repository Operator v2`** | **v2-only.** Sole mode-gated Git/PR/release executor, now including approved `reply_to_pr_comment` and `resolve_review_thread`. Conversational approval suffices when attended; publication still needs its separate manifest. See *The Operator Boundary* below |
+| — | **`Repository Operator v2`** | **v2-only.** Sole mode-gated Git/PR/release executor, including approved `reply_to_pr_comment` and `resolve_review_thread`. Conversational approval suffices when attended; an explicit unattended opt-in permits one frozen final local checkpoint. Publication still needs its separate manifest. See *The Operator Boundary* below |
 
 ### Prompts
 
@@ -194,6 +195,45 @@ unattended-envelope clause, or the separate release manifest where required.
 **It concentrates mutation rather than distributing it**, which is what makes the rest of the roster
 safely read-only about git. `Vanguard v2` still cannot run any of these commands; it can only delegate
 one named mode at a time, and the operator refuses a gate the orchestrator has not satisfied.
+
+### Opt-In Unattended Local Checkpoint
+
+Default remains no Git authority. A future owner-approved envelope may authorize one local staging/
+commit after the entire bounded target, all required validation and independent reviews pass, without
+another owner turn. Before authoring it fixes repository, exact agent branch, starting HEAD, exact
+maximum product paths, immutable target, gates and budgets, and explicitly delegates final verified
+candidate selection to Vanguard and final verbatim message authorship to Commit Author. Neither
+delegation follows from an implementation request or allowed-path list.
+
+Vanguard freezes the generated exact manifest, inspected diff, complete index/worktree content,
+current gate evidence and Commit Author message. Operator rechecks that unused authority and the
+frozen state before staging and committing, then makes one exact local checkpoint. Vanguard separately
+reads back commit, parent, message, contents and resulting state. This separates selection, prose,
+execution and verification without granting another agent mutation tools. The authoritative fields
+and refusal rules are in [protocol §6](agent-protocol-v2.md#opt-in-unattended-local-checkpoint).
+
+No partial/unreviewed target, unrelated input, unknown or changed candidate, or unlisted path qualifies.
+No second commit, automatic retry, amend, branch creation, push, PR action, merge, tag, version change,
+release, publication or adjacent action follows. Drift needs fresh owner approval; failed/uncertain
+effects stop for read-only reconciliation, and tool denial never permits another route or changed
+settings. Attended exact-proposal approvals remain unchanged. This is an opt-in mechanism, not approval
+for a particular project run or evidence that unattended execution works.
+
+#### Offline Checkpoint Scenarios
+
+Evaluate these against both live charters and the protocol, without a test commit or live delegation:
+
+| Scenario | Required decision |
+| --- | --- |
+| Explicit owner opt-in with both delegations; complete target and current passing gates; frozen candidate/message/state match | One Operator `checkpoint_commit`, no further owner turn; Vanguard independently verifies result and records consumption |
+| Missing opt-in or either delegation; implementation approval only | No commit authority; no invented final-content approval |
+| Target partial, failing, unreviewed, stale, unrun, or blocked, including at cutoff | No checkpoint, even of a green subset; preserve work and report |
+| Extra path, unrelated input, or unknown content | Refuse; do not expand the maximum list or silently select around drift |
+| HEAD, branch, index, content, or message changes after freeze | Stop for fresh owner approval; no re-freeze or automatic retry |
+| Tool approval denied or unavailable | Environment stop; no alternate tool, spelling, script, or settings change |
+| Staging/commit fails or the result is uncertain | Preserve/report actual and unknown effects; read-only reconciliation, no automatic retry or successor |
+| A checkpoint has already been attempted or consumed | No second attempt under the clause; failure does not replenish authority |
+| Push, PR, tag, version, release, publication, merge, amend or other adjacent action is requested under this clause | Refuse that action; the exception grants only its one local checkpoint |
 
 ### Attended Git And PR Work
 
@@ -251,6 +291,9 @@ repository/PR operation, credentials, network request, or changed approval setti
 Frontmatter/name-set/hash checks complement these cases; they cannot prove picker registration, tool
 approval behavior, or live execution. Reload VS Code, then verify the affected selectors and Chat
 Diagnostics. Any future live pilot needs its own exact owner-approved proposal.
+
+The local-checkpoint exception instead needs its own explicit owner-approved envelope and frozen
+candidate under the section above; neither these offline scenarios nor this maintenance authorizes it.
 
 ---
 
@@ -474,7 +517,7 @@ Dimensions 1, 2, and 9 are disqualifying at any failure. The rest are comparativ
 | Diagnosis versus repair | `Repo Analyst v2` finds build and packaging debt and proposes fixes unapplied; `Modernizer v2` applies only what an owner approved, one verifiable change at a time, and never during a deliberately red lap. An agent that both finds and fixes debt writes its own approval |
 | Landing | Conditional gates with one owner each: Security Reviewer before shipping and for applicable sensitive work; Changelog/README authors for relevant consumer-visible/documented changes; Pipeline Auditor -> Engineer -> Auditor for YAML; infrastructure Engineer -> Deployment Reviewer, with Pipeline Engineer owning YAML. Commit Author supplies requested commit/draft PR prose. Routine replies/dispositions do not inherit publication gates |
 | Sole ownership | `CHANGELOG.md` → `Changelog Author v2`. Root `README.md` → `README Author v2`. Every `.yml` and `.yaml` → `Pipeline Engineer v2`. `docs/feature-requests.md` → `Purpose Refiner v2`. `docs/open-questions.md` → `Product Discovery v2`. Bicep and `.bicepparam` → `Azure Infrastructure Engineer v2`. No file has two writers |
-| Git and release execution | Repository Operator only, one mode per invocation. Vanguard obtains exact proposal approval, delegates, and independently verifies. Attended conversational approval may cover a sequence; each step checks expected state and records actual SHA/URL/status. No agent merges/completes a PR |
+| Git and release execution | Repository Operator only, one mode per invocation. Vanguard obtains exact proposal approval or verifies the explicit unattended local-checkpoint opt-in, delegates, and independently verifies. Attended approval may cover a sequence; each step checks expected state and actual results. No agent merges/completes a PR |
 | Environment refusal | A denied or unobtainable tool approval is `BLOCKED` / `ENVIRONMENT` and the exact human command is named. **Never a second route to the same effect** — not another tool, spelling, script file, or redirect |
 | Repair loops | Protocol §5 progress-aware local iterations; no automatic fourth-compile stop. Explicit owner ceilings keep their stated meaning. Parent-mediated failed-gate/review cycles are distinct from local compiles. Narrower specialist limits, including requirements/contract single repair pass, remain; semantic disputes and repeated unchanged failures escalate |
 | Unknowns | Dependency-scoped: table and continue. Stop only per the protocol's three conditions |
@@ -483,7 +526,7 @@ Dimensions 1, 2, and 9 are disqualifying at any failure. The rest are comparativ
 | Handoff | External active handoff, at most three short recent entries, evidence links, usable in under two minutes. Resume only when continuity needs reconciliation; checkpoint at a meaningful session/ownership boundary or pause; wrapup at sign-off. No per-repair calls, default whole-history sweep, or automatic retention action. Existing owners promote durable content in batches; Scribe verifies |
 | Evidence | Mechanically generated manifests and check summaries outside repositories. Baseline per approved specification revision, comparisons at mutation boundaries, reuse only while inputs/configuration/tool/environment assumptions hold. Actual test identities/counts/failures/skips; zero tests and stale results never pass. Reports link records and summarize differences |
 | Branch refusal | A refused `prepare_branch` leaves operational reports, the external handoff, and read-only analysis; no alternate mutation route. No repository artifact may be edited on a default/shared branch, including documentation. An approved target requiring repository writes enters `STOP_SAFE`. A separately scoped discussion-only request needs no branch preparation in the first place |
-| Unattended envelope | Stop by 07:00 local; 3 repair cycles per failed gate; 8 build laps; allowed repositories, paths, checks, and reviews are mandatory |
+| Unattended envelope | Stop by 07:00 local; 3 repair cycles per failed gate; 8 build laps; repositories, paths, checks, and reviews are mandatory. No Git authority by default; only explicit protocol §6 opt-in permits one fully accepted final local checkpoint with delegated candidate/message selection |
 | Git | Clean baseline for authoring/branch preparation; explicit inspected checkpoint paths/content; `agent/<date>-<slug>` for commits; scoped validation/review; approved draft PRs/replies/named thread dispositions. No force-push, history rewrite, ref deletion, implicit tag/publication, or agent merge |
 | Release | Exact manifest only — repository, version file, exact old and new values, channel, tag, feed, artifacts, gates, cost cap. Never infer a version or channel |
 | Azure | No unattended deployment. Pipeline runs only when the envelope names them |

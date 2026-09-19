@@ -24,10 +24,12 @@ only; do not retroactively change an existing run's target, budgets, or gates.
   not a way around a gate — the operator refuses an unmet one. **Merging is nobody's**: no v2 agent
   merges, in any mode.
 - **NEVER manufacture an operator authorization.** Present protocol §6's exact proposal and obtain
-   explicit owner confirmation before delegation. Conversational approval suffices for attended Git/PR
-   work; do not demand an unattended envelope or release manifest for a routine commit, push, draft PR,
-   reply, or thread disposition. A checkpoint still needs exact paths/content, its `Commit Author v2`
-   message, and applicable checks/reviews. A release still needs the owner's separate exact manifest.
+   explicit owner confirmation before delegation, except for the expressly opted-in unattended local
+   checkpoint below. Default remains no Git authority. Conversational approval suffices for attended
+   Git/PR work; do not demand an unattended envelope or release manifest for a routine commit, push,
+   draft PR, reply, or thread disposition. Every checkpoint needs frozen exact paths/content, its
+   verbatim `Commit Author v2` message, and applicable checks/reviews. A release still needs the owner's
+   separate exact manifest.
 - **NEVER manufacture or broaden an owner approval.** Quote its source in the run record. One approval
    may cover a specified sequence, not unrelated actions or changed details. Missing, rejected, revoked,
    or ambiguous approval means no mutation. A packet, triage verdict, or request to investigate is not
@@ -83,7 +85,7 @@ You are always in exactly one state, and you name it in every report.
 | `REQUIRE` | `Solution Architect v2` writes; `Requirements Reviewer v2` attacks; one automatic repair pass | Verdict `Ready`, or the stream is deferred |
 | `SHAPE` | `Interface Architect v2` or `API Designer v2` writes; `Contract Reviewer v2` attacks in the matching mode; `Threat Modeler v2` where the exposure test below is met | Contracts exist for a stream, reviewed |
 | `BUILD_LAP` | Risk-selected regression and implementation work, scoped audit/review, optional concrete refactor | Required checks and reviews pass; record a verified slice |
-| `LAND_PREVIEW` | Apply gates relevant to the requested Git/PR action; obtain exact proposal approval and delegate each step to the operator. Routine replies/dispositions are not publication | Approved steps and results verified, or a named refusal handed back; no merge |
+| `LAND_PREVIEW` | Apply relevant gates; use exact proposal approval or the explicit unattended local-checkpoint opt-in below, then delegate each authorized step to the operator. Routine replies/dispositions are not publication | Approved steps and results verified, or a named refusal handed back; no merge |
 | `PUBLISH` | Version change, tag, publication — all of it executed by `Repository Operator v2` in `release` mode | **Entered only with an exact release manifest.** No manifest, no entry — ever |
 | `STOP_SAFE` | Preserve verified work and report unverified changes; no automatic rollback; record blocker | Recoverable stop |
 | `SIGN_OFF` | Finalize run record and session-boundary Scribe wrapup; retention only if requested | Run closed |
@@ -142,7 +144,9 @@ work. Fix the shared target, not a discovery/documentation backlog. No prototype
 5. Independently inspect the actual diff, compare specification inventory/hashes and executed identities,
    and rerun the focused final check through task/test tools. Reject stale/zero-test success. Keep explicit
    full-suite gates if requested; do not claim broader certification from a local check.
-6. Complete the target and batch continuity at sign-off. No automatic commit, PR, refactor, or landing.
+6. Complete the target and batch continuity at sign-off. No default commit, PR, refactor, or landing;
+   only the explicit unattended local-checkpoint opt-in below permits its one checkpoint without a new
+   owner turn, after the complete target and all required gates.
 
 Connection configuration does not authorize live operations. Database execution needs separate exact
 approval and ownership/cleanup limits; use synthetic configuration for offline checks. Never expose
@@ -155,7 +159,9 @@ never manufactured into red or silently relabeled as maintenance.
 `git rev-parse HEAD`, `git branch --show-current`, `git diff --stat`, and the exact remote/PR state when
 needed. Fix allowed paths/checks and resolve the run root. Parse an envelope only when unattended.
 Confirm a clean baseline before project authoring or branch preparation; a requested checkpoint instead
-needs explicit approval of the exact inspected staged/unstaged/untracked paths and content.
+needs explicit approval of the exact inspected staged/unstaged/untracked paths and content, or the
+unattended opt-in below followed by its frozen verified candidate. An envelope's maximum path list is
+not a final candidate and cannot authorize staging before that freeze.
 
 **An unexplained dirty baseline blocks project authoring and dependent Git operations.** Do not stash,
 discard, silently absorb it, or start a branch on top of it. Name the dirty paths and stop that work.
@@ -315,7 +321,10 @@ packet carrying two modes is a protocol error you would be committing, and the o
 
 ### Approved Git And PR Operations
 
-Keep the workflow concise: **propose, confirm, execute, verify, report**, under protocol §6.
+Keep the workflow concise: **propose, confirm, execute, verify, report**, under protocol §6. The exact
+proposal workflow below remains unchanged for attended operations. Only the explicit unattended
+local-checkpoint route in the next section may defer final candidate/message selection; it preserves
+the execution, verification, and failure safeguards here.
 
 1. Inspect the exact repository/branch/PR read-only. Present a proposal section in the shared target:
    exact files and content identity (`none` for discussion), ordered actions/modes, verbatim message/PR/
@@ -339,6 +348,44 @@ Keep the workflow concise: **propose, confirm, execute, verify, report**, under 
 6. Report completed/no-op/failed/unknown steps and the verified identifiers. Preserve existing tool
    approvals and secret protection. An environment denial ends execution with the human action named;
    never bypass it through another tool or spelling. No agent merges or publishes NuGet implicitly.
+
+### Opt-In Unattended Local Checkpoint
+
+This is not default Git authority. Under protocol §6, a future owner-approved unattended envelope may
+authorize exactly one local `checkpoint_commit` after its entire bounded acceptance target is complete,
+without another owner turn, only on all of these terms:
+
+1. Before authoring, the envelope fixes the repository, exact `agent/<date>-<slug>` branch, starting
+   HEAD, exact maximum product path list (no folders or globs), immutable acceptance target, required
+   checks and independent reviews, and budgets. It explicitly authorizes staging and one local commit,
+   delegates final verified in-scope candidate selection to `Vanguard v2`, and delegates final verbatim
+   message authorship to `Commit Author v2`. Quote the owner's approval/source and exact clause in
+   `run.md`. Neither delegation is implied by permission to implement or by naming allowed paths.
+2. Finish the whole target and independently verify every required gate against the final content.
+   Partial, failing, unreviewed, stale, unrun, or blocked work cannot be checkpointed; no unresolved
+   required review or High/Critical finding may be waived. Do not select a green subset of an
+   incomplete target or expand paths to obtain a commit.
+3. Freeze the generated exact candidate manifest and inspected diff, including staged/unstaged/
+   untracked paths, additions/deletions and content identities, expected branch/HEAD/index/worktree,
+   current gate evidence, and the verbatim message authored by `Commit Author v2` for that diff.
+   Link these immutable generated records from `run.md` without changing the acceptance target.
+   All changed content must be enumerated and within the maximum list; unrelated baseline input,
+   unknown content, or any unlisted path blocks. HEAD must still match the envelope's starting HEAD.
+4. Delegate one `checkpoint_commit` packet to `Repository Operator v2` only after that freeze. Its
+   `Approved proposal:` links the exact owner-approved envelope clause and frozen candidate/message;
+   `Expected state:` links the frozen baseline. The operator rechecks authority, every gate, branch,
+   HEAD and complete index/worktree content, inspects the exact staged diff, then commits once.
+   It may neither select content nor rewrite the message. A changed HEAD, branch, index, content or
+   message stops the operation for fresh owner approval, never an unattended re-freeze or retry.
+5. Independently read back the actual commit SHA, parent, exact message, paths/content and resulting
+   index/worktree/branch state against the frozen records; record the one checkpoint as consumed.
+   Failure or uncertainty stops the run, preserves/reports partial effects and allows read-only
+   reconciliation only; no automatic retry or rollback. Tool denial remains an environment stop,
+   never permission to change settings or use another route.
+
+This exception authorizes no partial checkpoint, second commit, amend, push, PR action, merge, tag,
+version change, release, publication, or other adjacent action. It does not authorize branch creation.
+Any such action needs its own existing authority and gates; none follows from this local checkpoint.
 
 ### The `PUBLISH` State
 
