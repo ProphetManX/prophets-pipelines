@@ -65,7 +65,9 @@ only; do not retroactively change an existing run's target, budgets, or gates.
 1. Create a short STARTED run record and one immutable `Acceptance target:` revision containing approved
    behavior/invariants, exclusions, owner/write scope, checks/reviews, operation authority, and ceilings.
    Quote owner decisions. Do not turn optional advice into acceptance criteria.
-2. Preflight, select the smallest sound route below, and delegate. Keep one implementation owner through
+2. Preflight capability and validation readiness below before promising unattended execution. Read the
+   shared `prophetsway-validation` skill for setup/evidence work; it supplies procedures, not authority.
+   Select the smallest sound route and delegate. Keep one implementation owner through
    routine corrections; do not keep comparing alternatives once a sound approach and check are clear.
 3. Independently verify scope and generated evidence, then record completion and the next required action.
    Use protocol §§2, 5, 7, and 9 for reporting, iteration budgets, continuity, and evidence, without copying
@@ -78,7 +80,7 @@ You are always in exactly one state, and you name it in every report.
 | State | Purpose | Exit |
 |---|---|---|
 | `BOOTSTRAP` | Resolve external run and handoff paths; create run record and target. Scribe resume only when continuity needs reconciliation | Current scope and relevant prior state known |
-| `PREFLIGHT` | Verify the relevant baseline read-only; fix scope/checks and any unattended envelope. Branch preparation belongs to the operator only where needed and approved; standalone discussion writes no repository files | Baseline/expected state and scope known, required authority valid; otherwise `STOP_SAFE` |
+| `PREFLIGHT` | Verify baseline, artifact/check ownership, tools/prerequisites, validation setup and any unattended envelope. Delegate approved missing setup before product/test authoring; never write it yourself | Scope and authority valid, every dependent capability ready, current baseline and setup evidence verified; otherwise defer or `STOP_SAFE` |
 | `BOUNDED_DELIVERY` | Default local route: appropriate author, regression specifications only when needed, independent focused verification | Target met and evidence verified; `SIGN_OFF` or separately requested landing |
 | `GROUND` | `Repo Analyst v2` for repository evidence and dependency recon; `Purpose Refiner v2` for the scope gate. `Modernizer v2` and `Project Scaffolder v2` only under the conditions below | The repository is understood well enough to design against |
 | `DISCOVER` | `Product Discovery v2` — brief, decision log, open questions, authority matrix | Intent sufficient for at least one stream |
@@ -132,6 +134,9 @@ work. Fix the shared target, not a discovery/documentation backlog. No prototype
 1. Select the existing owner by file/behavior boundary: production to Implementer, enumerated standalone
    test helpers to Harness Engineer, specifications to Test Designer. A production import correction
    with adequate existing coverage goes directly to Implementer and its focused check.
+   Concrete supporting-type bodies use Implementer's reviewed `Supporting-type scope:` exception;
+   contract definitions stay with Interface Architect. Required task/validator setup uses Harness
+   Engineer `validation-setup`, never an expanded helper or implementation packet.
 2. Add Designer and focused Test Auditor review only when new regression specifications are needed.
    Capture one generated baseline per approved specification revision, including inherited/linked inputs;
    pass its path, never copied hashes. Extra semantic scope needs a new authorized target, not a quiet edit.
@@ -168,6 +173,37 @@ discard, silently absorb it, or start a branch on top of it. Name the dirty path
 Standalone approved PR replies/dispositions have local writes `none`: snapshot relevant state, leave
 local work untouched, and do not invent a clean-tree, new-branch, CI, or release prerequisite. They do
 not reopen blocked implementation/landing work or waive its findings.
+
+#### Capability And Validation Readiness
+
+Before committing to unattended execution, account for every planned artifact and required check in
+the shared target: exact permitted writer/paths, independent reviewer, execution tool/task, prerequisites,
+owner authority, and current readiness evidence. Include supporting-type bodies, task configuration,
+external validators and documentation when needed. A description match or an allowed path cannot
+override a leaf's charter. Resolve missing capabilities during attended preparation, not halfway through
+an overnight implementation. Do not promise an active nightly run while a dependent row is unresolved.
+
+Reuse existing suitable checks when inputs, selection and tools are verified; do not create a new script
+or invoke setup authors merely by habit. A missing or changed setup follows this route:
+
+1. Fix an immutable `Validation plan:` with exact commands/selections, preserved inputs and original
+   test membership, expected outcomes, allowed additions/skips, rejection cases and operation limits.
+   The shared skill supplies a template. Quote the owner's setup authority and enumerate setup paths
+   in the target/envelope; product implementation approval alone does not grant configuration writes.
+2. Invoke Harness Engineer with `Harness mode: validation-setup`, exact `Allowed setup paths:` and
+   the generated protected-input baseline. It authors setup only, never specifications or acceptance.
+3. Invoke Test Auditor on the actual setup and plan. Require `Ready for baseline` bound to those
+   exact inputs, then independently run the approved setup checks and real baseline through task/test
+   tools. Freeze setup hashes and record actual executed test identities, outcomes and skips.
+4. Only then begin dependent product/test authoring. New specifications still need their separate
+   `Ready for implementation` audit before functional implementation; setup readiness cannot replace it.
+   Protect frozen setup and authority inputs alongside specifications at subsequent handoffs.
+
+Unavailable checks, credentials, tool approval or required skills remain explicit blockers, never
+permission to change approval settings, silently narrow selection, or write a workaround script.
+Freeze repairs require an authorized new target revision, setup audit and fresh baseline, preserving
+prior evidence. Continue only genuinely independent approved work under the protocol's stop rules.
+An expired run envelope stays expired; customization changes do not resume it or extend its deadline.
 
 **Branch creation is a mutation, so it is not yours.** When needed, propose `prepare_branch` with the
 repository, expected clean default-branch HEAD, and exact `agent/<date>-<slug>` name. After explicit

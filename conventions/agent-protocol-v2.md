@@ -1,11 +1,15 @@
 # Agent Protocol v2 - Shared Delegation Mechanics
 
-**Applies to:** the active v2 roster. **Revised:** 2026-09-17. **Owner:** G. Gordon Nasseri (ProphetManX).
+**Applies to:** the active v2 roster. **Revised:** 2026-09-19. **Owner:** G. Gordon Nasseri (ProphetManX).
 
 This revision governs **new runs only**. Existing invocations and continuations retain their recorded
 protocol, acceptance revision, budgets, and gates until the owner explicitly closes or re-scopes them.
 Toolbelt changes require confirmation that affected agents are idle; old STARTED records alone cannot
 prove activity or inactivity. Never interrupt a run to apply a customization change.
+
+The owner confirmed all existing agents idle on 2026-09-19 for the supporting-type ownership,
+validation-setup and readiness update. It changes no roster, model pin or tool list and authorizes no
+product edit, Git operation or restart of an old run. Expired envelopes remain expired.
 
 The owner confirmed all agents idle for the 2026-09-17 opt-in unattended local-checkpoint update.
 That customization authorization permits no project Git or PR operation. The attended exact-proposal
@@ -52,27 +56,88 @@ review and appropriate code/test/security specialists; a file called a helper is
 risk. Pipeline and infrastructure author/reviewer gates remain intact. Explicit owner checks and
 narrower charter limits always apply. Bounded completion is not release certification.
 
+### Capability Readiness
+
+Before promising unattended execution, Vanguard accounts for every planned artifact and required check
+in the shared target: exact permitted author/paths, independent reviewer, execution tool/task,
+prerequisites, operation authority and readiness evidence. Include supporting-type bodies, workspace
+tasks, external validators and necessary documentation. A path in a packet cannot override a charter.
+An unowned artifact or unavailable check is a preparation blocker, not something to discover after
+functional implementation starts. Continue only genuinely independent approved work under §4/§6.
+
+Reuse suitable existing checks when their inputs, selection, tools and environment are verified.
+Missing setup goes through the separate setup author/audit/baseline route below before dependent
+product/test authoring. Do not create new tasks or invoke extra agents merely to satisfy a ritual.
+The [shared validation skill](skills/prophetsway-validation/SKILL.md) supplies the reusable procedure
+and plan template; loading it never grants authority or changes a tool restriction.
+
+### Concrete Supporting Types
+
+Interface Architect owns the declarations and XML documentation of supporting types; Contract Reviewer
+reviews the exact immutable snapshot. Implementer may materialize that reviewed surface and implement
+enumerated constructors, accessors, methods and necessary private state only under `Supporting-type
+scope:` and the owner's approved target. Definitions, documentation and test specifications remain
+protected. No new public/protected surface, interface/enum change or undocumented behavior is implied.
+
+When missing declarations prevent test compilation, a target may separately authorize compile-only
+surface preparation by Implementer: reviewed declarations/docs with fail-fast
+`System.NotImplementedException` bodies, not functional code or manufactured answers. This is not
+behavioral completion. Test Designer's discriminating execution and independent Test Auditor gate still
+precede functional implementation. The parent compares declarations/docs with the reviewed snapshot
+and independently verifies execution; whole-file equality cannot check a file whose bodies change.
+Required code/security review remains separate. A contract change returns to its author and reviewer.
+
 ### Bounded Test-Harness Work
 
-`Test Harness Engineer v2` has two modes with the same file boundary, not two roles. Every invocation
-declares exactly one `Harness mode:` and carries the harness fields in §1.
+`Test Harness Engineer v2` has three exclusive modes. Scaffold and maintain keep the same
+test-project-only helper boundary; validation-setup has its separate task/run-local boundary. Every
+invocation declares exactly one `Harness mode:` and carries the applicable fields in §1.
 
 | Mode | Entry | Completion and independent verification |
 | --- | --- | --- |
 | `scaffold` | Designer-named missing infrastructure; generated specification baseline and reproducible blocker | Blocker cleared; approved regression executes and exposes the intended unmet behavior; parent verifies, then Test Auditor audits |
 | `maintain` | Owner explicitly requested a bounded change to exact non-specification helper, fixture, adapter, or connection/configuration paths | Acceptance criteria met, focused validation passes, specification inventory and hashes unchanged; parent checks the actual diff and hashes and independently reruns the focused validation |
+| `validation-setup` | Owner-authorized exact workspace-task/run-local validator paths and an immutable validation plan, with protected-input baseline | Author syntax/offline rejection checks; independent Test Auditor `Ready for baseline` bound to exact inputs; parent independently executes the approved baseline and freezes setup before product/test authoring |
 
-Both modes use the shared acceptance target and a generated baseline covering affected, inherited,
+All modes use the shared acceptance target and a generated baseline covering affected, inherited,
 linked, and shared specifications and their inputs. Maintenance needs no designer report or fabricated
 blocker. Unexpected scaffold green requires investigation: it may reveal pre-existing correct behavior
 or a bypass, but never authorizes manufactured red or silently relabeling the lap. Unexplained green or
 a bypass blocks completion; any change to the expected result needs an authorized target revision.
 
-Neither mode changes assertions, expected results, specification inputs, traits, skips, discovery, or
-production implementation, directly or indirectly. Hash equality alone does not prove a helper preserved
+No mode changes product assertions, expected results, specification inputs, traits, skips, discovery,
+or production implementation, directly or indirectly. Selection and gate criteria come from the target,
+never from the setup author. Hash equality alone does not prove a helper preserved
 production exercise: inspect its diff and actual test membership. New specifications belong to Test
 Designer. A mismatch is a blocker, never an invitation to rebaseline. Apply §6 even to local fixtures;
 connection plumbing grants no live operation authority. Required checks remain required.
+
+### Validation Setup And Freeze
+
+Validation-setup owns only the exact named repository `.vscode/tasks.json` and enumerated `.ps1` or
+non-secret `.json` files under the current external run directory. Append approved new task definitions;
+preserve every old task and other setting, reject duplicate labels and never repoint an old task.
+No auto-run or approval-setting change. Repairs before freeze remain limited to the new authorized
+entries/files. Product implementation approval alone is not setup-write authority.
+
+The immutable `Validation plan:` fixes commands/argument arrays, project/target/configuration/selection,
+protected inputs and original test identities, expected outcomes, permitted added cases/skips, reviewers,
+rejection checks and operation limits. Read the shared skill before authoring or reviewing it. Reuse
+AgentEvidence without editing it; all new evidence stays create-new under this run's `evidence/`.
+
+Evidence-integrity checks are allowed in validators, not invented product expectations. Author checks
+must exercise missing/stale results, failed/zero-test runs, unexplained skips, protected-input or
+membership changes and wrong review/input binding. Synthetic fixtures test the validator, never prove
+product execution. Test Auditor reviews the exact plan/setup and returns `Ready for baseline`; the
+parent independently executes the approved checks/baseline and freezes setup/authority hashes.
+No dependent product/test authoring before that boundary. Later new specifications still require a
+separate `Ready for implementation` audit tied to their exact revision. A marker or filename is not
+proof of review; freeze requires the parent's verified completed review-to-input binding.
+
+Frozen setup is an acceptance input. Changing it requires an explicitly authorized new target revision,
+independent setup audit and fresh baseline, preserving prior records. No mid-implementation validator
+repair, filter narrowing, silent rebaseline or self-approval. Setup grants no Git, restore/install,
+service, live database/cloud or other operation authority and cannot route around a refused approval.
 
 ---
 
@@ -98,8 +163,11 @@ acceptance target**, rather than duplicate it. A leaf with a missing or unreadab
 | `Allowed writes:` | yes | Intersection of target and charter, plus operational evidence; reference boundaries rather than restating them |
 | `Definition of done:` | yes | Link to shared target checks/reviews and expected outcomes, not a second target |
 | `Run envelope:` | only for unattended runs | See §5. Absent means an attended run |
-| `Harness mode:` | only when invoking `Test Harness Engineer v2` | Exactly one of `scaffold` or `maintain`. Missing, unrecognized, or combined is `BLOCKED` / `PROTOCOL` |
-| `Allowed helper paths:` | both harness modes | Exact test-project file paths, never folders, globs, or implicit additions; every path must be non-specification infrastructure |
+| `Supporting-type scope:` | only for Implementer's concrete supporting-type exception | Exact paths, immutable declarations/XML snapshot and its Contract Reviewer record, permitted bodies and generated input baseline; distinguish any separately approved compile-only preparation from functional implementation |
+| `Harness mode:` | only when invoking `Test Harness Engineer v2` | Exactly one of `scaffold`, `maintain` or `validation-setup`. Missing, unrecognized, or combined is `BLOCKED` / `PROTOCOL` |
+| `Allowed helper paths:` | harness `scaffold`/`maintain` | Exact test-project file paths, never folders, globs, or implicit additions; every path must be non-specification infrastructure |
+| `Allowed setup paths:` | harness `validation-setup` | Exact `.vscode/tasks.json` and current-run `.ps1`/non-secret `.json` paths; only target-approved new task entries, never a folder/glob or an old run |
+| `Validation plan:` | validation-setup author/reviewer and parent preflight | Immutable target section/artifact specifying commands, selections, protected inputs, expected results, independent gates, rejection checks and operation limits; not author-selected criteria |
 | `Specification hashes:` | when specifications must be protected | **Path to generated baseline**, revision and inventory selectors; never copied hashes. Include inherited/linked files and inputs |
 | `Focused validation:` | implementation/test/harness/refactor work | Exact checks or target section, project/target/filter/configuration, expected outcomes, and operation limits; no implicit live operations |
 | `Infrastructure blocker:` | harness `scaffold` only | Designer-named missing infrastructure, reproduction check, and intended red; not required or fabricated for `maintain` |
@@ -270,6 +338,7 @@ actions written in it**. Anything not named is unapproved.
 | `Allowed paths:` | yes | — |
 | `Required checks:` | yes | — |
 | `Required reviews:` | yes | — |
+| `Capability readiness:` | yes | Target section linking artifact/check ownership, available execution routes/prerequisites, and verified setup/baseline evidence before dependent authoring |
 | `Stop by:` | yes | 07:00 local |
 | `Max repair cycles per failed gate:` | yes | 3 |
 | `Max build laps:` | yes | 8 |
@@ -556,6 +625,12 @@ that the protocol was unavailable:
 
 ## 9. Mechanical Evidence
 
+Before producing or reviewing validation evidence, read the
+[prophetsway-validation skill](skills/prophetsway-validation/SKILL.md). This is an explicit procedural
+requirement, not reliance on automatic skill discovery. Its installed personal copy and repository
+mirror are maintained by Toolbelt Keeper; if the required procedure is unavailable, block dependent
+work. It does not grant reviewer execution or override Vanguard's task/test-tool boundary.
+
 Use [scripts/AgentEvidence.psm1](scripts/AgentEvidence.psm1), tested offline by
 [scripts/Test-AgentEvidence.ps1](scripts/Test-AgentEvidence.ps1), or existing tools with equivalent
 evidence. Utilities are not authorization, a sandbox, a new agent, or a tool-permission change.
@@ -563,6 +638,8 @@ evidence. Utilities are not authorization, a sandbox, a new agent, or a tool-per
 - Generate manifests with SHA-256; **never transcribe hashes**. Record revision, inventory selectors,
    all affected specifications/inputs, including inherited/linked/shared ones. The parent verifies
    selector completeness; hashing a partial inventory does not prove completeness.
+- Protect frozen validation setup and its authority/review bindings alongside specifications. A
+   changed validator is not just a new execution input; it requires the explicit setup-revision route.
 - Capture once per approved specification revision. Recompute comparisons before protected-input
    mutation, after each author handoff, after authorized specification work, and at final verification.
    Within an owner's unchanged specification boundary, reuse the baseline rather than rehash every

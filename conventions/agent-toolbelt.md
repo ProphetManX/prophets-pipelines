@@ -4,9 +4,20 @@
 > building, changing, or debugging agent customizations. Do not add it to `AGENTS.md` — it
 > is administrative context, irrelevant to day-to-day coding sessions.
 
-**Built:** 2026-08-08 · **Revised:** 2026-09-17 · **Owner:** G. Gordon Nasseri (ProphetManX)
+**Built:** 2026-08-08 · **Revised:** 2026-09-19 · **Owner:** G. Gordon Nasseri (ProphetManX)
 **Covers:** the customization roster and the `AGENTS.md` conventions system across 8 repos —
-**29 active v2 agents**, **26 archived v1 agents**, and **2 active prompts**.
+**29 active v2 agents**, **26 archived v1 agents**, **2 active prompts**, and **1 shared skill bundle**.
+
+**2026-09-19 ownership/readiness update:** the owner confirmed all existing agents idle. Implementer
+may implement exact supporting-type bodies against a frozen reviewed declaration/XML snapshot;
+Interface Architect retains the definition. Harness Engineer's separate `validation-setup` mode owns
+named task/run-local validator files, with Test Auditor setup review and independent parent
+baseline/freeze. Vanguard checks capability readiness before promising unattended work. The shared
+`prophetsway-validation` skill supplies procedures and a plan template, not new authority. Scaffolder
+routes YAML to Pipeline Engineer and no longer assigns auditing to mutation-only Modernizer.
+Roster, models, tools, picker visibility, product repositories and archived generations are unchanged.
+This does not resume an old run, extend its deadline or authorize product/Git operations. See the
+[current workflow](agent-toolbelt-v2.md) and [skill inventory](agent-toolbelt-v2.md#12-shared-skill-inventory).
 
 **Current v2 workflow:** one shared acceptance revision per coherent slice, default bounded delivery,
 focused regression/review work, progress-aware implementation iterations, generated evidence, and
@@ -36,6 +47,7 @@ are checked after every customization edit and in the final sweep; archived file
 | Set | Count | Where |
 | --- | --- | --- |
 | Active customizations | **31** — 29 agents + 2 prompts | Flat in `%APPDATA%\Code\User\prompts\` and flat in `conventions/toolbelt/` |
+| Shared skill bundle | **1**, with 2 files | Personal `.agents/skills/prophetsway-validation/`, mirrored separately under `conventions/skills/prophetsway-validation/` |
 | Archived v1 rollback generation | **26 agents + 2 prompt snapshots + 1 manifest** | `conventions/toolbelt/archive/v1/` |
 
 **A recursive listing of `conventions/toolbelt/` returns more than 31 files**, because it picks up the
@@ -66,6 +78,12 @@ See [The v2 Roster](#the-v2-roster).
 | 2 | `prophets-pipelines\conventions\toolbelt\` — flat files only | **Current mirror.** Version history and disaster recovery |
 | 3 | `prophets-pipelines\conventions\toolbelt\archive\<generation>\` | **Retired generations.** Rollback material; never loaded by VS Code |
 | 4 | `conventions\agent-toolbelt.md` and `conventions\agent-toolbelt-v2.md` | **Documentation.** This file and the v2 blueprint |
+
+Registered shared skills extend locations #1 and #2 with separate bundle roots:
+`%USERPROFILE%/.agents/skills/<name>/` and `conventions/skills/<name>/`. Their relative name sets and
+SHA-256 hashes are compared separately and recursively within each named bundle. Never create a skill
+subfolder in live prompts or sweep unrelated personal skills. Future generation snapshots include owned
+skills; the existing v1 archive remains unchanged with none. The v2 skill inventory names the owned set.
 
 Direction of truth is **#1 → #2**. Edit live, then mirror, then document. The flow reverses only when
 restoring onto a new machine or rolling a generation back.
@@ -261,6 +279,9 @@ deduplicated `Proposed` entry to `docs/feature-requests.md`.
 above — live, current mirror, generation archive, documentation — audits for drift by root-level hash
 with the archive excluded, and archives or restores whole named generations. An archive includes root
 agent files, generation-specific prompt snapshots, and a manifest validated before deletion or restore.
+It also maintains only the shared skills registered in the v2 inventory, with live-first edits and
+separate relative-path/hash checks. Future archives include those bundles under `skills/`; dependency
+compatibility must be checked before restore. No skill is copied into the flat prompt root.
 Tools are read, search, edit, execute. It is the only agent `Vanguard v2` does not cover, and that is on
 purpose: changing the toolbelt is a separate session from using it, and an orchestrator that could
 rewrite its own subagents mid-run has no stable definition to be measured against.
@@ -278,6 +299,7 @@ one-file report protocol — see item 14 in [agent-toolbelt-v2.md](agent-toolbel
 | `<repo>/AGENTS.md` × 6 | Generated shared block + per-repo section |
 | `prophets-pipelines/AGENTS.md` | Links to the master instead of inlining it |
 | `conventions/toolbelt/` — flat files | **Current mirror** — 31 customization files: 29 v2 agents and 2 prompts |
+| `conventions/skills/prophetsway-validation/` | Separate current mirror of the owned personal skill and its validation-plan asset; excluded from flat prompt comparison |
 | `conventions/toolbelt/archive/v1/` | The complete v1 rollback generation: **26 archived agents**, two prompt snapshots under `prompts/`, and a sorted 28-entry `SHA256SUMS.txt`. Never loaded; excluded from the current-mirror comparison |
 | `conventions/toolbelt/archive/README.md` | The generation scheme, pre-cutover sequence, and rollback order. Documentation, **not a customization** |
 
@@ -300,7 +322,7 @@ project state. The workflow update's static/offline checks do not certify live d
 
 | Live file | Agent | Model | Role |
 | --- | --- | --- | --- |
-| `proj-a-vanguard-v2.agent.md` | **Vanguard v2** | `GPT-6 Astra (copilot)` | Shared targets, bounded delivery and independent verification. Captures exact Git/PR approval or verifies explicit unattended opt-in for final local-checkpoint candidate selection; delegates execution exclusively to Repository Operator. Same 27-leaf allowlist and tools |
+| `proj-a-vanguard-v2.agent.md` | **Vanguard v2** | `GPT-6 Astra (copilot)` | Shared targets, capability/setup readiness and independent verification. Delegates missing validation setup before product work; retains exact Git/PR and local-checkpoint rules. Same 27-leaf allowlist and tools |
 | `proj-a-product-discovery-v2.agent.md` | Product Discovery v2 | `GPT-6 Astra (copilot)` | **New role.** Captures intent; owns `docs/product-brief.md`, `docs/decision-log.md`, `docs/open-questions.md` |
 | `proj-a-solution-architect-v2.agent.md` | Solution Architect v2 | `GPT-6 Astra (copilot)` | Architecture and requirements; one automatic evidence-backed repair pass |
 | `proj-a-requirements-reviewer-v2.agent.md` | Requirements Reviewer v2 | `GPT-6 Astra (copilot)` | **New role.** Read-only adversary; writes only its own invocation report |
@@ -313,8 +335,8 @@ project state. The workflow update's static/offline checks do not certify live d
 | `docs-a-repo-analyst-v2.agent.md` | Repo Analyst v2 | `GPT-6 Astra (copilot)` | Repository grounding **plus the former `Modernizer` recon** — dependencies, references, packaging, frameworks. Read-only on source; diagnoses, never repairs |
 | `docs-a-purpose-refiner-v2.agent.md` | Purpose Refiner v2 | `GPT-6 Astra (copilot)` | The scope gate, and the **only** writer of `docs/feature-requests.md` — a status change needs a quoted owner decision |
 | `ops-a-modernizer-v2.agent.md` | Modernizer v2 | `GPT-6 Astra (copilot)` | **Mutation only, no recon mode.** Applies an approved change list to `.csproj` / `.sqlproj`, one verifiable step at a time |
-| `ops-a-scaffolder-v2.agent.md` | Project Scaffolder v2 | `GPT-6 Astra (copilot)` | New projects and `.sln` entries only; structure, never behavior. Runs only after a reviewed architecture |
-| `tdd-a-interface-architect-v2.agent.md` | Interface Architect v2 | `GPT-6 Astra (copilot)` | C# contracts with complete XML docs, gated by the Requirement Trace Audit |
+| `ops-a-scaffolder-v2.agent.md` | Project Scaffolder v2 | `GPT-6 Astra (copilot)` | New projects and `.sln` entries only; structure, never behavior or YAML. Parent verifies against reviewed architecture/build evidence; Modernizer does not audit |
+| `tdd-a-interface-architect-v2.agent.md` | Interface Architect v2 | `GPT-6 Astra (copilot)` | Contract declarations/XML docs and supporting-type snapshots, gated by Requirement Trace Audit and independent Contract Reviewer; never functional bodies |
 | `tdd-a-api-designer-v2.agent.md` | API Designer v2 | `GPT-6 Astra (copilot)` | HTTP design documents under `docs/api/` only; authorization is consumed, never invented |
 | `tdd-a-contract-reviewer-v2.agent.md` | Contract Reviewer v2 | `GPT-6 Astra (copilot)` | Report-only adversary with a **required** `Mode: csharp \| http`. Unlike v1, it may not append a feature request |
 | `sec-a-threat-modeler-v2.agent.md` | Threat Modeler v2 | `GPT-6 Astra (copilot)` | Design-time; writes under `docs/security/` only. Sets the standard, never grades code against it |
@@ -324,9 +346,9 @@ project state. The workflow update's static/offline checks do not certify live d
 | Live file | Agent | Model | Role |
 | --- | --- | --- | --- |
 | `tdd-a-test-designer-v2.agent.md` | Test Designer v2 | `GPT-6 Astra (copilot)` | Focused specifications for approved behavior and material risks, inside specification files only. No matrix-invented requirements or manufactured red; observed results and generated baseline links |
-| `tdd-a-test-harness-engineer-v2.agent.md` | **Test Harness Engineer v2** | `GPT-6 Astra (copilot)` | Exact non-specification helper paths only; scaffold or maintain against the shared target. Preserve specifications and executed membership. Database lifecycle/concurrency gets risk review; source edits grant no operation authority |
-| `tdd-a-test-auditor-v2.agent.md` | Test Auditor v2 | `GPT-6 Astra (copilot)` | Independent scoped test/harness review using obligations, concrete risks, and generated evidence. No every-cell findings or mandatory closing defect; no execution tool added |
-| `tdd-a-implementer-v2.agent.md` | Implementer v2 | `GPT-6 Astra (copilot)` | Smallest complete scoped production solution through ordinary compile/fix cycles. Includes authorized SQL/exact XML, never tests/test infrastructure, contracts, project/build files, credentials, or database deployment |
+| `tdd-a-test-harness-engineer-v2.agent.md` | **Test Harness Engineer v2** | `GPT-6 Astra (copilot)` | Scaffold/maintain keep exact test-project helper paths. Separate validation-setup authors exact task/run-local validator paths from an approved plan; independent audit and parent baseline/freeze required |
+| `tdd-a-test-auditor-v2.agent.md` | Test Auditor v2 | `GPT-6 Astra (copilot)` | Independent specification/harness and validation-setup review. Setup `Ready for baseline` does not replace specification `Ready for implementation`; no execution tools added |
+| `tdd-a-implementer-v2.agent.md` | Implementer v2 | `GPT-6 Astra (copilot)` | Scoped production implementation including SQL/XML and enumerated supporting-type bodies/private state. Approved contract definitions/docs remain fixed; no tests, test infrastructure, validation setup or project/build files |
 | `tdd-a-code-reviewer-v2.agent.md` | Code Reviewer v2 | `GPT-6 Astra (copilot)` | Correctness review and PR-comment merit triage with comment/thread IDs and inspected head. Drafts replies for Vanguard's owner-confirmation flow; never posts/resolves or treats its verdict as authority |
 | `tdd-a-refactorer-v2.agent.md` | Refactorer v2 | `GPT-6 Astra (copilot)` | Concrete behavior-preserving production correction only; valid green baseline and identical test identities/outcomes/counts plus unchanged specifications. Mechanical corrections stay local |
 
@@ -402,7 +424,7 @@ Reasoning: [agent-toolbelt-v2.md](agent-toolbelt-v2.md) §2 *The Operator Bounda
 
 | Live file | Agent | Model | Role |
 | --- | --- | --- | --- |
-| `meta-a-toolbelt-keeper-v2.agent.md` | **Toolbelt Keeper v2** | `GPT-6 Astra (copilot)` | Maintains the **four** locations — live selector, current mirror, generation archive, documentation. Verifies live against the current mirror by name set and SHA-256 with the archive excluded; archives and restores **whole named generations** only, after pre- and post-hash validation; never overwrites an archive, never creates a live subfolder, never commits. **Outside `Vanguard v2`'s allowlist**, so the allowlist stays at exactly 27 project leaves |
+| `meta-a-toolbelt-keeper-v2.agent.md` | **Toolbelt Keeper v2** | `GPT-6 Astra (copilot)` | Maintains live customizations, mirrors, generations and documentation; named skill bundles have separate roots and hash checks. Whole-generation archive/restore only, never a live prompts subfolder or Git mutation. **Outside Vanguard's unchanged 27-leaf allowlist** |
 
 **That plan for two shared v1 customizations is half superseded.** `Toolbelt Keeper` was to stay v1 and
 serve both rosters; **it could not survive the v1 archive**, and it had no vocabulary for generations —
@@ -416,7 +438,14 @@ the existing Harness Engineer, never a widened Implementer. Both author and veri
 generated specification baselines replace copied hash tables. Passing helper maintenance and ordinary
 import corrections need no artificial red or full cycle. New regressions retain separate Designer/
 Auditor work. Database operations need exact separate approval and explicit resource ownership.
-See [the routing examples](agent-toolbelt-v2.md#routing-examples) for all four cases.
+See [the routing examples](agent-toolbelt-v2.md#routing-examples) for the applicable routes and refusals.
+
+The supporting-type exception changes only ownership of approved production bodies, not test ownership
+or contract-design authority. Separately approved compile-only surface preparation uses fail-fast stubs
+and is not behavioral completion. Setup is independently reviewed, executed and frozen before dependent
+authoring; later new specifications still receive their own audit. Shared skills do not replace those
+independent invocations or widen any role's tools. Reload and check Chat Diagnostics before a fresh
+project run; static/offline checks do not prove runtime skill loading or unattended execution.
 
 Two new convention documents carry what used to be copied into every agent:
 
