@@ -1,17 +1,18 @@
 # Agent Toolbelt v2 - Workflow And Role Map
 
 **Status:** **Active selector generation.** v1 is archived for rollback, not deleted. **Created:**
-2026-08-29. **Revised:** 2026-09-19 - reviewed supporting-type implementation, independently audited
-validation setup, capability readiness, and a shared validation skill. Existing operation safeguards
-remain. **Owner:** G. Gordon Nasseri (ProphetManX). **Roster:** 29 v2 agents — `Vanguard v2`,
-twenty-seven project leaves in its allowlist, and `Toolbelt Keeper v2` deliberately outside it.
+2026-08-29. **Revised:** 2026-09-21 - bounded owner delegation, an interview-derived decision profile,
+and morning review. **Owner:** G. Gordon Nasseri (ProphetManX). **Roster:** 30 v2 agents: `Vanguard v2`,
+twenty-eight leaves in its allowlist, and `Toolbelt Keeper v2` deliberately outside it.
 
-**Future runs only.** The owner confirmed all existing agents idle on 2026-09-19 before this revision.
-The narrow ownership changes are explicit below; roster, model pins, tool lists and product repositories
-are unchanged. No archive generation was edited. This does not restart a stopped run, extend an expired
+**Future runs only.** On 2026-09-21 the owner confirmed the other agent window had finished and
+authorized the new stand-in and its Vanguard integration. `Owner Delegate v2` adds report-only judgment,
+not execution or orchestration. Existing agent model pins/tools, product repositories, registered
+skills and archive generations are unchanged. This does not restart a stopped run, extend an expired
 envelope or authorize product/Git operations. Vanguard remains the orchestrator, Repository Operator
-the sole Git/PR executor, and reviewers independent. Static routing and offline utility checks do not
-prove runtime delegation, selector/skill loading, live operations or release readiness.
+the sole Git/PR executor, and reviewers independent. Static routing and offline checks do not prove
+runtime delegation, selector/skill loading, live operations or release readiness. See
+[Owner Delegation](#13-owner-delegation) for opt-in, calibration and the morning record.
 
 The selector cutover and earlier smoke evidence are recorded in §§6, 9, and 10 as dated history, not
 current project state or an instruction to resume those runs. Per-repository state belongs in each
@@ -57,6 +58,7 @@ not something still running.
 | `Vanguard` | **`Vanguard v2`** | One shared acceptance revision per slice; bounded delivery and independent verification. Presents exact Git/PR proposals for owner confirmation; an explicit unattended opt-in may delegate final verified local-checkpoint candidate selection. Delegates execution to the sole operator. Sole selectable project orchestrator |
 | `TDD Lead` | **`Vanguard v2`** | **Retired into it.** It duplicated `Vanguard`'s coverage and tripped the description-overlap rule; v2 has exactly one orchestrator. **Archived 2026-08-29 with the rest of v1**, which is what actually retired it — before that it was merely planned |
 | `Session Scribe` | **`Session Scribe v2`** | Resume/checkpoint/wrapup at meaningful session boundaries; compact evidence links, no per-repair invocation or default whole-history sweep |
+| None | **`Owner Delegate v2`** | Added 2026-09-21. Resolves explicitly delegated preference choices within approved design; writes only its invocation report. Vanguard independently verifies admissibility and routes execution; human review calibrates the profile. No product, operation or profile-write authority |
 | `Toolbelt Keeper` | **`Toolbelt Keeper v2`** | **Exists now.** Rewritten against the protocol for **four** locations — the flat live selector, the flat current mirror, the versioned generation archive, and the documentation — with whole-generation archive and restore. It maintains customization files rather than participating in a run, so it stays **outside every orchestrator's allowlist** and `Vanguard v2` cannot invoke it: changing the toolbelt remains a separate session. **The earlier plan to keep one shared v1 copy is superseded** — a shared v1 agent could not survive the v1 archive, and it had no vocabulary for generations |
 
 ### Discovery, requirements, and shaping
@@ -200,7 +202,7 @@ approval; a real semantic/scope decision does. These examples check routing rule
 
 **Count check: 26 v1 agents and 2 prompts, all accounted for.** One agent is retired into another
 (`TDD Lead`), one is split (`Modernizer`), **both prompts stay prompts** — `/sweep-workspace` retargeted
-to `Vanguard v2` and `/sync-agents-md` pinned to Luna — and four roles are new (`Product Discovery v2`,
+to `Vanguard v2` and `/sync-agents-md` pinned to Luna — and four roles were introduced in the initial v2 roster (`Product Discovery v2`,
 `Requirements Reviewer v2`, `Test Harness Engineer v2`, `Repository Operator v2`). Everything else
 carries forward. **All 26 v1 agents now have a v2 counterpart that exists**, `Toolbelt Keeper v2`
 included.
@@ -209,9 +211,10 @@ included.
 with `Toolbelt Keeper` deliberately staying v1 and shared, and that `/sweep-workspace` folds into the
 orchestrator.
 
-**Roster arithmetic: 29 active v2 agents** — `Vanguard v2`, plus the **27** project leaves in its
+**Roster arithmetic: 30 active v2 agents** - `Vanguard v2`, plus the **28** leaves in its
 `agents:` allowlist, plus `Toolbelt Keeper v2`, which is deliberately **not** in that allowlist. The
-allowlist is unchanged at 27 by this cutover. **28 is the pre-cutover figure**; do not restate it.
+2026-08-29 cutover had 29 agents and 27 leaves; Owner Delegate adds one of each on 2026-09-21.
+Historical migration counts below retain their dates; they are not current inventory.
 
 ### The Operator Boundary
 
@@ -344,6 +347,7 @@ These are load-bearing. A merge that violates one is not a simplification.
 
 | Creator | Validator | Why it cannot merge |
 | --- | --- | --- |
+| `Owner Delegate v2` | Vanguard's independent authority/evidence check, existing specialist gates, and owner calibration | A recommendation cannot authorize itself. The delegate does not implement, review its own implementation, alter the profile or clear a required gate; the morning review does not retrospectively authorize prohibited work |
 | `Test Designer v2` | `Implementer v2` | **The critical one.** An implementer that can edit a test will fix the test, because that is the shortest path to green |
 | `Test Designer v2` | `Test Harness Engineer v2` | Specification and infrastructure are different products with different failure modes. One agent holding both can move an assertion into a helper and call it plumbing |
 | `Test Harness Engineer v2` | `Test Auditor v2` for scaffold/setup; invoking parent/owner for maintain and final execution | Helpers cannot encode product answers. Setup criteria come from the approved plan; independent setup review precedes the parent's baseline/freeze. No author approves its own validator |
@@ -405,7 +409,7 @@ authorship/review separation, write boundary, or authorization gate. Current pin
 
 | Label | Class | Use for |
 | --- | --- | --- |
-| `GPT-6 Astra (copilot)` | **Judgment and bounded specialist** | All twenty-six non-Luna agents, including Vanguard, the harness, the reviewers, and Toolbelt Keeper |
+| `GPT-6 Astra (copilot)` | **Judgment and bounded specialist** | All twenty-seven non-Luna agents, including Vanguard, Owner Delegate, the harness, the reviewers, and Toolbelt Keeper |
 | `GPT-5.6 Luna (copilot)` | **Mechanical** | Recording, summarizing, reconciling against a diff — high volume, low judgment |
 
 Rules: **one pin per agent, no fallback array.** A fallback chain hides which model produced a result,
@@ -418,6 +422,7 @@ the picker default, so check model selection and Chat Diagnostics after loading.
 | Agent | Pin | Class |
 | --- | --- | --- |
 | `Vanguard v2` | `GPT-6 Astra (copilot)` | Judgment |
+| `Owner Delegate v2` | `GPT-6 Astra (copilot)` | Judgment |
 | `Product Discovery v2` | `GPT-6 Astra (copilot)` | Judgment |
 | `Requirements Reviewer v2` | `GPT-6 Astra (copilot)` | Judgment |
 | `Solution Architect v2` | `GPT-6 Astra (copilot)` | Judgment |
@@ -447,9 +452,9 @@ the picker default, so check model selection and Chat Diagnostics after loading.
 | `Commit Author v2` | `GPT-5.6 Luna (copilot)` | Mechanical |
 | `Changelog Author v2` | `GPT-5.6 Luna (copilot)` | Mechanical |
 
-**Distribution across the 29 active agents: Astra 26, Luna 3; Sol 0, Terra 0.** Derived from every live
-agent's frontmatter after the approved rollout. Every pin is a single label. The earlier harness-only
-distribution (Astra 1, Sol 5, Terra 20, Luna 3) is superseded.
+**Distribution across the 30 active agents: Astra 27, Luna 3; Sol 0, Terra 0.** Owner Delegate uses the
+existing judgment-role pin; no existing pin changes. Every pin is a single label. The September 7
+rollout had Astra 26 / Luna 3; its historical allocation and smoke evidence are not today's inventory.
 
 **Astra identity evidence:** the local VS Code `chat.cachedLanguageModels.v2` catalog contains
 `name: GPT-6 Astra`, `vendor: copilot`, `id: gpt-6-astra`, and `isUserSelectable: true`. The custom-agent
@@ -546,6 +551,7 @@ Dimensions 1, 2, and 9 are disqualifying at any failure. The rest are comparativ
 | Build order | v2 was built beside v1, and v1 was left byte-unchanged throughout that build. **Superseded 2026-08-29 at the selector layer:** v1 now lives in `conventions/toolbelt/archive/v1/` rather than in the picker, so "beside" no longer describes what a human sees. The benchmark-then-switch gate for the **default** is unchanged |
 | Generations | Live prompts and their flat mirror carry **exactly one** generation. Named shared skills have separate live/mirror roots. Future archives include owned skill snapshots under `skills/` as well as root agents and `prompts/`, all manifest-covered. The v1 archive remains unchanged with no skills. Archive and rollback move a whole named generation after manifest validation; never overwrite a generation or copy an archive into the live prompts root. See the archive scheme for dependency compatibility |
 | Minimum complete scope | One immutable shared acceptance target per coherent slice: behavior, invariants, exclusions, owners, checks, risk gates, authorization, ceilings. No speculative abstractions, extension points, configuration, providers, retries, or lifecycle features. Necessary safety/correctness are included |
+| Owner delegation | Advisory by default; a bounded owner-approved run clause enables decisions within already-discussed design. Fixed profile identity, concrete examples, finalized reports and independent parent eligibility checks precede continuation. No new workflow, operation permission or waived gate |
 | Default routing | Understood reversible local work, including production, goes to its existing owner and focused independent verification. Add regression authors only for a real specification need; discovery/architecture/full review are not automatic. Public contracts, architecture, security, consequential operations and releases retain relevant specialist gates |
 | Requirements flow | Discovery captures intent → Architect writes → Reviewer attacks → one automatic repair pass → Vanguard consumes. **Vanguard drives every leg** — neither leaf holds an `agent` tool, so they never invoke each other |
 | Discovery artifacts | `docs/product-brief.md`, `docs/decision-log.md`, `docs/open-questions.md`, owned solely by `Product Discovery v2`. A non-owner leaf **reports** a proposed question and the stream it blocks; Vanguard routes it to Discovery to deduplicate and append |
@@ -801,7 +807,7 @@ relevant agent work, not another manual slash command. Existing agent picker vis
 
 Toolbelt Keeper edits the named live bundle first, then mirrors all its files by relative path using
 `Copy-Item`, documents the change and checks both name sets and SHA-256. Compare this registered skill
-separately from the flat 31-file prompts/mirror pair. Never sweep unrelated personal skills, never put
+separately from the flat 32-file prompts/mirror pair. Never sweep unrelated personal skills, never put
 a skill folder beneath live prompts, and never count archive generations as current drift.
 
 Future archives include the generation's owned skill bundles under `skills/` in their manifest. v1 has
@@ -813,3 +819,103 @@ Before a new project run, reload VS Code and check the affected agents and skill
 Static YAML/link/hash checks and offline helper tests are not proof of runtime skill discovery,
 delegation or an unattended run. A pilot uses a fresh explicitly authorized target/envelope; this
 maintenance neither starts one nor resumes an old deadline.
+
+## 13. Owner Delegation
+
+**Added 2026-09-21 after an owner interview and idle confirmation.** The owner wants to design major
+components and their coupling, delegate implementation and bounded follow-on choices, and review
+concrete decisions the next morning. This is a separate judgment leaf, not a second Vanguard or a
+worker that can approve its own work. The authority mechanics live in
+[protocol section 4](agent-protocol-v2.md#owner-delegation), not in duplicated agent-specific rules.
+
+| Artifact | Responsibility |
+| --- | --- |
+| `proj-a-owner-delegate-v2.agent.md` | Live/mirrored charter; `Owner Delegate v2`, scalar Astra pin, `read/search/edit` with report-only writes and no child agents. Selectable for attended advisory discussion and invocable by Vanguard |
+| [owner-decision-profile-r1.md](owner-decision-profile-r1.md) | Versioned reference with ten confirmed preferences, ten interview question/answer records, three contextual import examples and a separately tentative inference. Not an auto-loaded instruction, skill or operation grant |
+| `proj-a-vanguard-v2.agent.md` | The sole changed existing customization: adds the delegate, independent eligibility checks, decision register and Scribe packet content; tools/model remain unchanged |
+| Current run's `run.md` and invocation reports | Exact questions/examples, alternatives, decisions, authority/rationale, actual work and owner review. Outside repositories under the existing run-artifact policy |
+
+The profile lives with the shared protocol documents rather than in a new live-prompts subfolder or
+unregistered skill. Toolbelt Keeper maintains it as a shared dependency. Preserve old revisions; future
+generation metadata records required profile/protocol paths and generated identities, and restoration
+must verify compatibility before activation. Never attach a new profile to an old generation by default.
+Existing v1 is untouched and gains no profile dependency.
+
+### Requesting A Run
+
+Ask Vanguard to prepare the normal run with Owner Delegate enabled. Vanguard presents a bounded
+`Owner delegation:` clause with the target/envelope, then records the owner's approval. That one opt-in
+covers admissible decisions inside it; every question does not need a new human turn. The following is
+a preparation template, not an approved envelope or executable command:
+
+```text
+Owner delegation:
+  Designed components and authoritative design: <exact target sections>
+  Permitted decision classes or choices: <bounded list inside that design>
+  Profile: <absolute R1 path and generated SHA-256 evidence>
+  Exclusions: <protocol exclusions plus any owner-specific hold points>
+  Limits: <unchanged paths, authors, operations, checks, reviews and budgets>
+  Owner approval/source: <actual confirmation of this clause>
+```
+
+Missing opt-in permits advisory assessment only. No expired run is resumed. The delegate can explain
+preferences but never invent operation permission, requirements, data-conflict policy or a new workflow.
+Already-delegated contract details remain with their existing author/reviewer. Personal code review is
+not a default gate on a designed dependent component; required independent reviews and explicit owner
+hold points remain gates.
+
+### Morning Record And Learning
+
+Vanguard records every owner-level question before consultation and registers direct human questions,
+advice and deferrals too. The delegate finalizes one report before dependent work; Vanguard verifies
+authority, decisive evidence, input identities and remaining limits. It then records actual work and
+verification separately. Scribe receives the register in its ordinary wrapup packet and links the
+morning summary; no Scribe customization change or per-question invocation is needed.
+
+The register makes question, concrete example, options/recommendation, selected answer, rationale and
+profile rule, resulting actions/checks, and pending owner review discoverable together. Reports stay
+unchanged after completion. On feedback, capture agreement/correction and why, distinguish instance
+corrections from general rules, and ask a focused follow-up only when the reason is absent. Proposed
+learning is not a profile update. Owner-confirmed changes go through Keeper between runs as a new
+profile revision; workers cannot adjust the authority under which they are currently operating.
+
+### Offline Routing Cases
+
+These are specification examples for checking the live charters and protocol. Reading this table or
+passing a structural script does not prove that a model will make the right judgment. Real calibration
+requires separately identified advisory replays or a fresh authorized pilot and owner review.
+
+| ID | Case | Required result |
+| --- | --- | --- |
+| OD01 | Valid opt-in; bounded internal implementation choice; approved behavior unchanged; reuse tradeoff matches P03 | Delegate may decide with evidence and a concrete example; parent verifies, existing author implements, ordinary independent gates remain |
+| OD02 | Ordinary import correction or a green transition already within an author's authority | Continue through the existing owner/check; do not manufacture a delegate gate |
+| OD03 | Owner explicitly chose X if P, otherwise Y; delegation includes this choice and verified evidence disproves P | May choose the named Y under P09, retaining the original condition, evidence and decision record |
+| OD04 | A prior unconditional rejection is inconvenient or a recommendation sounds better | Needs owner; no invented conditional branch or repeated request shopping |
+| OD05 | No opt-in, or `Decision mode: advise` | Advisory only; no delegated authorization to unblock work |
+| OD06 | Missing report/profile/approval, changed profile/request/target identity or expired envelope | Block the decision; no stale evidence, silent latest-profile substitution or deadline renewal |
+| OD07 | A proposed interface member expresses an expressly delegated, approved capability | Existing contract author/reviewer route; member count is not a new semantic permission |
+| OD08 | An unexpected component interaction, workflow or public behavioral promise is needed | Ask the owner before dependent work; profile familiarity is not design approval |
+| OD09 | Pending personal review of A; A passed required gates without major design issues; B's design is approved | B may proceed under P02 unless the owner expressly established a hold point |
+| OD10 | An unresolved blocking review, missing mandatory check or frozen validator/specification change is presented as a preference | Preserve the stop/revision route; delegate cannot waive or repair the gate |
+| OD11 | Old-file replay would overwrite a later user correction, but the project's conflict policy is absent | Needs owner; E03 is unresolved, not blanket file-wins or superuser permission |
+| OD12 | A project has explicitly adopted E01/E02 and a small input has malformed structure | Apply its approved prevalidation/no-write rule; valid structure still needs per-record business validation. Profile alone does not establish a BPA requirement |
+| OD13 | Diagnostic or retry feature sounds consistent with P06/P07 but expands the approved target | Advisory proposal or owner question only; optionality does not create scope |
+| OD14 | Tool refusal, new spend, Git/release action, live database mutation or a high-impact stop | Existing authority and mandatory stops; no delegate override or alternate execution route |
+| OD15 | Owner corrects a decision and supplies their reasoning | Preserve original report; record correction and proposed generalization separately. Keeper applies confirmed learning between runs, never mid-run self-edit |
+| OD16 | The delegate says DECIDED but its report lacks a concrete case or cites unsupported facts | Parent rejects continuation; a label or confidence score is not independent verification |
+
+### Validation And Remaining Checks
+
+Check parsed frontmatter, unique display names, exact allowlists, single model pins, read/report-only
+tools, local document links, full current name/hash parity and separately registered skill dependencies.
+Review the cases above against actual wording, particularly conditional decisions, missing authority,
+profile drift, refusal, learning and the before-action record. Existing generation files remain immutable.
+
+The verifier is Vanguard for decision admissibility, existing independent specialists for technical
+work, and the owner for judgment calibration. No new validator agent is needed; none of these roles
+allows the decision author to approve its own execution. Report-only edits are a charter restriction,
+not an enforced filesystem sandbox. Model agreement is not independent factual evidence.
+
+Before a fresh run, reload VS Code and check Owner Delegate, Vanguard's allowlist and Chat Diagnostics.
+File hashes do not prove picker registration or live delegation; both need observation after reload.
+This maintenance starts no autonomous project run or recommendation-only pilot.

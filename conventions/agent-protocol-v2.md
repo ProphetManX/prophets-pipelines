@@ -1,11 +1,16 @@
 # Agent Protocol v2 - Shared Delegation Mechanics
 
-**Applies to:** the active v2 roster. **Revised:** 2026-09-19. **Owner:** G. Gordon Nasseri (ProphetManX).
+**Applies to:** the active v2 roster. **Revised:** 2026-09-21. **Owner:** G. Gordon Nasseri (ProphetManX).
 
 This revision governs **new runs only**. Existing invocations and continuations retain their recorded
 protocol, acceptance revision, budgets, and gates until the owner explicitly closes or re-scopes them.
 Toolbelt changes require confirmation that affected agents are idle; old STARTED records alone cannot
 prove activity or inactivity. Never interrupt a run to apply a customization change.
+
+On 2026-09-21 the owner confirmed the other agent window had finished and authorized creation and
+wiring of `Owner Delegate v2` after the decision-profile interview. This enables the bounded delegation
+mechanism in section 4 for future explicitly opted-in runs, not a product run or a blanket proxy
+approval. Existing deadlines, operation authority, protected inputs and independent gates remain.
 
 The owner confirmed all existing agents idle on 2026-09-19 for the supporting-type ownership,
 validation-setup and readiness update. It changes no roster, model pin or tool list and authorizes no
@@ -163,6 +168,11 @@ acceptance target**, rather than duplicate it. A leaf with a missing or unreadab
 | `Allowed writes:` | yes | Intersection of target and charter, plus operational evidence; reference boundaries rather than restating them |
 | `Definition of done:` | yes | Link to shared target checks/reviews and expected outcomes, not a second target |
 | `Run envelope:` | only for unattended runs | See §5. Absent means an attended run |
+| `Decision mode:` | only for Owner Delegate | Exactly `advise` or `decide`; advice grants no continuation authority |
+| `Decision request:` | only for Owner Delegate | Immutable current-run question/ID, concrete example, options/recommendation, source evidence and blocked dependency; see section 4 |
+| `Decision profile:` | only for Owner Delegate | Exact profile path/revision and generated SHA-256 evidence, fixed for this run |
+| `Decision authority:` | only for Owner Delegate | Exact owner-approved target/envelope clause and approval source; `none - advisory only` is valid only for `advise` |
+| `Delegated decision:` | when a downstream packet consumes one | Finalized decision report plus Vanguard's recorded eligibility/freshness verification and the original owner delegation; never label the delegate's answer as a human quotation |
 | `Supporting-type scope:` | only for Implementer's concrete supporting-type exception | Exact paths, immutable declarations/XML snapshot and its Contract Reviewer record, permitted bodies and generated input baseline; distinguish any separately approved compile-only preparation from functional implementation |
 | `Harness mode:` | only when invoking `Test Harness Engineer v2` | Exactly one of `scaffold`, `maintain` or `validation-setup`. Missing, unrecognized, or combined is `BLOCKED` / `PROTOCOL` |
 | `Allowed helper paths:` | harness `scaffold`/`maintain` | Exact test-project file paths, never folders, globs, or implicit additions; every path must be non-specification infrastructure |
@@ -293,6 +303,101 @@ routine repair. The existing document owners retain decisions, requirements, and
 Categories in (2) are never invented — not defaulted, not "reasonably assumed", not inferred from a
 sibling repository. They are elicited during discovery or deferred as a stream.
 
+### Owner Delegation
+
+`Owner Delegate v2` applies the owner's [decision profile](owner-decision-profile-r1.md) to bounded
+choices inside a design the owner has already discussed and approved. It is a decision leaf, not an
+orchestrator, implementation author, reviewer or substitute human identity. Its report is labeled
+**delegated decision**, not a claim that the owner personally approved that answer.
+
+**Default is advisory only.** A run needs an explicit owner-approved `Owner delegation:` clause in its
+immutable target/envelope to consume `Decision mode: decide`. The clause names designed components,
+permitted decision classes or specific open choices, fixed profile path/revision and generated hash
+evidence, exclusions, applicable checks/reviews and the existing path/operation/budget limits. Quote
+the approval source. "Use the stand-in" is sufficient only when it clearly approves that already
+presented clause, not an unbounded policy the parent writes afterwards. Toolbelt creation is not opt-in
+for a project run. No extra approval turn is needed for each decision inside a valid clause.
+
+Suitable classes include choosing an internal strategy within approved behavior, resolving a bounded
+design detail the owner expressly delegated, and taking an owner-stated conditional alternative after
+its exact premise is disproved. Ordinary corrections and transitions already authorized need no
+delegate invocation. The profile guides judgment; it neither creates project requirements nor widens
+the clause. Do not make every implementation choice a new gate.
+
+The following cannot be delegated through this mechanism:
+
+- New components/workflows, architectural responsibilities or consequential cross-component behavior;
+  new public-contract semantics rather than exact details within an existing reviewed delegation.
+- New security, access, privacy, data ownership/overwrite policy, financial semantics or release
+  commitments. A hypothetical import preference does not resolve a real application's conflict policy.
+- New file/author grants, operations, spending, Git/PR/release actions, versions, environment approvals,
+  lifecycle/destructive authority, expanded scope or budgets, renewed deadlines, or a bypass of refusal.
+- Reversing an unconditional owner decision, overriding conflicting authority, clearing a blocking
+  review by preference, or changing/waiving required checks, frozen specifications or validation setup.
+
+Exact member names/signatures for an approved capability may already be delegated to the contract
+author and independent reviewer. That remains their work: neither the number of members nor the
+delegate's confidence establishes a new semantic grant. Narrower charters always bind. A leaf requiring
+an actual quoted owner approval for its operation must still receive one; the delegate cannot supply it.
+
+#### Decision And Continuation
+
+1. Before consultation, Vanguard assigns a run-local decision ID and records the exact worker question,
+   approved design/target, safe source links, concrete example, options, recommendation, consequences
+   and blocked dependency in an immutable request. Every owner-level question is registered, including
+   those sent directly to the human and those left deferred. Do not invent questions for routine work.
+2. Give Owner Delegate the standard packet and four decision fields. It inspects the relevant evidence,
+   cites profile rules and the exact authority clause, and writes its STARTED/finalized report under
+   the existing lifecycle. A recommendation alone, missing decisive evidence or conflicting rules
+   yields `NEEDS_OWNER`; an advisory packet yields `ADVISORY`, never `DECIDED`.
+3. **Before dependent work**, Vanguard re-opens the finalized report and independently checks approval
+   provenance, scope, profile/request/target identities, decisive facts and contrary evidence, remaining
+   budgets and mandatory stops. Use generated input identities through the existing evidence route;
+   no new execution/write permission follows. Recheck decision-relevant external facts separately.
+   Record this eligibility check in `run.md`; the word `DECIDED` or a confidence score is not a gate.
+4. Only an admissible `DECIDED` result can select the choice covered by the owner's clause. Pass both
+   the original delegation and the verified report to the existing author. Record the selection as an
+   immutable run-local resolution linked from the shared target, without overwriting that target's
+   approved behavior. Required contract/requirements/test reviews still precede dependent implementation.
+   If applying the answer would alter an invariant or frozen specification/setup, stop for the owner's
+   explicit revision route instead; the delegate cannot authorize that change.
+5. `ADVISORY`, `NEEDS_OWNER`, incomplete reports, drift or expired authority never unlock blocked work.
+   Apply dependency-scoped continuation and mandatory stops unchanged. Do not shop for another answer,
+   reset repair budgets or reinterpret a reviewer refusal as a preference question. New evidence may
+   support a fresh invocation within the same remaining authority; retain the prior record.
+
+The delegate has `read`, `search` and report-only `edit`, with no execution or child-agent tools.
+Tool minimization limits capability; its report-only path rule is a charter, not a filesystem sandbox.
+Vanguard checks decision admissibility separately from downstream authorship and verification. Owner
+morning review calibrates judgment; it does not replace required technical review or retroactively
+authorize a prohibited action.
+
+#### Morning Review And Learning
+
+Vanguard keeps a **Decision register** in `run.md`: ID, question/example/request link, mode, profile
+revision, decision/report, eligibility check, affected work, actual actions/verification links, and
+owner-review disposition. Initially `PENDING`; later record `AGREED`, `CORRECTED`, `DEFERRED` or
+`NOT_ACTED`, with the owner's actual words/reason where applicable. Do not rewrite finalized decision
+reports. Completed assessment is not completed implementation; preserve both records separately.
+
+Use a real inspected example where available. Redact sensitive details or label a synthetic example
+honestly; never put secrets, raw credentials or unnecessary personal data in the record. If no concrete
+example/evidence can safely establish a decision-critical fact, defer it. Every question, including
+advice and deferrals, must be discoverable from the morning register. Scribe links it and summarizes
+unreviewed decisions at the normal handoff boundary, not once per question. Unreviewed decision runs
+remain protected by section 2's retention rule.
+
+When the owner answers, ask one concrete why/exception follow-up if their reasoning is absent. Do not
+repeat a reason already given or delay otherwise authorized work merely to complete a profile interview.
+Separate instance corrections from proposed general rules; record source, context and counterexample.
+Only owner-confirmed learning enters a new profile revision through Toolbelt Keeper while affected
+agents are idle. Workers and the delegate never edit it. A correction to current work follows normal
+owner re-scope, author and independent verification routes; it does not silently change past evidence.
+
+Personal code review normally does not block an already-designed dependent component after required
+gates pass and no major design issue remains. Explicit human hold points still bind. An undesigned
+workflow or consequential interface change comes back to the owner before dependent work proceeds.
+
 ### Focused Specifications And Review
 
 Tests cover approved behavior, relevant boundaries, and material failure risks. A checklist prompts
@@ -343,6 +448,7 @@ actions written in it**. Anything not named is unapproved.
 | `Max repair cycles per failed gate:` | yes | 3 |
 | `Max build laps:` | yes | 8 |
 | `Pipeline runs:` | no | **Not allowed unless explicitly named** |
+| `Owner delegation:` | no | **Advisory only when absent.** Explicit opt-in names the designed components, bounded decision classes, pinned profile identity and unchanged limits under section 4 |
 | `Local checkpoint:` | no | **No Git authority by default.** Only §6's explicit opt-in, with both selection/authorship delegations, may authorize one final local checkpoint |
 | `Release manifest:` | no | Absent means no version change, tag, or publication |
 
@@ -602,6 +708,11 @@ The handoff states current work, next action, blockers, evidence links, and at m
 entries; it must be usable in under two minutes. Reconcile referenced current work, not every recent
 run by default. Enumerate wider history or retention only for requested recovery/cleanup; never delete
 automatically. Missing handoff means fresh start; consumed means already resumed, not replay old work.
+
+When a run contains owner-level questions, include a compact morning-review summary and link its
+Decision register: delegated decisions acted on, advice, deferred questions, pending owner review and
+proposed learning. Include concrete-example/report links without copying the full ledger into the
+handoff. Consuming a handoff does not mean the human reviewed its decisions.
 
 Batch durable promotions to their existing owners. Scribe verifies, never authors them. `fresh` requires
 required promotions complete; otherwise record `live` and exact pending owners/paths. Optional deferred

@@ -4,9 +4,18 @@
 > building, changing, or debugging agent customizations. Do not add it to `AGENTS.md` — it
 > is administrative context, irrelevant to day-to-day coding sessions.
 
-**Built:** 2026-08-08 · **Revised:** 2026-09-19 · **Owner:** G. Gordon Nasseri (ProphetManX)
+**Built:** 2026-08-08 · **Revised:** 2026-09-21 · **Owner:** G. Gordon Nasseri (ProphetManX)
 **Covers:** the customization roster and the `AGENTS.md` conventions system across 8 repos —
-**29 active v2 agents**, **26 archived v1 agents**, **2 active prompts**, and **1 shared skill bundle**.
+**30 active v2 agents**, **26 archived v1 agents**, **2 active prompts**, and **1 shared skill bundle**.
+
+**2026-09-21 owner-delegate addition:** the owner confirmed the other agent window had finished and
+authorized the stand-in after a concrete interview. `Owner Delegate v2` is a report-only decision leaf;
+Vanguard adds it to its allowlist, checks explicit run delegation and evidence before acting, and
+records every question/example/decision for morning review. The
+[versioned profile](owner-decision-profile-r1.md) guides choices, never grants operations or an
+undesigned workflow. Learning requires owner confirmation and a new Keeper-maintained revision between
+runs. Existing model pins/tools, both prompts, registered skills and archives are unchanged. No product
+run, deadline extension or Git operation is authorized. See [the mechanism](agent-toolbelt-v2.md#13-owner-delegation).
 
 **2026-09-19 ownership/readiness update:** the owner confirmed all existing agents idle. Implementer
 may implement exact supporting-type bodies against a frozen reviewed declaration/XML snapshot;
@@ -41,16 +50,16 @@ The current rules, routing examples, and offline approval scenarios are in
 > is built on. **Read every v1 roster table below as archived history**, not as a description of what
 > loads.
 
-**Current roster, checked 2026-09-12 by root-level inventory and parsed frontmatter.** Live/mirror hashes
+**Current roster, checked 2026-09-21 by root-level inventory and parsed frontmatter.** Live/mirror hashes
 are checked after every customization edit and in the final sweep; archived files are counted separately.
 
 | Set | Count | Where |
 | --- | --- | --- |
-| Active customizations | **31** — 29 agents + 2 prompts | Flat in `%APPDATA%\Code\User\prompts\` and flat in `conventions/toolbelt/` |
+| Active customizations | **32** - 30 agents + 2 prompts | Flat in `%APPDATA%\Code\User\prompts\` and flat in `conventions/toolbelt/` |
 | Shared skill bundle | **1**, with 2 files | Personal `.agents/skills/prophetsway-validation/`, mirrored separately under `conventions/skills/prophetsway-validation/` |
 | Archived v1 rollback generation | **26 agents + 2 prompt snapshots + 1 manifest** | `conventions/toolbelt/archive/v1/` |
 
-**A recursive listing of `conventions/toolbelt/` returns more than 31 files**, because it picks up the
+**A recursive listing of `conventions/toolbelt/` returns more than 32 files**, because it picks up the
 26 archived agents, two prompt snapshots, `SHA256SUMS.txt`, and `archive/README.md`. The snapshots and
 manifest complete the v1 rollback generation; the README documents the generation scheme and is outside
 the manifest. None of these archive files is a current customization. The current-mirror comparison is
@@ -79,6 +88,10 @@ See [The v2 Roster](#the-v2-roster).
 | 3 | `prophets-pipelines\conventions\toolbelt\archive\<generation>\` | **Retired generations.** Rollback material; never loaded by VS Code |
 | 4 | `conventions\agent-toolbelt.md` and `conventions\agent-toolbelt-v2.md` | **Documentation.** This file and the v2 blueprint |
 
+The shared documentation dependencies also include the protocol and versioned owner decision profile.
+Profile revisions stay in `conventions/`, outside the flat customization pair; they are explicitly
+referenced, not auto-loaded. Future generation compatibility records include their required identities.
+
 Registered shared skills extend locations #1 and #2 with separate bundle roots:
 `%USERPROFILE%/.agents/skills/<name>/` and `conventions/skills/<name>/`. Their relative name sets and
 SHA-256 hashes are compared separately and recursively within each named bundle. Never create a skill
@@ -106,7 +119,7 @@ cosmetic — the `name:` frontmatter field controls what appears in the UI.
 ### The Front Door
 
 **`Vanguard v2` is the front door.** It is the only orchestrator that loads, and its allowlist is
-exactly the 27 project leaves — `Toolbelt Keeper v2` is deliberately outside it, because changing the
+exactly the 28 leaves, including Owner Delegate - `Toolbelt Keeper v2` is deliberately outside it, because changing the
 toolbelt is a separate session from using it. See [The v2 Roster](#the-v2-roster) and
 [agent-toolbelt-v2.md](agent-toolbelt-v2.md).
 
@@ -298,7 +311,8 @@ one-file report protocol — see item 14 in [agent-toolbelt-v2.md](agent-toolbel
 | `prophets-pipelines/conventions/AGENTS.shared.md` | **Master copy** of the shared conventions block |
 | `<repo>/AGENTS.md` × 6 | Generated shared block + per-repo section |
 | `prophets-pipelines/AGENTS.md` | Links to the master instead of inlining it |
-| `conventions/toolbelt/` — flat files | **Current mirror** — 31 customization files: 29 v2 agents and 2 prompts |
+| `conventions/toolbelt/` — flat files | **Current mirror** - 32 customization files: 30 v2 agents and 2 prompts |
+| [conventions/owner-decision-profile-r1.md](owner-decision-profile-r1.md) | Versioned interview/preferences reference, not an auto-loaded customization or operation grant; maintained between runs |
 | `conventions/skills/prophetsway-validation/` | Separate current mirror of the owned personal skill and its validation-plan asset; excluded from flat prompt comparison |
 | `conventions/toolbelt/archive/v1/` | The complete v1 rollback generation: **26 archived agents**, two prompt snapshots under `prompts/`, and a sorted 28-entry `SHA256SUMS.txt`. Never loaded; excluded from the current-mirror comparison |
 | `conventions/toolbelt/archive/README.md` | The generation scheme, pre-cutover sequence, and rollback order. Documentation, **not a customization** |
@@ -322,11 +336,17 @@ project state. The workflow update's static/offline checks do not certify live d
 
 | Live file | Agent | Model | Role |
 | --- | --- | --- | --- |
-| `proj-a-vanguard-v2.agent.md` | **Vanguard v2** | `GPT-6 Astra (copilot)` | Shared targets, capability/setup readiness and independent verification. Delegates missing validation setup before product work; retains exact Git/PR and local-checkpoint rules. Same 27-leaf allowlist and tools |
+| `proj-a-vanguard-v2.agent.md` | **Vanguard v2** | `GPT-6 Astra (copilot)` | Shared targets, capability/setup readiness and independent verification. Adds Owner Delegate to a 28-leaf allowlist and checks bounded decisions before continuation; tools and exact Git/PR/local-checkpoint rules unchanged |
 | `proj-a-product-discovery-v2.agent.md` | Product Discovery v2 | `GPT-6 Astra (copilot)` | **New role.** Captures intent; owns `docs/product-brief.md`, `docs/decision-log.md`, `docs/open-questions.md` |
 | `proj-a-solution-architect-v2.agent.md` | Solution Architect v2 | `GPT-6 Astra (copilot)` | Architecture and requirements; one automatic evidence-backed repair pass |
 | `proj-a-requirements-reviewer-v2.agent.md` | Requirements Reviewer v2 | `GPT-6 Astra (copilot)` | **New role.** Read-only adversary; writes only its own invocation report |
 | `proj-a-session-scribe-v2.agent.md` | Session Scribe v2 | `GPT-5.6 Luna (copilot)` | Session-boundary continuity; external v2 handoff and operational run artifacts. References evidence instead of copying it; no per-repair call or default whole-history sweep |
+
+**Added 2026-09-21 - owner judgment:**
+
+| Live file | Agent | Model | Role |
+| --- | --- | --- | --- |
+| `proj-a-owner-delegate-v2.agent.md` | **Owner Delegate v2** | `GPT-6 Astra (copilot)` | Bounded decisions under an explicit run clause and pinned profile; read/search plus report-only edit, no execution or child agents. Concrete examples, independent parent eligibility checks, morning review and owner-confirmed learning |
 
 **Slice 2a — grounding and shaping**, which made `Vanguard v2`'s `GROUND` and `SHAPE` states executable:
 
@@ -355,9 +375,10 @@ project state. The workflow update's static/offline checks do not certify live d
 **Owner-approved model rollout, 2026-09-07:** the harness moved first, then all twenty-five remaining
 v2 Sol/Terra agents moved to `GPT-6 Astra (copilot)`, verified against VS Code's cached selectable
 Copilot entry. The owner reports successful manual Astra overrides for Vanguard; this is experience,
-not a comparative benchmark. The active agent split is **Astra 26 / Luna 3**, with no Sol/Terra pin
-remaining. Session Scribe, Commit Author, and Changelog Author retain Luna. Tools, instructions,
-allowlists, both prompt files, and archived generations are unchanged. See
+not a comparative benchmark. That rollout's split was **Astra 26 / Luna 3**, with no Sol/Terra pin
+remaining; Owner Delegate subsequently makes the current split **Astra 27 / Luna 3**. Session Scribe,
+Commit Author, and Changelog Author retain Luna. The model-only rollout changed no tools, instructions,
+allowlists, prompts or archives. See
 [Model Workload Classes](agent-toolbelt-v2.md#5-model-workload-classes) for identity evidence and the
 distinction between catalog verification and post-reload picker/Diagnostics checks.
 
@@ -375,7 +396,7 @@ distinction between catalog verification and post-reload picker/Diagnostics chec
 | `infra-a-deployment-reviewer-v2.agent.md` | Azure Deployment Reviewer v2 | `GPT-6 Astra (copilot)` | Read-only gate on resolution, preview, cost, permissions, secrets, isolation, recovery, residency, and the deployment YAML. `Ready` is not deployment approval |
 | `ops-a-repository-operator-v2.agent.md` | **Repository Operator v2** | `GPT-6 Astra (copilot)` | Sole Git/PR/release executor; one mode per invocation: `prepare_branch`, `checkpoint_commit`, `publish_branch`, `open_or_update_draft_pr`, `reply_to_pr_comment`, `resolve_review_thread`, `mark_pr_ready`, `release`. Attended approval may cover a sequence; explicit unattended opt-in permits one frozen final local checkpoint only. Verify expected state and actual results. No force-push, history rewrite, ref deletion, merge/close, or implicit publication |
 
-**Approved landing uses one executor.** Vanguard's unchanged twenty-seven-leaf allowlist includes the
+**Approved landing uses one executor.** Vanguard's twenty-eight-leaf allowlist includes the
 operator, so it can request approved staging/commits, pushes, draft PR updates, review replies, and
 named thread resolutions without handing back ordinary commands. Explicit conversational approval
 authorizes the exact proposal, not adjacent actions; an unattended envelope is not required when the
@@ -424,7 +445,7 @@ Reasoning: [agent-toolbelt-v2.md](agent-toolbelt-v2.md) §2 *The Operator Bounda
 
 | Live file | Agent | Model | Role |
 | --- | --- | --- | --- |
-| `meta-a-toolbelt-keeper-v2.agent.md` | **Toolbelt Keeper v2** | `GPT-6 Astra (copilot)` | Maintains live customizations, mirrors, generations and documentation; named skill bundles have separate roots and hash checks. Whole-generation archive/restore only, never a live prompts subfolder or Git mutation. **Outside Vanguard's unchanged 27-leaf allowlist** |
+| `meta-a-toolbelt-keeper-v2.agent.md` | **Toolbelt Keeper v2** | `GPT-6 Astra (copilot)` | Maintains live customizations, mirrors, generations and documentation; named skill bundles have separate roots and hash checks. Whole-generation archive/restore only, never a live prompts subfolder or Git mutation. **Outside Vanguard's 28-leaf allowlist** |
 
 **That plan for two shared v1 customizations is half superseded.** `Toolbelt Keeper` was to stay v1 and
 serve both rosters; **it could not survive the v1 archive**, and it had no vocabulary for generations —
@@ -447,12 +468,13 @@ authoring; later new specifications still receive their own audit. Shared skills
 independent invocations or widen any role's tools. Reload and check Chat Diagnostics before a fresh
 project run; static/offline checks do not prove runtime skill loading or unattended execution.
 
-Two new convention documents carry what used to be copied into every agent:
+Shared convention documents carry mechanics and references outside the agent charters:
 
 | Document | Contains |
 | --- | --- |
 | [agent-protocol-v2.md](agent-protocol-v2.md) | Shared targets, compact packet/report fields, progress budgets, mechanical evidence, risk routing, ownership/safety gates, and batched continuity for future v2 runs |
 | [agent-toolbelt-v2.md](agent-toolbelt-v2.md) | Role map, accepted workflow defaults, routing examples, evidence utility usage, and clearly dated migration/benchmark history |
+| [owner-decision-profile-r1.md](owner-decision-profile-r1.md) | Confirmed decision preferences, contextual examples, tentative interpretations and the interview source record; no project or operation authority |
 
 **Three differences are worth knowing before reading v1 below**, because the v1 sections describe the
 older mechanism and are still correct *for v1*:
