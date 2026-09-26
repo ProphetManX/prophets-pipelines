@@ -1,17 +1,18 @@
 # Agent Toolbelt v2 - Workflow And Role Map
 
 **Status:** **Active selector generation.** v1 is archived for rollback, not deleted. **Created:**
-2026-08-29. **Revised:** 2026-09-21 - bounded owner delegation, an interview-derived decision profile,
-and morning review. **Owner:** G. Gordon Nasseri (ProphetManX). **Roster:** 30 v2 agents: `Vanguard v2`,
+2026-08-29. **Revised:** 2026-09-26 - approved-design specification alignment and explicit preflight
+delegation status. **Owner:** G. Gordon Nasseri (ProphetManX). **Roster:** 30 v2 agents: `Vanguard v2`,
 twenty-eight leaves in its allowlist, and `Toolbelt Keeper v2` deliberately outside it.
 
-**Future runs only.** On 2026-09-21 the owner confirmed the other agent window had finished and
-authorized the new stand-in and its Vanguard integration. `Owner Delegate v2` adds report-only judgment,
-not execution or orchestration. Existing agent model pins/tools, product repositories, registered
-skills and archive generations are unchanged. This does not restart a stopped run, extend an expired
-envelope or authorize product/Git operations. Vanguard remains the orchestrator, Repository Operator
-the sole Git/PR executor, and reviewers independent. Static routing and offline checks do not prove
-runtime delegation, selector/skill loading, live operations or release readiness. See
+**Future runs only.** On 2026-09-26 the owner confirmed all agents idle and authorized a narrow
+approved-design expectation-alignment route. Owner Delegate remains report-only; Vanguard independently
+checks eligibility and records an immutable revision; Test Designer authors and Test Auditor reviews.
+Those four charters and the registered validation skill/template now agree with the shared protocol.
+Roster, models/tools, decision profile, product repositories and archives are unchanged. No stopped run
+is restarted, expired envelope renewed or product/Git operation authorized. Vanguard remains the
+orchestrator, Repository Operator the sole Git/PR executor, and reviewers independent. Static routing
+and offline checks do not prove runtime delegation, selector/skill loading or release readiness. See
 [Owner Delegation](#13-owner-delegation) for opt-in, calibration and the morning record.
 
 The selector cutover and earlier smoke evidence are recorded in §§6, 9, and 10 as dated history, not
@@ -55,10 +56,10 @@ not something still running.
 
 | v1 agent | Target | Disposition |
 | --- | --- | --- |
-| `Vanguard` | **`Vanguard v2`** | One shared acceptance revision per slice; bounded delivery and independent verification. Presents exact Git/PR proposals for owner confirmation; an explicit unattended opt-in may delegate final verified local-checkpoint candidate selection. Delegates execution to the sole operator. Sole selectable project orchestrator |
+| `Vanguard` | **`Vanguard v2`** | One shared acceptance revision per slice; explicit delegation status at preflight, independent eligibility and immutable approved-design alignment revisions. Bounded delivery and independent verification; exact Git/PR proposals or an explicit local-checkpoint opt-in, with execution delegated to the sole operator. Sole selectable project orchestrator |
 | `TDD Lead` | **`Vanguard v2`** | **Retired into it.** It duplicated `Vanguard`'s coverage and tripped the description-overlap rule; v2 has exactly one orchestrator. **Archived 2026-08-29 with the rest of v1**, which is what actually retired it — before that it was merely planned |
 | `Session Scribe` | **`Session Scribe v2`** | Resume/checkpoint/wrapup at meaningful session boundaries; compact evidence links, no per-repair invocation or default whole-history sweep |
-| None | **`Owner Delegate v2`** | Added 2026-09-21. Resolves explicitly delegated preference choices within approved design; writes only its invocation report. Vanguard independently verifies admissibility and routes execution; human review calibrates the profile. No product, operation or profile-write authority |
+| None | **`Owner Delegate v2`** | Added 2026-09-21. Resolves explicitly delegated preference choices and separately opted-in approved-design specification alignment; writes only its report. Current approved requirements fix replacements, never implementation output. Vanguard verifies admissibility; existing authors/reviewers act. No product, operation or profile-write authority |
 | `Toolbelt Keeper` | **`Toolbelt Keeper v2`** | **Exists now.** Rewritten against the protocol for **four** locations — the flat live selector, the flat current mirror, the versioned generation archive, and the documentation — with whole-generation archive and restore. It maintains customization files rather than participating in a run, so it stays **outside every orchestrator's allowlist** and `Vanguard v2` cannot invoke it: changing the toolbelt remains a separate session. **The earlier plan to keep one shared v1 copy is superseded** — a shared v1 agent could not survive the v1 archive, and it had no vocabulary for generations |
 
 ### Discovery, requirements, and shaping
@@ -79,9 +80,9 @@ not something still running.
 
 | v1 agent | Target | Disposition |
 | --- | --- | --- |
-| `Test Designer` | `Test Designer v2` | Focused regression specifications for approved behavior and material risks; specification files and their local declarations only. Observes outcomes honestly, including pre-existing green; never manufactures red or fills a matrix with invented requirements |
+| `Test Designer` | `Test Designer v2` | Focused specifications and exact authorized expectation revisions; specification files and local declarations only. Applies the recorded delta, preserves valid regressions and prior evidence, and supplies a candidate for independent audit. No manufactured red or invented requirements |
 | — | **`Test Harness Engineer v2`** | `scaffold` and `maintain` retain exact test-project helper paths. Separate `validation-setup` owns enumerated workspace-task/run-local validator paths against an approved plan, with independent setup audit and parent baseline/freeze |
-| `Test Auditor` | `Test Auditor v2` | Independent specification/harness and setup review. `Ready for baseline` is distinct from `Ready for implementation`; no new execution tools, authored fixes or self-approved gates |
+| `Test Auditor` | `Test Auditor v2` | Independent specification/harness, exact alignment-delta and setup review against approved requirements. `Ready for baseline` is distinct from candidate-bound `Ready for implementation`; no execution tools, authored fixes or self-approved gates |
 | `Implementer` | `Implementer v2` | Smallest complete production solution, including scoped SQL/XML and exact supporting-type bodies under a frozen reviewed contract. Never changes contract definitions/docs, tests, test infrastructure, validation setup or project/build files |
 | `Code Reviewer` | `Code Reviewer v2` | Correctness review and PR-comment merit triage with target IDs/head evidence. Draft replies go through Vanguard for owner approval and operator execution; the reviewer never posts or resolves. Optional improvements cannot expand acceptance |
 | `Refactorer` | `Refactorer v2` | Concrete behavior-preserving production changes only. Requires input-valid green evidence and identical test identities/outcomes/counts; ordinary mechanical corrections remain local |
@@ -173,7 +174,7 @@ resume an existing run. Each begins with normal preflight and one shared accepta
 | Missing owner, tool, required skill or operation authority | Do not claim unattended readiness; resolve during preparation or continue only independent approved work. No charter override, silent selection change or settings workaround |
 | Database work needing separate approval | Source plumbing is not permission to connect, provision, publish, create/drop/reset, or certify. Establish exact operation authorization, explicit database ownership/cleanup bounds, and relevant lifecycle/concurrency/security review. Keep unapproved operations blocked; synthetic offline checks may proceed only within their own scope |
 
-Missing target/mode/paths/evidence blocks delegation. A production bypass or changed specification blocks
+Missing target/mode/paths/evidence blocks delegation. A production bypass or unauthorized specification change blocks
 acceptance even if tests pass. An ordinary local correction does not reset budgets or require fresh
 approval; a real semantic/scope decision does. These examples check routing rules, not live delegation.
 
@@ -551,7 +552,7 @@ Dimensions 1, 2, and 9 are disqualifying at any failure. The rest are comparativ
 | Build order | v2 was built beside v1, and v1 was left byte-unchanged throughout that build. **Superseded 2026-08-29 at the selector layer:** v1 now lives in `conventions/toolbelt/archive/v1/` rather than in the picker, so "beside" no longer describes what a human sees. The benchmark-then-switch gate for the **default** is unchanged |
 | Generations | Live prompts and their flat mirror carry **exactly one** generation. Named shared skills have separate live/mirror roots. Future archives include owned skill snapshots under `skills/` as well as root agents and `prompts/`, all manifest-covered. The v1 archive remains unchanged with no skills. Archive and rollback move a whole named generation after manifest validation; never overwrite a generation or copy an archive into the live prompts root. See the archive scheme for dependency compatibility |
 | Minimum complete scope | One immutable shared acceptance target per coherent slice: behavior, invariants, exclusions, owners, checks, risk gates, authorization, ceilings. No speculative abstractions, extension points, configuration, providers, retries, or lifecycle features. Necessary safety/correctness are included |
-| Owner delegation | Advisory by default; a bounded owner-approved run clause enables decisions within already-discussed design. Fixed profile identity, concrete examples, finalized reports and independent parent eligibility checks precede continuation. No new workflow, operation permission or waived gate |
+| Owner delegation | Advisory by default; record/reconcile status at preflight, preserving valid opt-in without renewing expired authority. A bounded current-run clause enables named decisions; approved-design specification alignment must be explicitly included. Fixed profile, evidence, independent eligibility and revision/audit/baseline gates; no new workflow, operation permission or waived gate |
 | Default routing | Understood reversible local work, including production, goes to its existing owner and focused independent verification. Add regression authors only for a real specification need; discovery/architecture/full review are not automatic. Public contracts, architecture, security, consequential operations and releases retain relevant specialist gates |
 | Requirements flow | Discovery captures intent → Architect writes → Reviewer attacks → one automatic repair pass → Vanguard consumes. **Vanguard drives every leg** — neither leaf holds an `agent` tool, so they never invoke each other |
 | Discovery artifacts | `docs/product-brief.md`, `docs/decision-log.md`, `docs/open-questions.md`, owned solely by `Product Discovery v2`. A non-owner leaf **reports** a proposed question and the stream it blocks; Vanguard routes it to Discovery to deduplicate and append |
@@ -738,6 +739,12 @@ excuse incidental test drift. Inventory selectors must include inherited/linked 
 inputs, generated assets used by the check, and toolchain inputs as relevant. The parent checks that
 selection is complete; a digest proves bytes, not that the selected set was sufficient.
 
+An authorized approved-design alignment creates a new immutable revision and, after independent audit
+and parent verification, a new specification baseline. Preserve the predecessor, failures and exact
+assertion delta. Membership stays fixed; outcome changes are evaluated against the new revision, not
+silently overwritten or forced into unchanged-outcome equality. No evidence-helper change or validator
+authority follows from this route; see [the alignment procedure](agent-protocol-v2.md#approved-design-specification-alignment).
+
 From the pipeline repository root, with paths and check configuration supplied by the shared target:
 
 ```powershell
@@ -799,11 +806,15 @@ skill. The repository link remains readable even before the installed skill is v
 
 | Owned skill | Live bundle | Repository mirror | Purpose |
 | --- | --- | --- | --- |
-| `prophetsway-validation` | `%USERPROFILE%/.agents/skills/prophetsway-validation/` | [skills/prophetsway-validation/SKILL.md](skills/prophetsway-validation/SKILL.md) and its `assets/` | Capability readiness, approved validation-plan template, setup audit/freeze and AgentEvidence usage |
+| `prophetsway-validation` | `%USERPROFILE%/.agents/skills/prophetsway-validation/` | [skills/prophetsway-validation/SKILL.md](skills/prophetsway-validation/SKILL.md) and its `assets/` | Capability readiness, validation-plan template, authorized alignment evidence, separate setup audit/freeze and AgentEvidence usage |
 
 The bundle has `SKILL.md` and `assets/validation-plan.md`; shared AgentEvidence scripts remain in
 `conventions/scripts/`, not copied into the skill. It uses `user-invocable: false`: available for
 relevant agent work, not another manual slash command. Existing agent picker visibility is unchanged.
+
+The 2026-09-26 update adds exact alignment-revision and prior-failure bindings, explicit delegation
+status, and rejection of unlisted assertion changes. It preserves separate setup authority and
+independent audits; no shared evidence helper or project validator changed.
 
 Toolbelt Keeper edits the named live bundle first, then mirrors all its files by relative path using
 `Copy-Item`, documents the change and checks both name sets and SHA-256. Compare this registered skill
@@ -832,7 +843,9 @@ worker that can approve its own work. The authority mechanics live in
 | --- | --- |
 | `proj-a-owner-delegate-v2.agent.md` | Live/mirrored charter; `Owner Delegate v2`, scalar Astra pin, `read/search/edit` with report-only writes and no child agents. Selectable for attended advisory discussion and invocable by Vanguard |
 | [owner-decision-profile-r1.md](owner-decision-profile-r1.md) | Versioned reference with ten confirmed preferences, ten interview question/answer records, three contextual import examples and a separately tentative inference. Not an auto-loaded instruction, skill or operation grant |
-| `proj-a-vanguard-v2.agent.md` | The sole changed existing customization: adds the delegate, independent eligibility checks, decision register and Scribe packet content; tools/model remain unchanged |
+| `proj-a-vanguard-v2.agent.md` | Explicit preflight delegation status, independent eligibility checks, immutable alignment revisions, decision register and Scribe packet content; tools/model remain unchanged |
+| `tdd-a-test-designer-v2.agent.md` / `tdd-a-test-auditor-v2.agent.md` | Separate exact expectation authoring and independent candidate-bound audit; no production, setup, gate or path authority added |
+| [validation skill](skills/prophetsway-validation/SKILL.md) and [plan template](skills/prophetsway-validation/assets/validation-plan.md) | Revision-specific evidence and preserved failures, with setup authorization/audit kept separate |
 | Current run's `run.md` and invocation reports | Exact questions/examples, alternatives, decisions, authority/rationale, actual work and owner review. Outside repositories under the existing run-artifact policy |
 
 The profile lives with the shared protocol documents rather than in a new live-prompts subfolder or
@@ -852,9 +865,11 @@ a preparation template, not an approved envelope or executable command:
 Owner delegation:
   Designed components and authoritative design: <exact target sections>
   Permitted decision classes or choices: <bounded list inside that design>
+  Specification alignment: <explicitly include approved-design-specification-alignment in that list, or exclude it>
   Profile: <absolute R1 path and generated SHA-256 evidence>
   Exclusions: <protocol exclusions plus any owner-specific hold points>
   Limits: <unchanged paths, authors, operations, checks, reviews and budgets>
+  Validity: <this run's identity and applicable expiry/revocation limits>
   Owner approval/source: <actual confirmation of this clause>
 ```
 
@@ -863,6 +878,36 @@ preferences but never invent operation permission, requirements, data-conflict p
 Already-delegated contract details remain with their existing author/reviewer. Personal code review is
 not a default gate on a designed dependent component; required independent reviews and explicit owner
 hold points remain gates.
+
+Preflight and resume state `Owner delegation status: ACTIVE | ADVISORY_ONLY | EXPIRED | REVOKED |
+UNRESOLVED` in the summary and run record, with the exact approved current-run clause and categories.
+Reconcile the owner request, target/envelope and relevant handoff. Recover a still-valid opt-in lost
+from a packet, or block it as unresolved; never silently downgrade it. No automatic renewal or reuse
+of another run's approval. A handoff and this maintenance request are not project-run authority.
+
+### Approved-Design Alignment
+
+`approved-design-specification-alignment` is a separate opt-in decision category, not implied by generic
+preference authority. Current explicit owner-approved requirements must fix the exact replacement and
+directly contradict the old expectation. The approved design, not implementation output, controls.
+No new behavior, weakened approved guarantee, ambiguous requirement, conflicting approval or scope
+expansion qualifies. Valid regressions go to the production author unchanged; ordinary corrections and
+direct exact owner-approved revisions need no delegate gate.
+
+Record the question and literal before/after expectations for each exact file/test/assertion, governing
+requirement and approval source, prior baseline/failures and current generated evidence. Delegate
+decides report-only; Vanguard independently checks the decisive sources and current authority before
+creating a new immutable alignment revision that preserves all other limits. Test Designer applies
+only that delta, Test Auditor independently reviews the candidate, and Vanguard verifies the audit
+binding and actual diff, establishes the new revision-bound baseline and executes required checks.
+Retain test membership, filters, reviews, original evidence and every unrelated expectation, including
+others in the same file. A permitted filename is not permission to rewrite all its assertions.
+
+This removes repeated approval of a settled product decision, not independent verification. No silent
+rebaseline, skipped test, relaxed gate or expired-run restart. Missing readiness can still block an
+eligible alignment: a frozen validator/task/plan or setup-binding change needs its separately authorized
+setup revision, independent audit and fresh baseline. Neither the delegate nor Test Designer repairs it.
+Full authority and sequencing live in [protocol section 4](agent-protocol-v2.md#approved-design-specification-alignment).
 
 ### Morning Record And Learning
 
@@ -878,6 +923,11 @@ unchanged after completion. On feedback, capture agreement/correction and why, d
 corrections from general rules, and ask a focused follow-up only when the reason is absent. Proposed
 learning is not a profile update. Owner-confirmed changes go through Keeper between runs as a new
 profile revision; workers cannot adjust the authority under which they are currently operating.
+
+Alignment entries additionally retain exact assertion before/after expectations, approved requirements
+and approval provenance, original and new revisions/baselines, prior failures, actual edits, independent
+audit and executed verification. Include denied/ineligible questions and decisions not acted on. Morning
+review must distinguish a permissible decision from an applied and verified change.
 
 ### Offline Routing Cases
 
@@ -896,7 +946,7 @@ requires separately identified advisory replays or a fresh authorized pilot and 
 | OD07 | A proposed interface member expresses an expressly delegated, approved capability | Existing contract author/reviewer route; member count is not a new semantic permission |
 | OD08 | An unexpected component interaction, workflow or public behavioral promise is needed | Ask the owner before dependent work; profile familiarity is not design approval |
 | OD09 | Pending personal review of A; A passed required gates without major design issues; B's design is approved | B may proceed under P02 unless the owner expressly established a hold point |
-| OD10 | An unresolved blocking review, missing mandatory check or frozen validator/specification change is presented as a preference | Preserve the stop/revision route; delegate cannot waive or repair the gate |
+| OD10 | A blocking review, missing mandatory check, frozen setup change or specification change outside the explicit alignment category is presented as a preference | Preserve the stop/revision route; delegate cannot waive or repair the gate |
 | OD11 | Old-file replay would overwrite a later user correction, but the project's conflict policy is absent | Needs owner; E03 is unresolved, not blanket file-wins or superuser permission |
 | OD12 | A project has explicitly adopted E01/E02 and a small input has malformed structure | Apply its approved prevalidation/no-write rule; valid structure still needs per-record business validation. Profile alone does not establish a BPA requirement |
 | OD13 | Diagnostic or retry feature sounds consistent with P06/P07 but expands the approved target | Advisory proposal or owner question only; optionality does not create scope |
@@ -904,12 +954,39 @@ requires separately identified advisory replays or a fresh authorized pilot and 
 | OD15 | Owner corrects a decision and supplies their reasoning | Preserve original report; record correction and proposed generalization separately. Keeper applies confirmed learning between runs, never mid-run self-edit |
 | OD16 | The delegate says DECIDED but its report lacks a concrete case or cites unsupported facts | Parent rejects continuation; a label or confidence score is not independent verification |
 
+#### Alignment Routing Cases
+
+AD01/AD02 replay the owner's supplied Q-M3-01 incident as offline examples, not freshly inspected Logger
+state, test execution or authority for its old run. Every positive case assumes a new applicable run,
+the explicit alignment grant, inspected current approvals and unchanged file/author/operation/budget
+bounds. Actual packets must record full literal old/new property lists and exact test/assertion paths,
+not the shorthand used here. These checks exercise the instructions, not runtime model behavior.
+
+| ID | Case | Required result |
+| --- | --- | --- |
+| AD01 | Approved `LogFailureStage.LabelCheck = 3`; stale exact enum expectation `[1, 2]` | Eligible exact replacement `[1, 2, 3]`, preserving existing values and the name/value mapping; delegate report -> independent Vanguard eligibility/new revision -> Designer -> Auditor -> verified new baseline and required checks |
+| AD02 | Approved read-only `LogFailureReport.CoreCaptureFailureCount`; stale exact report-property list | Eligible exact old list plus only that property; preserve every old member and read-only/type guarantees. Same independent revision route; no new behavior inferred |
+| AD03 | Approved enum value is `3`, but implementation uses `4` | Valid test remains intact; fix production under existing authority. Never align the expectation to `4` |
+| AD04 | Approved report property is read-only, but implementation exposes a setter | Preserve the read-only assertion and fix production; cannot delete or weaken the guarantee |
+| AD05 | A valid count assertion expects `2` under the approved rule; implementation returns `0` | Production defect, not stale design. No expectation change or baseline refresh to accept `0` |
+| AD06 | Candidate uses containment instead of exact equality, drops an old member, or changes another assertion in the same allowed file | Auditor rejects the unapproved/weakening delta; filename scope is not assertion scope and a green run does not cure it |
+| AD07 | Replacement needs new behavior, security/ownership policy, ambiguous interpretation or selection between conflicting approvals | Needs human decision; timestamps, profile preferences and implementation output cannot choose it |
+| AD08 | Only generic preference delegation exists, or paths/author/operations/remaining budgets do not permit the revision | No alignment authority; no new grant, budget reset or operation inferred from a decision |
+| AD09 | Specifications already drifted, evidence is missing/stale, or decision/request/target identities do not match | Block and preserve the evidence; no retroactive approval or silent rebaseline |
+| AD10 | Exact alignment is eligible but the frozen validator/task/plan or setup binding must change | Setup-dependent work stays blocked until the separate authorized setup revision/audit/baseline process; no validator repair by delegate, Designer or Implementer |
+| AD11 | Proposed route overwrites old baseline/failures, skips or replaces a test, narrows a filter, omits a review or accepts a stale audit | Reject; retain original evidence, membership and required gates, with a newly audited revision-bound baseline |
+| AD12 | A valid approved current-run opt-in is missing from a reconstructed packet | Recover and carry the exact approved clause, or mark `UNRESOLVED` and block dependent delegated work; never silently downgrade |
+| AD13 | Authority is expired, revoked or belongs to another run | No automatic renewal or continuation; fresh applicable owner authority is required |
+| AD14 | Exact human approval already covers the revision, or the author is correcting an authorized mechanical typo | Use the existing author/verification route without a delegate gate; a semantic revision still needs its independent audit/new baseline |
+| AD15 | This maintenance or the old Q-M3-01 approval is cited to restart an expired project run | Refuse; future-only customization authority is not project-run authorization |
+
 ### Validation And Remaining Checks
 
 Check parsed frontmatter, unique display names, exact allowlists, single model pins, read/report-only
 tools, local document links, full current name/hash parity and separately registered skill dependencies.
 Review the cases above against actual wording, particularly conditional decisions, missing authority,
-profile drift, refusal, learning and the before-action record. Existing generation files remain immutable.
+profile drift, refusal, learning, exact alignment versus genuine regression, and the before-action record.
+Check preflight opt-in recovery and expiry separately. Existing generation files remain immutable.
 
 The verifier is Vanguard for decision admissibility, existing independent specialists for technical
 work, and the owner for judgment calibration. No new validator agent is needed; none of these roles

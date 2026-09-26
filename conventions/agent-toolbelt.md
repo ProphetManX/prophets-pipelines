@@ -4,9 +4,20 @@
 > building, changing, or debugging agent customizations. Do not add it to `AGENTS.md` — it
 > is administrative context, irrelevant to day-to-day coding sessions.
 
-**Built:** 2026-08-08 · **Revised:** 2026-09-21 · **Owner:** G. Gordon Nasseri (ProphetManX)
+**Built:** 2026-08-08 · **Revised:** 2026-09-26 · **Owner:** G. Gordon Nasseri (ProphetManX)
 **Covers:** the customization roster and the `AGENTS.md` conventions system across 8 repos —
 **30 active v2 agents**, **26 archived v1 agents**, **2 active prompts**, and **1 shared skill bundle**.
+
+**2026-09-26 approved-design alignment:** after the owner confirmed all agents idle, the shared protocol,
+Owner Delegate, Vanguard, Test Designer, Test Auditor and the registered validation skill/template gained
+the explicit future-run `approved-design-specification-alignment` category. Current approved design fixes
+the exact expectation replacement; implementation output never does. Vanguard independently verifies
+eligibility and records a new immutable revision; Designer authors, Auditor reviews, then Vanguard
+verifies the binding/diff and establishes the new baseline with required checks. Previous failures and
+baselines remain intact. Preflight makes delegation status explicit, preserving valid opt-in without
+renewing expired authority. No new tools/models, profile revision, roster member, project operation or
+archive change. Validator changes retain their separate authorized setup process. See the
+[workflow and allowed/refusal cases](agent-toolbelt-v2.md#approved-design-alignment).
 
 **2026-09-21 owner-delegate addition:** the owner confirmed the other agent window had finished and
 authorized the stand-in after a concrete interview. `Owner Delegate v2` is a report-only decision leaf;
@@ -336,7 +347,7 @@ project state. The workflow update's static/offline checks do not certify live d
 
 | Live file | Agent | Model | Role |
 | --- | --- | --- | --- |
-| `proj-a-vanguard-v2.agent.md` | **Vanguard v2** | `GPT-6 Astra (copilot)` | Shared targets, capability/setup readiness and independent verification. Adds Owner Delegate to a 28-leaf allowlist and checks bounded decisions before continuation; tools and exact Git/PR/local-checkpoint rules unchanged |
+| `proj-a-vanguard-v2.agent.md` | **Vanguard v2** | `GPT-6 Astra (copilot)` | Shared targets, explicit delegation status/readiness, independent eligibility and immutable alignment revisions; separate authors, audit and baseline execution. Same 28-leaf allowlist, tools and Git/PR/local-checkpoint rules |
 | `proj-a-product-discovery-v2.agent.md` | Product Discovery v2 | `GPT-6 Astra (copilot)` | **New role.** Captures intent; owns `docs/product-brief.md`, `docs/decision-log.md`, `docs/open-questions.md` |
 | `proj-a-solution-architect-v2.agent.md` | Solution Architect v2 | `GPT-6 Astra (copilot)` | Architecture and requirements; one automatic evidence-backed repair pass |
 | `proj-a-requirements-reviewer-v2.agent.md` | Requirements Reviewer v2 | `GPT-6 Astra (copilot)` | **New role.** Read-only adversary; writes only its own invocation report |
@@ -346,7 +357,7 @@ project state. The workflow update's static/offline checks do not certify live d
 
 | Live file | Agent | Model | Role |
 | --- | --- | --- | --- |
-| `proj-a-owner-delegate-v2.agent.md` | **Owner Delegate v2** | `GPT-6 Astra (copilot)` | Bounded decisions under an explicit run clause and pinned profile; read/search plus report-only edit, no execution or child agents. Concrete examples, independent parent eligibility checks, morning review and owner-confirmed learning |
+| `proj-a-owner-delegate-v2.agent.md` | **Owner Delegate v2** | `GPT-6 Astra (copilot)` | Bounded preferences and separately opted-in approved-design expectation alignment; read/search plus report-only edit, no execution or child agents. Exact evidence, independent parent eligibility, morning review and owner-confirmed learning |
 
 **Slice 2a — grounding and shaping**, which made `Vanguard v2`'s `GROUND` and `SHAPE` states executable:
 
@@ -365,9 +376,9 @@ project state. The workflow update's static/offline checks do not certify live d
 
 | Live file | Agent | Model | Role |
 | --- | --- | --- | --- |
-| `tdd-a-test-designer-v2.agent.md` | Test Designer v2 | `GPT-6 Astra (copilot)` | Focused specifications for approved behavior and material risks, inside specification files only. No matrix-invented requirements or manufactured red; observed results and generated baseline links |
+| `tdd-a-test-designer-v2.agent.md` | Test Designer v2 | `GPT-6 Astra (copilot)` | Focused specifications and exact authorized alignment deltas inside specification files only; valid regressions and prior evidence preserved. Candidate diff/results go to independent audit, never self-approved baseline replacement |
 | `tdd-a-test-harness-engineer-v2.agent.md` | **Test Harness Engineer v2** | `GPT-6 Astra (copilot)` | Scaffold/maintain keep exact test-project helper paths. Separate validation-setup authors exact task/run-local validator paths from an approved plan; independent audit and parent baseline/freeze required |
-| `tdd-a-test-auditor-v2.agent.md` | Test Auditor v2 | `GPT-6 Astra (copilot)` | Independent specification/harness and validation-setup review. Setup `Ready for baseline` does not replace specification `Ready for implementation`; no execution tools added |
+| `tdd-a-test-auditor-v2.agent.md` | Test Auditor v2 | `GPT-6 Astra (copilot)` | Independent specification/harness, exact alignment-delta and validation-setup review. Candidate-bound `Ready for implementation` remains separate from setup `Ready for baseline`; no execution tools or authored fixes |
 | `tdd-a-implementer-v2.agent.md` | Implementer v2 | `GPT-6 Astra (copilot)` | Scoped production implementation including SQL/XML and enumerated supporting-type bodies/private state. Approved contract definitions/docs remain fixed; no tests, test infrastructure, validation setup or project/build files |
 | `tdd-a-code-reviewer-v2.agent.md` | Code Reviewer v2 | `GPT-6 Astra (copilot)` | Correctness review and PR-comment merit triage with comment/thread IDs and inspected head. Drafts replies for Vanguard's owner-confirmation flow; never posts/resolves or treats its verdict as authority |
 | `tdd-a-refactorer-v2.agent.md` | Refactorer v2 | `GPT-6 Astra (copilot)` | Concrete behavior-preserving production correction only; valid green baseline and identical test identities/outcomes/counts plus unchanged specifications. Mechanical corrections stay local |

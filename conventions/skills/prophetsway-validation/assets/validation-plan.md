@@ -9,6 +9,7 @@ an execution command, or evidence that a check passed. Do not copy mutable value
 - Acceptance target and immutable revision: `<path and revision>`
 - Repository root and external run directory: `<exact paths>`
 - Owner approval/source and applicable unattended envelope: `<quoted authority or attended scope>`
+- Owner delegation status and classes: `<ACTIVE / ADVISORY_ONLY / EXPIRED / REVOKED / UNRESOLVED; exact current-run clause/source, profile identity, limits and expiry; explicitly include/exclude alignment>`
 - Permitted setup writer and exact allowed setup paths: `<owner and file list, no folders/globs>`
 - Independent setup reviewer: `Test Auditor v2`
 - Parent execution route: `<existing task/test tool and required prerequisites>`
@@ -36,10 +37,16 @@ author when existing verified checks already satisfy the target.
 - Setup files and evidence helper/tool identities to freeze: `<exact paths>`
 - Original executed test identities/outcomes by approved target: `<baseline record after setup audit>`
 - Permitted later specification additions: `<authorized specification paths/revision and audit binding>`
+- Specification alignment, if applicable: `<exact immutable revision, predecessor/baseline/failures, assertion-specific before/after delta, approved design/source, direct approval or category grant/decision/eligibility record, candidate/audit binding>`
 - Approved skip identities and reasons: `<exact identities or none>`
 
 Do not transcribe hashes. A pending real baseline is marked pending and blocks readiness; no test total
 is guessed. Protected baselines and execution-input snapshots have different lifetimes.
+
+An alignment grants only the exact expectation delta under protocol section 4. Preserve test identities,
+all other assertions and historical results; keep previous baselines/failures and separately bind the
+audited new baseline. It grants no setup change, skip, filter narrowing or review waiver. Record valid
+current-run opt-in explicitly; do not silently drop it or renew expired/different-run authority.
 
 ## Checks
 
@@ -54,6 +61,7 @@ Project, target, configuration and runner:
 Exact filter/selection and source of its approval:
 Expected outcome (including any approved new-specification red):
 Protected original identities and permitted added-case binding:
+Authorized alignment delta and old/new revision/evidence binding, if applicable:
 Inputs/tool/environment assumptions:
 Fresh evidence/TRX/coverage paths beneath this run's evidence directory:
 Build-only versus executed-test classification:
@@ -73,10 +81,12 @@ being interpreted optimistically. Compiling an example or snippet does not autho
 | Failed command or incomplete result | Reject | `<record>` |
 | Zero executed tests | Reject | `<record>` |
 | Unapproved skipped identity | Reject | `<record>` |
-| Changed protected specification or authority input | Reject; no rebaseline | `<record>` |
+| Changed protected specification or authority input outside the exact approved revision | Reject; no rebaseline | `<record>` |
 | Removed/replaced original test, including equal-count substitution | Reject | `<record>` |
 | Changed frozen setup, or repointed pre-existing task | Reject | `<record>` |
 | Missing independent review, or review bound to different inputs | Reject freeze | `<record>` |
+| Alignment without its exact authority/eligibility/revision binding, or with an unlisted assertion delta | Reject; an allowed filename is insufficient | `<record>` |
+| Prior baseline/failure overwritten, or an unrelated regression excused by the new revision | Reject | `<record>` |
 
 Synthetic records prove validator behavior only. They are never a product baseline or passing product
 test result. Rejection cases are acceptance obligations, not a grant to edit the shared evidence helpers.
@@ -87,9 +97,13 @@ test result. Rejection cases are acceptance obligations, not a grant to edit the
 2. Test Auditor reviews actual setup/plan and returns `Ready for baseline` bound to exact inputs.
 3. Parent independently runs the approved checks and real baseline, checks actual identities/outcomes,
    and freezes setup/authority input hashes. No dependent product/test authoring before this gate.
-4. Later new specifications receive a separate `Ready for implementation` audit tied to their revision.
+4. Later new or explicitly revised specifications receive a separate `Ready for implementation` audit tied to their revision.
    Freeze requires a verified completed review, not a filename or keyword match.
 5. Final verification checks protected inputs, actual membership/outcomes and all target-required gates.
+
+For alignment, the parent independently verifies the exact assertion delta and completed audit/candidate
+binding before accepting the new specification baseline and running required checks. Compare actual
+outcome changes under that revision without rewriting old failures or waiving required green gates.
 
 A frozen-setup change requires an explicitly authorized new target revision, fresh independent setup
 review and baseline. Preserve old evidence and do not modify the validator during implementation.

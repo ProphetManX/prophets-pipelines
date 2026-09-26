@@ -1,11 +1,16 @@
 # Agent Protocol v2 - Shared Delegation Mechanics
 
-**Applies to:** the active v2 roster. **Revised:** 2026-09-21. **Owner:** G. Gordon Nasseri (ProphetManX).
+**Applies to:** the active v2 roster. **Revised:** 2026-09-26. **Owner:** G. Gordon Nasseri (ProphetManX).
 
 This revision governs **new runs only**. Existing invocations and continuations retain their recorded
 protocol, acceptance revision, budgets, and gates until the owner explicitly closes or re-scopes them.
 Toolbelt changes require confirmation that affected agents are idle; old STARTED records alone cannot
 prove activity or inactivity. Never interrupt a run to apply a customization change.
+
+On 2026-09-26 the owner confirmed all agents idle and authorized the approved-design specification
+alignment category in section 4. It requires explicit future-run delegation, independent eligibility
+verification, separate specification authorship/audit and revision-bound evidence. This maintenance
+grants no retroactive authority, project edit, validator repair or restart of an expired run.
 
 On 2026-09-21 the owner confirmed the other agent window had finished and authorized creation and
 wiring of `Owner Delegate v2` after the decision-profile interview. This enables the bounded delegation
@@ -39,8 +44,11 @@ the minimum, not optional extras. If they need a semantic decision or extra auth
 work and name the decision; neither silently omit them nor expand the target.
 
 Specification changes require an explicitly authorized new revision and baseline, preserving previous
-evidence. Findings and passing implementations never rewrite acceptance. Optional improvements are
-nonblocking deferred work, not new requirements or grounds for an automatic second pass.
+evidence. Authority is direct owner approval or section 4's expressly delegated
+`approved-design-specification-alignment` route, never implementation output. That category aligns
+expectations to already-approved behavior; it cannot change that behavior. Findings and passing
+implementations never rewrite acceptance. Optional improvements are nonblocking deferred work, not
+new requirements or grounds for an automatic second pass.
 
 ### Risk-Proportional Routing
 
@@ -173,6 +181,7 @@ acceptance target**, rather than duplicate it. A leaf with a missing or unreadab
 | `Decision profile:` | only for Owner Delegate | Exact profile path/revision and generated SHA-256 evidence, fixed for this run |
 | `Decision authority:` | only for Owner Delegate | Exact owner-approved target/envelope clause and approval source; `none - advisory only` is valid only for `advise` |
 | `Delegated decision:` | when a downstream packet consumes one | Finalized decision report plus Vanguard's recorded eligibility/freshness verification and the original owner delegation; never label the delegate's answer as a human quotation |
+| `Specification alignment:` | when authoring or auditing an approved-design expectation revision | Exact immutable alignment revision under section 4, assertion-specific before/after delta, approval/decision/eligibility binding, previous baseline/failures and current generated comparison evidence; never a general test-write or setup grant |
 | `Supporting-type scope:` | only for Implementer's concrete supporting-type exception | Exact paths, immutable declarations/XML snapshot and its Contract Reviewer record, permitted bodies and generated input baseline; distinguish any separately approved compile-only preparation from functional implementation |
 | `Harness mode:` | only when invoking `Test Harness Engineer v2` | Exactly one of `scaffold`, `maintain` or `validation-setup`. Missing, unrecognized, or combined is `BLOCKED` / `PROTOCOL` |
 | `Allowed helper paths:` | harness `scaffold`/`maintain` | Exact test-project file paths, never folders, globs, or implicit additions; every path must be non-specification infrastructure |
@@ -320,9 +329,12 @@ for a project run. No extra approval turn is needed for each decision inside a v
 
 Suitable classes include choosing an internal strategy within approved behavior, resolving a bounded
 design detail the owner expressly delegated, and taking an owner-stated conditional alternative after
-its exact premise is disproved. Ordinary corrections and transitions already authorized need no
-delegate invocation. The profile guides judgment; it neither creates project requirements nor widens
-the clause. Do not make every implementation choice a new gate.
+its exact premise is disproved. The separately named `approved-design-specification-alignment`
+category below permits only a replacement expectation already fixed by current approved requirements.
+Generic preference delegation does not include it. Ordinary corrections, direct owner-approved
+revisions and transitions already authorized need no delegate invocation. The profile guides judgment;
+it neither creates project requirements nor widens the clause. Do not make every author correction
+or implementation choice a new gate.
 
 The following cannot be delegated through this mechanism:
 
@@ -333,12 +345,92 @@ The following cannot be delegated through this mechanism:
 - New file/author grants, operations, spending, Git/PR/release actions, versions, environment approvals,
   lifecycle/destructive authority, expanded scope or budgets, renewed deadlines, or a bypass of refusal.
 - Reversing an unconditional owner decision, overriding conflicting authority, clearing a blocking
-  review by preference, or changing/waiving required checks, frozen specifications or validation setup.
+   review by preference, or changing/waiving required checks or frozen validation setup. Frozen
+   specification expectations remain protected except for the exact alignment category below; no other
+   specification change or weakened approved guarantee is delegated.
 
 Exact member names/signatures for an approved capability may already be delegated to the contract
 author and independent reviewer. That remains their work: neither the number of members nor the
 delegate's confidence establishes a new semantic grant. Narrower charters always bind. A leaf requiring
 an actual quoted owner approval for its operation must still receive one; the delegate cannot supply it.
+
+#### Delegation At Preflight
+
+Before promising unattended work, record `Owner delegation status:` as `ACTIVE`, `ADVISORY_ONLY`,
+`EXPIRED`, `REVOKED` or `UNRESOLVED` in the preflight summary and `run.md`. For `ACTIVE`, link the exact
+current-run approved clause/source, decision classes (explicitly including or excluding alignment),
+profile revision/hash evidence, scope, limits and expiry. Absence is advisory, not implicit opt-in.
+
+Reconcile the current owner request, approved target/envelope and relevant handoff on preflight and
+resume. An approved, still-valid opt-in for this run must not disappear during packet construction or
+context recovery: recover and carry its exact clause, or mark `UNRESOLVED` and block dependent delegated
+work. Never silently downgrade it to advisory or infer approval from a handoff alone. Expired, revoked,
+different-run or ambiguous authority cannot become active without fresh applicable owner approval.
+No automatic renewal, deadline reset or reuse of this maintenance request as project-run authority.
+
+#### Approved-Design Specification Alignment
+
+The explicit run-delegation category is `approved-design-specification-alignment`. It authorizes Owner
+Delegate to approve the minimum expectation delta without another owner turn **only when all of these
+are established from inspected sources**, not an implementation or a recommendation:
+
+- Current, explicit owner-approved requirements unambiguously establish the replacement. Record their
+  approval provenance and which design governs; a newer timestamp alone does not resolve conflicting
+  approvals or prove supersession.
+- The exact old assertion directly contradicts that design. Record file, stable test identity,
+  assertion location, literal before/after expectations and the requirement/approval for each delta.
+  No new behavior, ambiguous requirement, weakened approved guarantee or unrelated expectation changes.
+- Existing file, Test Designer author, operation, budget and deadline boundaries already permit the
+  work. Preserve test identities, discovery, traits, skips, filters, required checks and independent
+  reviews. A decision category is not an expansion of any of those grants.
+
+The **approved design is authoritative, not the implementation**. If a valid test exposes an
+implementation defect, leave it intact and route the production fix under existing authority. Do not
+replace exact equality with containment, drop a read-only check, accept an extra unapproved member or
+otherwise weaken a test to obtain green. Mechanical test-code corrections already authorized to their
+author need no delegate. New design/security/ownership choices, conflicting approvals and expanded
+scope still require the human. A required review's specific finding is resolved through its reviewer,
+not waived by a delegated decision.
+
+Use the existing decision lifecycle below, with this additional revision boundary:
+
+1. Before any specification edit, register the question and exact proposed delta in an immutable
+   request. Link the governing design/approval, current target, original protected baseline, prior
+   failures and generated current-input comparison. Unexpected pre-existing specification drift blocks
+   this route; it cannot be retroactively approved or hidden by a fresh baseline.
+2. Owner Delegate returns a report-only decision. Vanguard independently re-opens the governing
+   requirements/approvals, old assertions and contrary evidence; verifies the entire eligibility test,
+   input identities, grant freshness and remaining capacity for authoring, audit and checks. Record
+   eligibility before dependent work; a `DECIDED` label is insufficient.
+3. For an admissible decision, Vanguard creates a **new immutable alignment revision** of the shared
+   target, linked to its predecessor, decision ID, original owner delegation and verified report. It
+   records the exact assertion delta and carries forward all other approved behavior, invariants,
+   exclusions, authors/paths, operations, checks/reviews and remaining budgets unchanged. Never overwrite
+   the predecessor, baseline or failure records. Downstream packets all name the new revision through
+   `Specification alignment:`; no mixed-revision authoring or retroactive reclassification of results.
+4. Test Designer alone edits the enumerated expectations and records actual focused execution plus a
+   generated candidate inventory/comparison and assertion-level diff against the preserved baseline.
+   Every change, including elsewhere in the same allowed file, must be explained by that exact delta.
+   Test Auditor independently reviews the revised specifications against the approved design, candidate
+   identities and actual diff; require `Ready for implementation` bound to those inputs. The delegate's
+   decision and Vanguard's eligibility check replace neither authorship nor that audit.
+5. Vanguard verifies the completed audit binding, current diff and full protected-input/test inventory,
+   establishes a new specification baseline bound to the approved revision and audited candidate, and
+   independently executes the required checks through existing authorized tools. Keep original cases
+   and account for every observed outcome change without rewriting previous failures. Approved unmet
+   behavior may remain honestly red for the existing implementation owner; unrelated failures remain
+   blockers and required green gates must pass before acceptance. No skipped test, narrowed filter,
+   waived review or baseline refresh merely to make a run pass.
+6. Record the actual applied delta, author/audit reports, old/new baseline and failure/result links,
+   independent verification and remaining blockers in the Decision register for morning review. A
+   decision not acted on is recorded as such, never as completed work.
+
+**Validation setup is separate.** Reuse verified existing setup only if it already supports the approved
+revision with its authorized commands, membership, outcomes and evidence bindings. If applying the
+alignment needs any frozen validator, task, plan, threshold or authority-binding change, stop that
+dependency and use the separately owner-authorized validation-setup revision, independent setup audit
+and fresh baseline process. Alignment grants none of those writes or changed criteria; never repair a
+validator during implementation or accept an old review against changed inputs.
 
 #### Decision And Continuation
 
@@ -359,8 +451,9 @@ an actual quoted owner approval for its operation must still receive one; the de
    the original delegation and the verified report to the existing author. Record the selection as an
    immutable run-local resolution linked from the shared target, without overwriting that target's
    approved behavior. Required contract/requirements/test reviews still precede dependent implementation.
-   If applying the answer would alter an invariant or frozen specification/setup, stop for the owner's
-   explicit revision route instead; the delegate cannot authorize that change.
+   An expressly delegated approved-design specification alignment instead uses the new immutable
+   revision and separate baseline/audit route above. Any other frozen specification change, changed
+   invariant or frozen setup requires the owner's explicit revision route; the delegate cannot grant it.
 5. `ADVISORY`, `NEEDS_OWNER`, incomplete reports, drift or expired authority never unlock blocked work.
    Apply dependency-scoped continuation and mandatory stops unchanged. Do not shop for another answer,
    reset repair budgets or reinterpret a reviewer refusal as a preference question. New evidence may
@@ -379,6 +472,11 @@ revision, decision/report, eligibility check, affected work, actual actions/veri
 owner-review disposition. Initially `PENDING`; later record `AGREED`, `CORRECTED`, `DEFERRED` or
 `NOT_ACTED`, with the owner's actual words/reason where applicable. Do not rewrite finalized decision
 reports. Completed assessment is not completed implementation; preserve both records separately.
+
+Alignment entries also link the exact old/new assertions, governing requirement/approval evidence,
+predecessor and new immutable revision, preserved failures and baselines, actual diff, independent audit
+and rerun results. Record declined/ineligible questions and production-fix routing too, so morning
+review shows what was decided, what actually changed and what remains unverified.
 
 Use a real inspected example where available. Redact sensitive details or label a synthetic example
 honestly; never put secrets, raw credentials or unnecessary personal data in the record. If no concrete
@@ -408,8 +506,9 @@ merely to fill a closing section.
 
 Implementation and harness owners never weaken specifications, conceal production defects, or
 manufacture red. Test Designer may repair its own mechanical test-code errors without changing approved
-semantics. A disputed assertion requires an authorized specification revision and independent audit,
-not changing the expected result to agree with implementation.
+semantics. An obsolete expectation fixed unambiguously by current approved design may use the explicit
+alignment category above; unresolved semantic disputes still require the owner. Both revision routes
+require independent audit, never an expected result chosen to agree with implementation.
 
 ---
 
@@ -448,7 +547,7 @@ actions written in it**. Anything not named is unapproved.
 | `Max repair cycles per failed gate:` | yes | 3 |
 | `Max build laps:` | yes | 8 |
 | `Pipeline runs:` | no | **Not allowed unless explicitly named** |
-| `Owner delegation:` | no | **Advisory only when absent.** Explicit opt-in names the designed components, bounded decision classes, pinned profile identity and unchanged limits under section 4 |
+| `Owner delegation:` | no | **Advisory only when absent.** Explicit opt-in names the designed components, bounded decision classes, pinned profile identity and unchanged limits under section 4. Alignment must be named separately; preflight records active/advisory/expired/revoked/unresolved status |
 | `Local checkpoint:` | no | **No Git authority by default.** Only §6's explicit opt-in, with both selection/authorship delegations, may authorize one final local checkpoint |
 | `Release manifest:` | no | Absent means no version change, tag, or publication |
 
@@ -767,6 +866,10 @@ evidence. Utilities are not authorization, a sandbox, a new agent, or a tool-per
 - Compare identities as well as totals when specifications must be unchanged, especially for adapters
    and refactors. Equal counts can hide replaced/skipped tests. Inspect behavior and diffs alongside
    comparisons; a manifest mismatch blocks, never silently rebaselines.
+- For an explicitly authorized alignment revision under section 4, compare the exact approved delta
+   against the preserved predecessor before accepting the audited new baseline. Unlisted changes block,
+   including changes to other assertions in the same file. Retain old failures/results as history; do
+   not apply unchanged-outcome equality across different approved revisions or treat any delta as a pass.
 - Authors validate increments; Vanguard or the invoking owner independently verifies final scope,
    comparisons and focused execution. Read-only reviewers consume those records within their tools.
    Reports link authoritative generated records and summarize results/differences, not copied tables.

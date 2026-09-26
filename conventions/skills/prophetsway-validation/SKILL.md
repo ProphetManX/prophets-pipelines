@@ -1,6 +1,6 @@
 ---
 name: prophetsway-validation
-description: 'Shared ProphetsWay v2 procedure for validation readiness, workspace test tasks, run-local validators, protected specifications, SHA-256 manifests, TRX evidence, test membership, and independent setup review. Use when preparing an unattended run, creating validation setup, capturing or checking baseline/final evidence, freezing audited specifications, or reviewing a run validator. Procedures never grant write or execution authority.'
+description: 'Shared ProphetsWay v2 procedure for validation readiness, workspace test tasks, run-local validators, protected specifications, approved-design specification alignment, SHA-256 manifests, TRX evidence, test membership, and independent setup review. Use when preparing an unattended run, creating validation setup, capturing or checking baseline/final evidence, binding an authorized expectation revision, freezing audited specifications, or reviewing a run validator. Procedures never grant write or execution authority.'
 user-invocable: false
 ---
 
@@ -39,7 +39,7 @@ create a bespoke script when an existing approved check supplies equivalent evid
 | --- | --- | --- |
 | Concrete supporting-type declarations and XML docs | Interface Architect | Contract Reviewer on the exact snapshot |
 | Enumerated supporting-type bodies/private state | Implementer under `Supporting-type scope:` | Parent surface comparison/execution and target-selected code/security review |
-| New specifications | Test Designer | Test Auditor: `Ready for implementation` |
+| New or explicitly revised specifications | Test Designer | Test Auditor: `Ready for implementation` bound to the exact candidate/revision; parent verifies baseline and execution |
 | Test-project-only helpers | Harness Engineer `scaffold` or `maintain` | Existing mode-specific audit/parent checks |
 | Named workspace tasks and run-local validators | Harness Engineer `validation-setup` | Test Auditor: `Ready for baseline`, then parent execution and setup freeze |
 
@@ -75,9 +75,10 @@ Only the permitted setup author follows this section. Require `Harness mode: val
    Auditor. A setup author cannot create its own independent review or approve its own criteria.
 
 Setup scripts may check evidence integrity; they may not define expected product behavior or replace
-product tests. The original test identities and outcomes must survive. Approved new specifications may
-add identities; derive and review that delta rather than hardcoding an eventual total or refreshing a
-baseline to conceal changed membership.
+product tests. Original test identities and historical outcome records must survive. Approved new
+specifications may add identities; derive and review that delta rather than hardcoding an eventual total
+or refreshing a baseline to conceal changed membership. An exact approved-design expectation revision
+uses the separate alignment boundary below, not permission for the setup author to change expectations.
 
 ## Review, Execute And Freeze
 
@@ -91,8 +92,8 @@ identities/outcomes/counts/skips and freeze setup/authority input hashes. A keyw
 a file's existence, or a filename is not proof that an independent review occurred. A freeze operation
 must consume the parent's verified review-to-input binding; it never manufactures that approval.
 
-`Ready for baseline` is setup review only. After Test Designer authors new specifications, a separate
-`Ready for implementation` audit binds that specification revision before functional implementation.
+`Ready for baseline` is setup review only. After Test Designer authors new or authorized revised
+specifications, a separate `Ready for implementation` audit binds that revision before functional implementation.
 Do not let the first verdict stand in for the second. Existing sufficient specifications do not need
 an artificial new red phase or audit merely to perform a local correction.
 
@@ -100,6 +101,32 @@ Frozen setup is an acceptance input, not a convenient repair target. A change to
 selection, thresholds or code requires an explicitly authorized new target revision, independent
 setup audit and fresh baseline. Preserve previous records. Product authors cannot change the validator
 that judges them; no concurrent setup repair during their implementation invocation.
+
+### Approved-Design Specification Alignment
+
+Protocol section 4 owns `approved-design-specification-alignment` authority. This skill grants none.
+Require the exact `Specification alignment:` revision, predecessor and original baseline/failure links,
+literal assertion delta and governing owner-approved requirements. A delegated route also needs its
+explicit current-run category grant, finalized decision and Vanguard's independent eligibility record.
+Direct exact owner approval remains valid without a delegate invocation. The design, not code, fixes
+the replacement; valid regressions remain intact for the existing production author to fix.
+
+Preserve all prior records. Test Designer supplies candidate hashes, assertion-level diff and actual
+execution. Test Auditor independently reviews that exact candidate against the approved revision;
+Vanguard verifies the completed audit/input binding and full inventory before establishing the new
+protected specification baseline and independently executing required checks. Do not authorize an
+entire file because one assertion may change. Unlisted deltas, changed membership, skipped tests,
+narrowed filters or weakened approved guarantees block acceptance. No retroactive approval of drift.
+
+Keep test identities and historical outcomes; compare outcome differences explicitly against the new
+revision instead of requiring identical outcomes across different approved expectations. Old failures
+remain failures, and new results must satisfy their own required gates. An authorized red observation
+is not green; a new baseline never excuses an unrelated regression or an unrun check.
+
+Reuse setup only if its approved commands/selection/criteria and bindings already support the revision.
+Any frozen setup/task/plan/binding change needs the separately authorized validation-setup revision,
+independent setup audit and fresh baseline. Neither a decision nor a specification audit grants that
+change. Link old/new revisions, actual deltas and all verification records in the morning register.
 
 ## Capture Execution Evidence
 
@@ -143,6 +170,8 @@ executed tests, stale results, unexplained skips and ignored command failures ne
 Use `Compare-AgentTestResults` when unchanged membership/outcomes are required. For an approved new
 specification revision, independently inspect the actual added/removed/changed identity delta and bind
 permitted additions to the audited revision. Equal totals cannot prove that original cases survived.
+Alignment permits no identity additions/removals; compare the preserved identities and recorded outcome
+delta under its exact revision, not unchanged-outcome equality against a different revision's failures.
 Compare protected manifests at ownership/mutation boundaries and final verification, not every save.
 
 ## Report And Stop
