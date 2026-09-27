@@ -4,9 +4,20 @@
 > building, changing, or debugging agent customizations. Do not add it to `AGENTS.md` — it
 > is administrative context, irrelevant to day-to-day coding sessions.
 
-**Built:** 2026-08-08 · **Revised:** 2026-09-26 · **Owner:** G. Gordon Nasseri (ProphetManX)
+**Built:** 2026-08-08 · **Revised:** 2026-09-27 · **Owner:** G. Gordon Nasseri (ProphetManX)
 **Covers:** the customization roster and the `AGENTS.md` conventions system across 8 repos —
 **30 active v2 agents**, **26 archived v1 agents**, **2 active prompts**, and **1 shared skill bundle**.
+
+**2026-09-27 rolling assignments:** after the owner confirmed all agents idle, Vanguard, Repository
+Operator and Owner Delegate gained the approved timeboxed multi-slice workflow. Assignment state and
+the original deadline survive checkpoints/status replies; green partial work can commit in place
+without claiming feature completion. Explicit bounded recovery permits one evidence-backed attempt
+per decision, with fresh requests possible inside the original window. Explicit `prepare_worktree`
+authority isolates known broken work without altering parked files; later ready slices continue on one
+healthy branch. The human reviews and pushes. No automatic merge, history rewrite, gate waiver or old-run
+renewal. Live definitions, flat mirrors, protocol and both documents are the maintenance scope; roster,
+models/tools, registered skill, decision profile and archives are unchanged. See the
+[rolling guide and offline scenarios](agent-toolbelt-v2.md#14-rolling-assignments).
 
 **2026-09-26 approved-design alignment:** after the owner confirmed all agents idle, the shared protocol,
 Owner Delegate, Vanguard, Test Designer, Test Auditor and the registered validation skill/template gained
@@ -39,16 +50,15 @@ Roster, models, tools, picker visibility, product repositories and archived gene
 This does not resume an old run, extend its deadline or authorize product/Git operations. See the
 [current workflow](agent-toolbelt-v2.md) and [skill inventory](agent-toolbelt-v2.md#12-shared-skill-inventory).
 
-**Current v2 workflow:** one shared acceptance revision per coherent slice, default bounded delivery,
-focused regression/review work, progress-aware implementation iterations, generated evidence, and
-session-boundary continuity. Attended Git/PR actions now use exact proposals and conversational approval:
-Vanguard confirms and verifies; Repository Operator alone executes separate approved steps, including
-review replies and individual thread dispositions. Merging/completing remains human-only; publication
-still requires its separate manifest. A future unattended envelope may explicitly opt into one final
-verified local checkpoint, delegating candidate selection to Vanguard and verbatim message authorship
-to Commit Author, with Operator alone executing. Default remains no Git authority. The owner confirmed
-agents idle on 2026-09-17. This is a future-run
-instruction change, not a roster/model/tool change or permission to resume or mutate an existing project/PR.
+**Current v2 workflow:** one approved assignment can contain rolling immutable slice targets, selected
+just in time inside designed work areas/exclusions. Focused independent verification and explicit
+checkpoint authority lead to `NEXT_ACTION`, not sign-off after every slice. `single-final` still permits
+only its one complete-target commit; explicit `rolling` authority permits successive local checkpoints,
+including green partial work when granted. Frozen content and valid evidence feed Commit Author and one
+Operator invocation, followed by one independent readback. Five minutes is a soft administration target;
+Scribe wraps up at assignment end or a real pause. Attended Git/PR exact proposals remain available,
+but overnight rolling work does not push. Default remains no Git or isolation authority. These are
+future-run rules, not permission to resume or mutate an existing project/PR.
 The current rules, routing examples, and offline approval scenarios are in
 [agent-toolbelt-v2.md](agent-toolbelt-v2.md); authoritative mechanics are in
 [agent-protocol-v2.md](agent-protocol-v2.md). Per-repository state/convention cleanup is separate.
@@ -347,7 +357,7 @@ project state. The workflow update's static/offline checks do not certify live d
 
 | Live file | Agent | Model | Role |
 | --- | --- | --- | --- |
-| `proj-a-vanguard-v2.agent.md` | **Vanguard v2** | `GPT-6 Astra (copilot)` | Shared targets, explicit delegation status/readiness, independent eligibility and immutable alignment revisions; separate authors, audit and baseline execution. Same 28-leaf allowlist, tools and Git/PR/local-checkpoint rules |
+| `proj-a-vanguard-v2.agent.md` | **Vanguard v2** | `GPT-6 Astra (copilot)` | Persistent timeboxed assignment and just-in-time slice targets; NEXT_ACTION after complete/green-partial checkpoints, bounded delegate recovery and authorized isolation. Independent verification; unchanged 28-leaf allowlist and tools |
 | `proj-a-product-discovery-v2.agent.md` | Product Discovery v2 | `GPT-6 Astra (copilot)` | **New role.** Captures intent; owns `docs/product-brief.md`, `docs/decision-log.md`, `docs/open-questions.md` |
 | `proj-a-solution-architect-v2.agent.md` | Solution Architect v2 | `GPT-6 Astra (copilot)` | Architecture and requirements; one automatic evidence-backed repair pass |
 | `proj-a-requirements-reviewer-v2.agent.md` | Requirements Reviewer v2 | `GPT-6 Astra (copilot)` | **New role.** Read-only adversary; writes only its own invocation report |
@@ -357,7 +367,7 @@ project state. The workflow update's static/offline checks do not certify live d
 
 | Live file | Agent | Model | Role |
 | --- | --- | --- | --- |
-| `proj-a-owner-delegate-v2.agent.md` | **Owner Delegate v2** | `GPT-6 Astra (copilot)` | Bounded preferences and separately opted-in approved-design expectation alignment; read/search plus report-only edit, no execution or child agents. Exact evidence, independent parent eligibility, morning review and owner-confirmed learning |
+| `proj-a-owner-delegate-v2.agent.md` | **Owner Delegate v2** | `GPT-6 Astra (copilot)` | Expressly delegated preferences, approved-design alignment and bounded recovery; each recovery decision buys one attempt, with fresh evidence-backed requests allowed. Report-only; no deadline/hard-limit override, operation authority or review waiver |
 
 **Slice 2a — grounding and shaping**, which made `Vanguard v2`'s `GROUND` and `SHAPE` states executable:
 
@@ -405,7 +415,7 @@ distinction between catalog verification and post-reload picker/Diagnostics chec
 | `ops-a-pipeline-auditor-v2.agent.md` | Pipeline Auditor v2 | `GPT-6 Astra (copilot)` | Read-only contract, chain, drift, permission, and secret audit, and the independent re-review of an applied change set. Unlike v1 it may not append a feature request |
 | `infra-a-engineer-v2.agent.md` | Azure Infrastructure Engineer v2 | `GPT-6 Astra (copilot)` | Bicep, `.bicepparam`, and infrastructure docs. **Writes no YAML** — it specifies the deployment pipeline and `Pipeline Engineer v2` writes it. **No mutating Azure command in any mode**, where v1 allowed one after in-conversation approval |
 | `infra-a-deployment-reviewer-v2.agent.md` | Azure Deployment Reviewer v2 | `GPT-6 Astra (copilot)` | Read-only gate on resolution, preview, cost, permissions, secrets, isolation, recovery, residency, and the deployment YAML. `Ready` is not deployment approval |
-| `ops-a-repository-operator-v2.agent.md` | **Repository Operator v2** | `GPT-6 Astra (copilot)` | Sole Git/PR/release executor; one mode per invocation: `prepare_branch`, `checkpoint_commit`, `publish_branch`, `open_or_update_draft_pr`, `reply_to_pr_comment`, `resolve_review_thread`, `mark_pr_ready`, `release`. Attended approval may cover a sequence; explicit unattended opt-in permits one frozen final local checkpoint only. Verify expected state and actual results. No force-push, history rewrite, ref deletion, merge/close, or implicit publication |
+| `ops-a-repository-operator-v2.agent.md` | **Repository Operator v2** | `GPT-6 Astra (copilot)` | Sole executor, one mode per invocation: `prepare_branch`, `prepare_worktree`, `checkpoint_commit`, `publish_branch`, `open_or_update_draft_pr`, `reply_to_pr_comment`, `resolve_review_thread`, `mark_pr_ready`, `release`. Explicit single-final/rolling checkpoints and separate isolation authority; frozen state and result verification. No implicit push, merge, history rewrite or deletion |
 
 **Approved landing uses one executor.** Vanguard's twenty-eight-leaf allowlist includes the
 operator, so it can request approved staging/commits, pushes, draft PR updates, review replies, and
@@ -422,26 +432,29 @@ approval and secret controls remain; a refusal is never bypassed. See the
 [attended workflow and offline scenarios](agent-toolbelt-v2.md#attended-git-and-pr-work).
 
 The 2026-09-12 update changed live Vanguard, Repository Operator, Code Reviewer, their flat mirrors,
-and the protocol and two toolbelt documents. The 2026-09-17 exception changes only Vanguard and
+and the protocol and two toolbelt documents. The 2026-09-17 exception changed only Vanguard and
 Repository Operator, their flat mirrors, and those three governing documents. No agent/tool grant is added; the archive is untouched. Static and
 offline checks do not prove live execution or picker registration: reload VS Code and check the affected
 selectors and Chat Diagnostics. No actual project Git/PR mutation is part of this customization session.
 
-**Opt-in unattended local checkpoint:** before authoring, the owner-approved envelope fixes the repository,
-agent branch, starting HEAD, exact maximum product paths, immutable target, gates and budgets, and
-explicitly delegates final verified candidate selection to Vanguard and final verbatim message authorship
-to Commit Author. Only after the complete target and required validation/independent reviews pass does
-Vanguard freeze the generated exact manifest, inspected diff, state, evidence and message. Operator
-rechecks authority, branch/HEAD/index/worktree and exact content/message before staging/committing once;
-Vanguard independently reads back commit, parent, message, contents and resulting state.
+**Opt-in unattended local checkpoints:** preserve explicit `single-final` authority as one complete-target
+commit. The distinct `rolling` grant fixes designed work, permitted areas/exclusions, initial branch/HEAD,
+authors, gates and original deadline; exact files emerge per slice. Both delegate verified candidate
+selection to Vanguard and verbatim message authorship to Commit Author. Only expressly permitted
+`GREEN_PARTIAL` checkpoints can retain unfinished requirements, and every required current checkpoint
+check/review still passes for the entire candidate. No failed test, omitted regression or narrowed gate
+may be hidden as future work. Slice completion stays separate from checkpoint success.
 
-No later owner turn is needed only for that expressly opted-in operation. Partial or unreviewed work,
-unlisted/unknown/changed content, or changed HEAD/message blocks it. Failure/uncertainty and tool denial
-retain their existing stops; no automatic retry, second commit, amend, branch creation, push, PR action,
-merge, tag, version, release, publication or adjacent authority follows. Attended exact proposals remain
-unchanged. See [the rule and offline scenarios](agent-toolbelt-v2.md#opt-in-unattended-local-checkpoint)
-and [the governing protocol](agent-protocol-v2.md#opt-in-unattended-local-checkpoint). The parent must
-independently verify customization maintenance before activating a new project run.
+Freeze candidate/diff/state, valid evidence and exact message. Operator stages exact paths and commits
+once per unique ID; Vanguard independently reads back once and immediately selects the next authorized
+action. Failed/uncertain attempts cannot be recycled under a new ID; changed frozen content and denied
+tools keep their existing stops. Worktree isolation is separately approved, preserves known broken work
+and requires verification against the new actual root. No automatic integration or cleanup; existing
+authors recover parked behavior against the continuing branch under current tests/reviews. The human
+retains pushing. See [the checkpoint rules](agent-toolbelt-v2.md#opt-in-unattended-local-checkpoint),
+[assignment scenarios](agent-toolbelt-v2.md#offline-assignment-scenarios) and the
+[protocol](agent-protocol-v2.md#opt-in-unattended-local-checkpoint). Independent verification and a fresh
+authorized pilot remain necessary before claiming runtime behavior or timing.
 
 **Slice 2c also removed three ownership collisions v1 carried**, each a real drift source: `CHANGELOG.md`
 had two possible writers, deployment YAML had two, and git and release actions had none. Each now has

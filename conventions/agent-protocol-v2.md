@@ -1,11 +1,16 @@
 # Agent Protocol v2 - Shared Delegation Mechanics
 
-**Applies to:** the active v2 roster. **Revised:** 2026-09-26. **Owner:** G. Gordon Nasseri (ProphetManX).
+**Applies to:** the active v2 roster. **Revised:** 2026-09-27. **Owner:** G. Gordon Nasseri (ProphetManX).
 
 This revision governs **new runs only**. Existing invocations and continuations retain their recorded
 protocol, acceptance revision, budgets, and gates until the owner explicitly closes or re-scopes them.
 Toolbelt changes require confirmation that affected agents are idle; old STARTED records alone cannot
 prove activity or inactivity. Never interrupt a run to apply a customization change.
+
+On 2026-09-27 the owner confirmed all agents idle and approved rolling timeboxed assignments, successive
+local checkpoints including verified green partial work, evidence-backed delegated recovery, and
+isolation of known broken work. The human retains pushing. These are future-run opt-in mechanisms, not
+permission for any project operation, deadline renewal, automatic merge or weakened validation gate.
 
 On 2026-09-26 the owner confirmed all agents idle and authorized the approved-design specification
 alignment category in section 4. It requires explicit future-run delegation, independent eligibility
@@ -50,6 +55,11 @@ expectations to already-approved behavior; it cannot change that behavior. Findi
 implementations never rewrite acceptance. Optional improvements are nonblocking deferred work, not
 new requirements or grounds for an automatic second pass.
 
+Assignment, slice and checkpoint status are separate. Rolling authority in section 5 lets Vanguard
+derive slices within an approved design without predicting every filename upfront. A `GREEN_PARTIAL`
+checkpoint under section 6 preserves verified unfinished work; it never completes the target, removes
+unmet requirements, or turns a failed required check into a passing one.
+
 ### Risk-Proportional Routing
 
 **Bounded delivery is the default** for understood, reversible local work, including production work.
@@ -75,6 +85,9 @@ Before promising unattended execution, Vanguard accounts for every planned artif
 in the shared target: exact permitted author/paths, independent reviewer, execution tool/task,
 prerequisites, operation authority and readiness evidence. Include supporting-type bodies, workspace
 tasks, external validators and necessary documentation. A path in a packet cannot override a charter.
+For rolling work, apply this to the next selected slice and reuse the verified assignment-wide capability
+map; future filenames need not all be known. Do not declare dependent authoring ready until its actual
+paths, checks and execution roots are resolved.
 An unowned artifact or unavailable check is a preparation blocker, not something to discover after
 functional implementation starts. Continue only genuinely independent approved work under §4/§6.
 
@@ -169,6 +182,7 @@ acceptance target**, rather than duplicate it. A leaf with a missing or unreadab
 | `Run directory:` | yes | Absolute path to `<project-parent>/.agent-runs/<run-id>/` — see §2 |
 | `Report artifact:` | yes | Absolute path to this invocation's Markdown report inside the run directory |
 | `Acceptance target:` | yes | Immutable shared target path and revision; all authors and verifiers use it |
+| `Assignment authority:` | rolling work, recovery or isolation | Immutable owner-approved assignment/envelope and source; binds approved design, work areas/exclusions, operation/delegate grants, original deadline and hard limits. Slice targets derive from it, never replace it |
 | `Scope:` | yes | What is included **and** what is excluded |
 | `Authoritative inputs:` | yes | `AGENTS.md` plus the exact artifact paths that define the work |
 | `Settled owner decisions:` | yes | Quoted. A recommendation restated as a decision is a protocol violation by the parent |
@@ -181,6 +195,7 @@ acceptance target**, rather than duplicate it. A leaf with a missing or unreadab
 | `Decision profile:` | only for Owner Delegate | Exact profile path/revision and generated SHA-256 evidence, fixed for this run |
 | `Decision authority:` | only for Owner Delegate | Exact owner-approved target/envelope clause and approval source; `none - advisory only` is valid only for `advise` |
 | `Delegated decision:` | when a downstream packet consumes one | Finalized decision report plus Vanguard's recorded eligibility/freshness verification and the original owner delegation; never label the delegate's answer as a human quotation |
+| `Recovery attempt:` | an extra default-policy attempt under section 5 | Unique decision/attempt ID, finalized bounded-recovery decision, independent eligibility, exact plan/check/effort and cumulative history; one attempt, not renewed assignment authority |
 | `Specification alignment:` | when authoring or auditing an approved-design expectation revision | Exact immutable alignment revision under section 4, assertion-specific before/after delta, approval/decision/eligibility binding, previous baseline/failures and current generated comparison evidence; never a general test-write or setup grant |
 | `Supporting-type scope:` | only for Implementer's concrete supporting-type exception | Exact paths, immutable declarations/XML snapshot and its Contract Reviewer record, permitted bodies and generated input baseline; distinguish any separately approved compile-only preparation from functional implementation |
 | `Harness mode:` | only when invoking `Test Harness Engineer v2` | Exactly one of `scaffold`, `maintain` or `validation-setup`. Missing, unrecognized, or combined is `BLOCKED` / `PROTOCOL` |
@@ -190,8 +205,8 @@ acceptance target**, rather than duplicate it. A leaf with a missing or unreadab
 | `Specification hashes:` | when specifications must be protected | **Path to generated baseline**, revision and inventory selectors; never copied hashes. Include inherited/linked files and inputs |
 | `Focused validation:` | implementation/test/harness/refactor work | Exact checks or target section, project/target/filter/configuration, expected outcomes, and operation limits; no implicit live operations |
 | `Infrastructure blocker:` | harness `scaffold` only | Designer-named missing infrastructure, reproduction check, and intended red; not required or fabricated for `maintain` |
-| `Operator mode:` | only when invoking `Repository Operator v2` | Exactly one of `prepare_branch`, `checkpoint_commit`, `publish_branch`, `open_or_update_draft_pr`, `reply_to_pr_comment`, `resolve_review_thread`, `mark_pr_ready`, `release`. Missing, unrecognized, or combined is `BLOCKED` / `PROTOCOL` |
-| `Approved proposal:` | every operator invocation | Exact immutable proposal section/revision and step; quoted owner approval/source, or the exact unattended-envelope clause. For the opt-in local checkpoint, also link its frozen candidate, diff, gates and verbatim message. See §6; the packet is never its own authority |
+| `Operator mode:` | only when invoking `Repository Operator v2` | Exactly one of `prepare_branch`, `prepare_worktree`, `checkpoint_commit`, `publish_branch`, `open_or_update_draft_pr`, `reply_to_pr_comment`, `resolve_review_thread`, `mark_pr_ready`, `release`. Missing, unrecognized, or combined is `BLOCKED` / `PROTOCOL` |
+| `Approved proposal:` | every operator invocation | Exact immutable proposal/step and quoted approval/source, or the precise unattended authority clause. Checkpoints link unique ID/status, frozen candidate/diff/gates/message; isolation links unique ID, parked state, verified source and exact new branch/path. See section 6; the packet is never its own authority |
 | `Expected state:` | every operator invocation | Operation-relevant baseline including local HEAD/branch, relevant index/worktree content, remote and PR/comment/thread state; link verified predecessor results for approved transitions. Unknown required state blocks |
 | `Release manifest:` | only to authorize a version change, tag, or publication | See §6 |
 
@@ -215,7 +230,8 @@ root. If no valid parent exists, obtain an explicit external run root from the o
 
 ```text
 <project-parent>/.agent-runs/<run-id>/
-   run.md                         parent state, target/report/evidence links, budgets
+   run.md                         assignment/slice/checkpoint state, links, budgets, next action
+   assignment-rN.md                immutable rolling authority, when applicable
    slice-NN-rN.md                  immutable shared acceptance revision
    NN-agent-slug.md                one invocation report per leaf invocation
    evidence/                      generated manifests, comparisons, validation records
@@ -245,9 +261,12 @@ written reports before completion. A charter cites this rule instead of repeatin
 ### The parent's `run.md`
 
 Update `run.md` at meaningful state/ownership/authorization transitions, not every compiler correction or
-file save. Keep target, active owner, budget, last verified boundary, and next action recoverable. Finalize
-before the final response with state/status, report and evidence links, remaining decisions, budgets, and
-baseline-versus-final summaries. An unfinalized record is incomplete, whatever the leaves accomplished.
+file save. Keep original assignment authority/deadline/time zone, status, remaining approved work,
+slice targets/dependencies/status, active owner/root/branch, parked work, cumulative budgets/recovery
+consumption, last verified checkpoint and exact next action recoverable. Checkpoint success never closes
+the assignment. Status replies update rather than finalize it. Finalize at a real completion, planned
+pause or stop with the actual stopping condition, evidence links and unfinished work. Use this one
+record between slices, not a fresh orchestration project or Scribe wrapup per commit.
 
 ### Retention
 
@@ -273,6 +292,10 @@ Continuation: CONTINUE | SWITCH_WORKSTREAM | STOP_RUN
 `PARTIAL` / `REVIEW`, not a failed reviewer. `NONE` accompanies only COMPLETE or NO_CHANGE. Budget
 exhaustion is `PARTIAL` / `BUDGET`, not permission for another attempt. Other reasons name the actual
 blocker, without implying that an unavailable or failed check passed.
+
+The section 5 recovery exception needs original owner delegation, a fresh decision and independent
+eligibility before one further default-policy attempt; `PARTIAL` alone grants nothing. A hard cap stays
+hard. Operator `COMPLETE` means its operation finished, not that a partial feature or assignment did.
 
 `Continuation` is the leaf's recommendation about the **run**, not about itself. A leaf that finished
 its own work but discovered a global blocker still returns `Continuation: STOP_RUN`.
@@ -305,8 +328,9 @@ routine repair. The existing document owners retain decisions, requirements, and
 **Stop the whole run only when one of these holds:**
 
 1. No independent work remains.
-2. The uncertainty affects a **public API surface**, **security**, **data ownership or privacy**,
-   **money or financial semantics**, **architecture**, or a **release commitment**.
+2. A never-invent uncertainty in public API, security, data ownership/privacy, financial semantics,
+   architecture or release commitments cannot be isolated from the remaining work. Otherwise defer
+   its dependent slice and continue only independent approved work; never assume the missing answer.
 3. A mandatory stop in §6 applies.
 
 Categories in (2) are never invented — not defaulted, not "reasonably assumed", not inferred from a
@@ -336,6 +360,10 @@ revisions and transitions already authorized need no delegate invocation. The pr
 it neither creates project requirements nor widens the clause. Do not make every author correction
 or implementation choice a new gate.
 
+The separately named `bounded-recovery` category in section 5 permits one extra default-policy repair
+attempt per verified decision. Multiple fresh requests are possible inside the original window; this
+is not permission to extend time, hard owner ceilings, specialist limits, operations or acceptance.
+
 The following cannot be delegated through this mechanism:
 
 - New components/workflows, architectural responsibilities or consequential cross-component behavior;
@@ -343,7 +371,9 @@ The following cannot be delegated through this mechanism:
 - New security, access, privacy, data ownership/overwrite policy, financial semantics or release
   commitments. A hypothetical import preference does not resolve a real application's conflict policy.
 - New file/author grants, operations, spending, Git/PR/release actions, versions, environment approvals,
-  lifecycle/destructive authority, expanded scope or budgets, renewed deadlines, or a bypass of refusal.
+  lifecycle/destructive authority, expanded scope, hard owner budgets, renewed deadlines or a bypass
+  of refusal. Only explicit `bounded-recovery` can extend default-policy repair attempts as specified
+  in section 5; it overrides no narrower specialist or owner limit.
 - Reversing an unconditional owner decision, overriding conflicting authority, clearing a blocking
    review by preference, or changing/waiving required checks or frozen validation setup. Frozen
    specification expectations remain protected except for the exact alignment category below; no other
@@ -531,6 +561,75 @@ stop. **Every explicit owner ceiling retains its stated meaning**, including com
 never reinterpret or reset it on a new packet. Narrower specialist limits, including the requirements/
 contract single repair pass, remain binding. Genuine scope/semantic decisions still require the owner.
 
+Two no-progress attempts are not a two-slice or two-compile limit. Ordinary verified progress needs no
+delegate invocation. The default repair stop blocks further attempts at that problem, not every
+independent slice, unless a mandatory stop applies. Only the explicit recovery procedure below may
+permit another attempt; a new packet, slice name or worktree never resets a counter.
+
+### Rolling Assignment Authority
+
+Before an unattended rolling assignment, obtain approval of one immutable envelope covering designed
+requirements and their sources, repositories, initial agent branches/HEADs, permitted projects/directories
+or files, exclusions, author boundaries, required checks/reviews, original stop timestamp including date
+and time zone, and explicit operation/delegate grants. Record hard caps as hard; ambiguous numeric limits
+remain hard. The deadline governs rolling throughput unless the owner also fixes a build/slice cap.
+Installation, "keep busy", allowed paths or this maintenance are not approval of an unspecified design.
+
+Vanguard may split/reorder the already-designed work and choose new in-scope filenames as each slice
+becomes ready. Create that slice's immutable target and exact author paths just in time, preserving all
+applicable inherited obligations and remaining limits. Checkpoint gates and unfinished completion
+obligations are distinct and fixed before authoring, not narrowed after a failure. No exhaustive list
+of future files or slices is needed, but a permitted folder grants no new feature or charter exception.
+New responsibilities, expanded areas or altered approved behavior still need the existing owner route.
+
+Match areas by canonical repository-relative path components, not string prefixes. Exclusions win;
+reject traversal, symlink/junction escapes and access to unrelated repositories or Git internals.
+An approved isolation root maps the same relative work-area policy to its verified checkout; it grants
+no neighboring paths. Leaf-specific exact-path, author and review requirements remain load-bearing.
+
+After every slice boundary and verified checkpoint, Vanguard enters `NEXT_ACTION`: reconcile current
+time, latest owner instruction, assignment status, authority, consumed operations/recovery, remaining
+work and dependencies. Select a ready slice, not merely the next numbered one, and actually start its
+next authorized action in the same turn. Consult active Owner Delegate for an eligible unresolved
+question before deferring it to the human; routine transitions do not need its permission. Missing
+implementation approval permits only already-authorized investigation/run-local planning or other
+independent work, never inferred repository/setup writes. Record the exact missing decision.
+
+With a valid window and a ready authorized slice after a successful commit, continuation is required
+without another user prompt. A status question neither cancels nor extends the assignment. Preserve
+the original deadline and grants on resume; no fresh window, silent advisory downgrade or counter reset.
+Reserve time for checks, checkpoints and closeout. At expiry or explicit pause/cancellation start no
+new product/Git action; safely reconcile in-flight effects, preserve files and report. Ending early is
+valid when all requested work is done or no permitted action remains, or a hard/safety stop applies.
+Name the actual stop instead of treating a slice, commit, status reply or leaf completion as sign-off.
+
+### Delegated Bounded Recovery
+
+The owner may expressly include `bounded-recovery` in the assignment's `Owner delegation:` clause.
+It permits Owner Delegate to evaluate extensions of the default no-progress/per-gate repair policy,
+not a deadline, hard owner cap, specialist review/scope ceiling or operation refusal. Generic preference
+or alignment delegation is insufficient. Preserve the original approval/source and cumulative history.
+
+1. Vanguard registers a fresh immutable request with the exact failure/slice/gate, previous attempts
+   and results, inspected new evidence and changed causal understanding, a materially different next
+   plan, discriminating check, permitted author/paths, bounded effort including verification/reporting,
+   original deadline and remaining capacity. Repeated output or rewording a guess is not new evidence.
+2. Owner Delegate evaluates whether that plan is justified within the original grant. `DECIDED` permits
+   exactly one attempt under its plan/check/effort; an ineligible request returns `NEEDS_OWNER` with the
+   reason and dependency. No blanket sequence, renewable permission or implicit next attempt.
+3. Before dispatch, Vanguard independently verifies evidence, authority, current input identities, hard
+   limits and safe-closeout capacity. Pass `Recovery attempt:` to the existing permitted author; mark
+   the unique decision consumed when the attempt starts and record its actual result afterwards.
+4. A later failure may support another fresh request with new evidence and a revised plan. There is
+   no fixed total of valid recovery approvals within the original window; every request is adjudicated
+   separately. No automatic renewal, reset of totals, answer shopping, or repeated unchanged proposal.
+
+Recovery never grants Git retries, live operations, unavailable checks, changed protected expectations,
+frozen setup repair, scope expansion or a waived review. Those retain their separate rules. Narrower
+leaf limits, including one requirements/contract repair pass and a declared scope ceiling, still bind.
+Declined/exhausted recovery defers that problem; switch only to genuinely independent permitted work.
+Record decisions and outcomes in the existing Decision register, not new per-attempt handoff machinery.
+
 ### The Autonomous Run Envelope
 
 An unattended run is authorized by an envelope, and **an envelope is approval only for the exact
@@ -543,15 +642,16 @@ actions written in it**. Anything not named is unapproved.
 | `Required checks:` | yes | — |
 | `Required reviews:` | yes | — |
 | `Capability readiness:` | yes | Target section linking artifact/check ownership, available execution routes/prerequisites, and verified setup/baseline evidence before dependent authoring |
-| `Stop by:` | yes | 07:00 local |
-| `Max repair cycles per failed gate:` | yes | 3 |
-| `Max build laps:` | yes | 8 |
+| `Stop by:` | yes | Exact owner-approved date/time/time zone; 07:00 local is a preparation suggestion, never a self-renewing window |
+| `Max repair cycles per failed gate:` | yes | 3 under default policy; explicitly delegated bounded recovery may add one attempt per decision. Any stated hard owner cap remains hard |
+| `Max build laps:` | yes | 8 for a bounded non-rolling run; rolling assignments use the approved deadline unless an explicit numeric hard cap is set |
 | `Pipeline runs:` | no | **Not allowed unless explicitly named** |
-| `Owner delegation:` | no | **Advisory only when absent.** Explicit opt-in names the designed components, bounded decision classes, pinned profile identity and unchanged limits under section 4. Alignment must be named separately; preflight records active/advisory/expired/revoked/unresolved status |
-| `Local checkpoint:` | no | **No Git authority by default.** Only §6's explicit opt-in, with both selection/authorship delegations, may authorize one final local checkpoint |
+| `Owner delegation:` | no | **Advisory only when absent.** Explicit opt-in names designed components, categories, pinned profile and limits. Name alignment and bounded recovery separately; preserve active/advisory/expired/revoked/unresolved status |
+| `Local checkpoint:` | no | **No Git authority by default.** Section 6's explicit `single-final` or `rolling` policy needs both candidate-selection and message-authorship delegations; green partial checkpoints require explicit permission |
+| `Worktree isolation:` | no | **Not allowed by default.** Explicit grant fixes eligible broken-work conditions, approved external isolation area/branch naming and verified-source selection; exact operation inputs freeze before each creation |
 | `Release manifest:` | no | Absent means no version change, tag, or publication |
 
-Budgets are ceilings, not targets. On reaching one, enter `STOP_SAFE`: preserve the last verified
+Hard budgets are ceilings, not targets. On reaching one, enter `STOP_SAFE`: preserve the last verified
 boundary, report current unverified changes, write the handoff, and stop. Never automatically stash,
 reset, or discard work to make the ending look green. Reaching a ceiling is a normal outcome
 (`PARTIAL` / `BUDGET`), not a failure.
@@ -569,6 +669,7 @@ building and leaves no account of what it did has produced nothing a human can u
 | --- | --- |
 | Require a **clean baseline** before project authoring or branch preparation; checkpoint only explicitly approved, inspected changes | Absorbing unexplained dirty content or discarding owner work |
 | Create and work on a dedicated `agent/<date>-<slug>` branch | Committing to `main` or any shared branch |
+| Explicitly authorized `prepare_worktree` from a verified healthy commit while preserving known run-authored broken work | Using isolation to bypass unknown drift, safety stops, denied tools, or to merge/delete/overwrite work |
 | Atomic commits, **only after scoped validation and review** | Committing unrelated baseline changes |
 | Push that exact branch/ref to the approved remote | Force-push, history rewrite, branch or tag deletion, implicit tags or publication |
 | Open or update a **draft** PR | Marking ready before every gate below passes |
@@ -593,7 +694,8 @@ unrelated baseline changes, and never stages, commits, pushes, or changes branch
 other leaf and no orchestrator stages, commits, pushes, posts replies, resolves threads, tags, publishes,
 or changes pull-request state. `Vanguard v2` proposes, obtains confirmation, delegates to the operator,
 and independently verifies its result; for the opt-in checkpoint below it verifies the owner's exact
-envelope authority instead of requesting another turn. It never runs the mutation itself. Reviewers assess merit and
+envelope authority instead of requesting another turn. The same applies only to expressly granted
+worktree isolation. It never runs the mutation itself. Reviewers assess merit and
 draft wording only. No agent receives merge authority.
 
 **One operation per invocation.** Every operator packet carries exactly one `Operator mode:`, and a
@@ -611,7 +713,8 @@ review gates, not publication gates transplanted onto routine discussion.
 In the exact-proposal route, before any operation Vanguard presents a concise proposal in the existing
 acceptance target and records the owner's exact confirmation/source in `run.md`. Only the opt-in local
 checkpoint below may defer final candidate/message selection under explicit owner delegations; it still
-freezes both before execution. No extra orchestration framework is required. Exact proposals include:
+freezes both before execution. Explicit worktree isolation similarly freezes exact operation inputs
+under its original grant. No extra orchestration framework is required. Exact proposals include:
 
 - Repository root and GitHub host/owner/repository; local branch/HEAD and exact remote/destination ref
    with expected tip, plus PR number/URL, base/head repositories/refs and head SHA as applicable.
@@ -653,47 +756,112 @@ is not. An uncertain result must be reconciled and any retry explicitly reapprov
 
 #### Opt-In Unattended Local Checkpoint
 
-Default remains no Git authority. Before authoring, a future run's owner-approved unattended envelope
-may explicitly authorize staging and exactly one local `checkpoint_commit` after its entire bounded
-acceptance target is complete, without another owner turn. It must fix the repository, exact
-`agent/<date>-<slug>` branch, starting HEAD, exact maximum product path list (no folders or globs),
-immutable target revision, required checks and independent reviews, and budgets. The owner must
-explicitly delegate final verified in-scope candidate selection to `Vanguard v2` and final verbatim
-commit message authorship to `Commit Author v2`. Neither delegation is implied by implementation
-approval, allowed paths, a task packet, or this rule. Record the approval/source and exact clause in
-`run.md`; the envelope is immutable authority, not a license to rewrite the target later.
+Default remains no Git authority. Before authoring, the owner must explicitly authorize local staging/
+committing, final verified candidate selection by Vanguard, and verbatim commit-message authorship by
+Commit Author. Record the exact approval/source in the immutable authority and `run.md`. Implementation
+approval, work areas, a packet, a delegate decision or this maintenance never supplies these grants.
 
-1. Vanguard completes the whole target and independently verifies the final diff and every required
-   check/review against the final content. Partial, failing, unreviewed, stale, unrun or blocked work
-   cannot be checkpointed. No green subset of an incomplete target, unresolved required review, or
-   High/Critical finding may be waived. A cutoff without a fully accepted candidate ends uncommitted.
-2. Vanguard freezes a generated exact candidate manifest and inspected diff with staged/unstaged/
-   untracked paths, additions/deletions and content identities, expected branch/HEAD/index/worktree,
-   current gate evidence and the verbatim Commit Author message for that diff. Link the immutable
-   records from `run.md` without changing the acceptance target. All changed content must be enumerated
-   and within the maximum list; unrelated baseline input, unknown content or an unlisted path blocks.
-   HEAD must still equal the envelope's starting HEAD. Deferred selection permits no unknown content
-   at execution time.
-3. Only Repository Operator executes. One `checkpoint_commit` packet links the exact approved envelope
-   clause and frozen candidate/message through `Approved proposal:`, and the frozen baseline through
-   `Expected state:`. The operator verifies that this clause has not already been attempted; a failed
-   or uncertain attempt does not restore authority. Immediately before staging and committing, it
-   rechecks authority, target completion, gates, branch, HEAD and the complete index/worktree inventory
-   and content. It stages exact paths only, inspects the staged diff against the frozen candidate and
-   expected staging effects, and commits the exact content/message once. It never chooses content or
-   rewrites the message.
-4. A changed HEAD, branch, index, content or message stops for fresh owner approval, never an unattended
-   re-freeze or retry. Refused tool approval remains `BLOCKED` / `ENVIRONMENT`; no alternate route or
-   approval-setting change. Failure or uncertainty stops the run, preserves and reports partial effects
-   (including staging), and allows read-only reconciliation only. No automatic retry or rollback.
-5. Vanguard independently reads back the actual commit SHA, parent, exact message, changed paths/content
-   and resulting index/worktree/branch state against the frozen records, then records the checkpoint as
-   consumed. An operator assertion or successful tool exit alone is not verification.
+Two policies are distinct; never silently upgrade an existing approval:
 
-This exception authorizes no partial checkpoint, second commit, amend, branch creation, push, PR action,
-merge, tag, version change, release, publication or other adjacent action. Existing attended exact-
-proposal approval and all scope, review, validation, secret, refusal and failure safeguards remain.
-Other operations retain their own authority and gates; none follows from this local checkpoint.
+- `single-final` retains exactly one complete-target local checkpoint, with fixed repository, exact
+  agent branch, starting HEAD, exact maximum file list, immutable target, gates and budgets. No partial
+  or second commit follows; a failed/uncertain attempt consumes the authority.
+- `rolling` explicitly permits successive unique local checkpoints within section 5's approved
+  assignment. Fix design, repository, initial branch/HEAD, permitted areas/exclusions, authors, gates
+  and deadline; select exact paths per slice. State whether `GREEN_PARTIAL` checkpoints are permitted.
+  No need to know every future filename. An authorized isolation result may identify a new continuing
+  branch; no unrelated observed branch/HEAD can replace the approved chain.
+
+#### Checkpoint Eligibility And Execution
+
+`COMPLETE` means the slice's completion obligations and required gates are satisfied. `GREEN_PARTIAL`
+preserves useful unfinished work at a blocker or planned boundary: every required checkpoint check
+and applicable independent review must pass for the actual entire candidate, including regression
+coverage for changed behavior. Build/test green alone does not waive a required review or safety gate.
+Record implemented work, missing requirements, blockers and next action; keep the slice incomplete.
+An independent next slice may proceed, but no dependency on the unfinished behavior is satisfied.
+
+Checkpoint criteria come from the approved authority/target before authoring. Never narrow filters,
+drop/skip tests, waive checks, move failed obligations into a new slice or silently redefine acceptance
+to label work green. An intentionally red specification is still failed execution and cannot enter a
+green partial commit. Unreviewed, stale, unrun, failing or unbound required evidence, an unresolved
+required finding, High/Critical risk, unrelated content or secret blocks checkpointing. Missing final
+feature behavior is recorded separately, never deleted from the target or reported as finished.
+
+1. Finish applicable product documentation through its existing owners before freeze. Independently
+   verify candidate scope and required execution/reviews. Reuse unchanged valid evidence under section
+   9, including configuration/tool/runtime/selection/environment bindings; do not reopen unchanged
+   reviews or rerun a suite solely because a commit is next. Reuse existing manifest/Git evidence
+   routes, not a new validation framework or run-local script for each checkpoint.
+2. Freeze a generated exact candidate manifest, inspected diff, all active index/worktree paths and
+   content identities (pre-staged, unstaged, untracked, added/deleted), expected branch/HEAD/state,
+   checkpoint ID/status, gate links, unfinished obligations and verbatim Commit Author message. Keep
+   parked work separately inventoried, not staged into the active candidate. All active changed content
+   must be enumerated and in scope. First parent is the approved starting HEAD; later parents bind only
+   independently verified approved predecessor commits or an expressly authorized isolation source.
+3. Record the unique operation ID as dispatched before invoking Repository Operator once. Its packet
+   links original authority and frozen records through `Approved proposal:` and `Expected state:`.
+   The operator checks no prior/in-flight attempt, expiry/revocation, eligibility, gates and the entire
+   frozen state immediately before staging. Stage only exact paths, inspect the staged diff, recheck
+   HEAD/branch/index/worktree against expected staging effects, and commit exact content/message once.
+4. Changed frozen HEAD, branch, content, index or message stops for fresh owner approval, not unattended
+   re-freeze or retry. Expected approved predecessor/staging effects are not drift; later authorized
+   authoring after a consumed checkpoint is not frozen forever. Failure/uncertainty preserves actual
+   and unknown effects, including staging, and stops Git successors for read-only reconciliation.
+   A new ID cannot recycle a failed attempt. No automatic rollback or delegate-approved Git retry.
+   Tool denial remains an environment stop, never an alternative tool/script or settings change.
+5. The operator records actual effects. Vanguard performs one independent readback of commit SHA,
+   parent, exact message, changed paths/content and resulting branch/index/worktree against the frozen
+   records. Record the checkpoint consumed and enter `NEXT_ACTION` immediately. Operator success or a
+   clean tree is not assignment completion; a ready authorized next slice starts without a user prompt.
+
+Five minutes is a **soft checkpoint-administration target**, from an eligible verified candidate through
+message/freeze, operator execution, independent readback and the existing run-record update. Track
+elapsed time; an overrun needs a brief concrete cause, not more paperwork, skipped safeguards or an
+automatic assignment stop. It extends no deadline. Full Scribe wrapup is not a checkpoint prerequisite.
+
+Rolling authority is local-only: the human reviews and pushes. It grants no push, PR action, merge,
+cherry-pick, rebase, amend, ref deletion, version change, tag, release or publication. Initial branch
+preparation and worktree creation need their own authority. Attended exact-proposal operations remain
+available under their existing rules, not as an implicit successor of the overnight assignment.
+
+#### Isolating Known Broken Work
+
+Only a distinct owner-approved `Worktree isolation:` clause or exact attended proposal permits
+Repository Operator `prepare_worktree`. The clause fixes the assignment/repository, allowed external
+worktree area and branch naming, verified-source selection, eligible known run-authored build/test
+failures, unchanged scope/gates and original deadline. It delegates exact safe branch/path selection
+within those bounds to Vanguard. Default is no isolation authority; it does not follow from commits.
+
+Before the operation, stop active writers/commands through their authorized lifecycle and confirm they
+are quiescent. Preserve the broken checkout and all failure records. Freeze a unique isolation ID,
+parked root/branch/HEAD and complete tracked/untracked dirty content inventory, failure evidence,
+last verified healthy source SHA and its gate bindings, and exact new branch/path. Unknown dirt,
+unexplained drift, a safety stop, failed/uncertain Git action or refused tool cannot be bypassed this way.
+
+The operator verifies repository identity, source evidence, current parked state, unused ID, absence of
+destination directory/branch, expiry/revocation and canonical containment. Reject traversal or symlink/
+junction escapes and locations inside any existing checkout or run-artifact directory. Recheck before
+one ordinary `git worktree add -b` with exact branch/path/SHA. No force, switching the parked checkout,
+stash/reset/cleanup, submodule update, restore/install, merge or remote action. Existing files survive.
+Read back new root/branch/HEAD/common Git identity and clean index/worktree, and compare parked contents
+against the frozen record. Failure/uncertainty requires read-only reconciliation and fresh owner
+approval, never a new ID and automatic retry; report all actual or unknown effects.
+
+Vanguard independently verifies that result, then binds author packets and checks to the new root and
+verifies its required baseline/readiness. An old absolute-path task can test the wrong checkout;
+creating a worktree alone proves no build/test readiness. Reuse setup only with correct verified inputs,
+otherwise use the separately authorized setup route. External databases/services are not isolated by
+a worktree; their approvals and ownership limits still apply. Never promise continuation without this
+execution route. Missing readiness defers dependent work, not permission to repoint frozen setup.
+
+Keep subsequent ready slices on one continuing healthy branch, not a worktree per slice or parallel
+completed branches. Track parked work and remaining obligations in `run.md`. When unblocked, existing
+authors finish the approved behavior against the current continuing branch with current specifications
+and fresh verification, using parked changes as reference. No blind tree copy, automatic Git merge,
+cherry-pick or rebase. Routine code reconciliation is agent-owned; genuinely new design conflicts need
+the delegate only inside its grant, otherwise the owner. Report the healthy branch for review/push and
+any still-parked incomplete work. Never automatically delete parked files, worktrees or refs.
 
 #### Replies And Thread Dispositions
 
@@ -781,7 +949,8 @@ Stop the run — `STOP_SAFE`, then report — on any of:
    diff drifting outside its approved scope;
 - an unresolved High or Critical review or security finding in dependent implementation/landing work;
    standalone approved discussion may truthfully report it, but never waive it;
-- a repair cycle or build-lap ceiling reached;
+- a hard owner or specialist repair/build/time ceiling reached; an exhausted default-policy repair
+   trigger follows section 5's explicit recovery or independent-work route, never an automatic reset;
 - a required check that cannot run at all, as distinct from one that ran and failed;
 - an unapproved mutation, including an irreversible action absent from the attended approved proposal
    or unattended envelope; version changes, tags, and publication still require a release manifest;
@@ -798,10 +967,11 @@ once and pass it verbatim; never create a repo-local v2 handoff or touch the v1 
 continuity remains writable when repository preflight blocks project work.
 
 **Batch Scribe work**: resume when session continuity needs reconciliation, checkpoint at a meaningful
-session/ownership boundary or planned pause, wrapup at sign-off. Do not invoke Scribe for every minor
-repair, compiler pass, state transition, or green increment. `run.md` provides recovery between those
-boundaries. An explicit fresh bounded request may skip resume when no prior state is being carried;
-it still ends with a final record and session-boundary handoff.
+session boundary or planned pause, wrapup at assignment sign-off. Do not invoke Scribe for every minor
+repair, compiler pass, author handoff, slice switch, commit or green increment. `run.md` provides recovery
+between those boundaries. A fresh bounded request may skip resume when no prior state is carried;
+it still ends with a final record and session-boundary handoff. A completed slice/operator report does
+not trigger wrapup while the assignment still has a permitted next action.
 
 The handoff states current work, next action, blockers, evidence links, and at most three short recent
 entries; it must be usable in under two minutes. Reconcile referenced current work, not every recent

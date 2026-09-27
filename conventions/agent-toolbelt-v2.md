@@ -1,11 +1,18 @@
 # Agent Toolbelt v2 - Workflow And Role Map
 
 **Status:** **Active selector generation.** v1 is archived for rollback, not deleted. **Created:**
-2026-08-29. **Revised:** 2026-09-26 - approved-design specification alignment and explicit preflight
-delegation status. **Owner:** G. Gordon Nasseri (ProphetManX). **Roster:** 30 v2 agents: `Vanguard v2`,
+2026-08-29. **Revised:** 2026-09-27 - rolling assignments, green partial checkpoints, delegated recovery
+and broken-work isolation. **Owner:** G. Gordon Nasseri (ProphetManX). **Roster:** 30 v2 agents: `Vanguard v2`,
 twenty-eight leaves in its allowlist, and `Toolbelt Keeper v2` deliberately outside it.
 
-**Future runs only.** On 2026-09-26 the owner confirmed all agents idle and authorized a narrow
+**Future runs only.** On 2026-09-27 the owner confirmed all agents idle and approved assignment-level
+continuation, successive local checkpoints including verified green partial work, repeated evidence-backed
+recovery decisions and explicit worktree isolation. Vanguard, Repository Operator and Owner Delegate
+carry the changes; their model/tool grants and roster membership are unchanged. The human retains
+pushing. Registered skills, the decision profile and archives are untouched. No old run or deadline is
+renewed. See [Rolling Assignments](#14-rolling-assignments) for preparation and offline acceptance cases.
+
+**Prior 2026-09-26 update:** the owner confirmed all agents idle and authorized a narrow
 approved-design expectation-alignment route. Owner Delegate remains report-only; Vanguard independently
 checks eligibility and records an immutable revision; Test Designer authors and Test Auditor reviews.
 Those four charters and the registered validation skill/template now agree with the shared protocol.
@@ -56,10 +63,10 @@ not something still running.
 
 | v1 agent | Target | Disposition |
 | --- | --- | --- |
-| `Vanguard` | **`Vanguard v2`** | One shared acceptance revision per slice; explicit delegation status at preflight, independent eligibility and immutable approved-design alignment revisions. Bounded delivery and independent verification; exact Git/PR proposals or an explicit local-checkpoint opt-in, with execution delegated to the sole operator. Sole selectable project orchestrator |
+| `Vanguard` | **`Vanguard v2`** | Preserves a timeboxed assignment across rolling slice targets and checkpoints; `NEXT_ACTION` selects ready work without another prompt. Independent eligibility/verification, green partial status, delegated recovery and authorized isolation; no direct Git mutation |
 | `TDD Lead` | **`Vanguard v2`** | **Retired into it.** It duplicated `Vanguard`'s coverage and tripped the description-overlap rule; v2 has exactly one orchestrator. **Archived 2026-08-29 with the rest of v1**, which is what actually retired it — before that it was merely planned |
 | `Session Scribe` | **`Session Scribe v2`** | Resume/checkpoint/wrapup at meaningful session boundaries; compact evidence links, no per-repair invocation or default whole-history sweep |
-| None | **`Owner Delegate v2`** | Added 2026-09-21. Resolves explicitly delegated preference choices and separately opted-in approved-design specification alignment; writes only its report. Current approved requirements fix replacements, never implementation output. Vanguard verifies admissibility; existing authors/reviewers act. No product, operation or profile-write authority |
+| None | **`Owner Delegate v2`** | Resolves expressly delegated preferences, approved-design alignment and bounded recovery. Each recovery decision permits one attempt; fresh evidence and a revised plan may justify another. Vanguard verifies eligibility. No product/operation authority, deadline extension or review waiver |
 | `Toolbelt Keeper` | **`Toolbelt Keeper v2`** | **Exists now.** Rewritten against the protocol for **four** locations — the flat live selector, the flat current mirror, the versioned generation archive, and the documentation — with whole-generation archive and restore. It maintains customization files rather than participating in a run, so it stays **outside every orchestrator's allowlist** and `Vanguard v2` cannot invoke it: changing the toolbelt remains a separate session. **The earlier plan to keep one shared v1 copy is superseded** — a shared v1 agent could not survive the v1 archive, and it had no vocabulary for generations |
 
 ### Discovery, requirements, and shaping
@@ -118,7 +125,7 @@ Every harness packet declares exactly one mode, a shared acceptance target, `Spe
 a generated baseline link, and focused checks/operation limits. Scaffold/maintain use exact
 `Allowed helper paths:` inside the test project. Validation-setup uses exact `Allowed setup paths:`
 and an immutable `Validation plan:`. Scaffold alone needs the designer-proved blocker. Maintenance
-follows `PREFLIGHT` -> `BOUNDED_DELIVERY` -> `SIGN_OFF`, with independent parent verification; no
+follows `PREFLIGHT` -> `BOUNDED_DELIVERY` -> `NEXT_ACTION`, with independent parent verification; no
 fabricated red, designer report or full cycle.
 
 Unexpected scaffold green must be explained against the target, not manufactured into red or silently
@@ -166,7 +173,7 @@ resume an existing run. Each begins with normal preflight and one shared accepta
 
 | Case | Route and acceptance evidence |
 | --- | --- |
-| Passing helper maintenance | Exact standalone helper paths -> Harness Engineer `maintain` -> parent diff/specification/membership comparison and focused rerun -> SIGN_OFF. Passing baseline is valid; no manufactured blocker/red or automatic full cycle |
+| Passing helper maintenance | Exact helper paths -> Harness Engineer `maintain` -> parent diff/specification/membership comparison and focused rerun -> NEXT_ACTION. Sign-off only at assignment end/pause; no manufactured red or automatic full cycle |
 | Ordinary production import correction | Implementer owns the local correction and compile/fix iterations; existing valid specifications and focused project check suffice -> independent final verification. No Designer, discovery, architecture, Code Reviewer, commit, or Scribe call per attempt |
 | New behavior needing regressions | Fix approved behavior and material risks -> Test Designer -> focused Test Auditor -> implementation owner -> independent final verification. Add contract/architecture/code/security gates only when the actual risk or explicit requirement calls for them; no speculative matrix requirements |
 | Concrete supporting report/exception bodies | Interface Architect snapshot -> Contract Reviewer -> explicitly scoped Implementer surface preparation if needed -> Designer/Auditor specifications -> Implementer bodies -> independent surface/execution checks and required reviews |
@@ -192,7 +199,7 @@ approval; a real semantic/scope decision does. These examples check routing rule
 | `Pipeline Auditor` | `Pipeline Auditor v2` | Retained. Read-only; never YAML; unlike v1 it may not append a feature request. **Exists now** |
 | `Azure Infrastructure Engineer` | `Azure Infrastructure Engineer v2` | Retained, **narrowed to Bicep, `.bicepparam`, and infrastructure docs — it writes no YAML at all.** v1 authored its own deployment pipeline; v2 specifies it and `Pipeline Engineer v2` writes it. **No mutating Azure command, in any mode.** **Exists now** |
 | `Azure Deployment Reviewer` | `Azure Deployment Reviewer v2` | Retained. `Ready` is not deployment permission, and it now also reviews the deployment YAML the pipeline engineer wrote. **Exists now** |
-| — | **`Repository Operator v2`** | **v2-only.** Sole mode-gated Git/PR/release executor, including approved `reply_to_pr_comment` and `resolve_review_thread`. Conversational approval suffices when attended; an explicit unattended opt-in permits one frozen final local checkpoint. Publication still needs its separate manifest. See *The Operator Boundary* below |
+| — | **`Repository Operator v2`** | Sole mode-gated Git/PR/release executor. Explicit `single-final` or `rolling` checkpoint authority; green partial commits only with passing required gates, and `prepare_worktree` only with isolation authority. One operation per invocation; no implicit push or integration |
 
 ### Prompts
 
@@ -230,6 +237,8 @@ unattended-envelope clause, or the separate release manifest where required.
 | Exactly one `Operator mode:` per invocation | One confirmation may cover a specified sequence, but each step has its own packet/report. No automatic adjacent action or repeated approval of unchanged details |
 | Expected HEAD and relevant state checked immediately before; results read back after | Include reviewed content/index, remote/PR head, target discussion and applicable gates. Advance expected state only from verified approved predecessors; unexpected change stops for reconfirmation |
 | Staging is an **exact enumerated path and content list** | Never a folder, glob, or `-A`. Pre-staged changes are included in inspection; unenumerated or changed content stops the operation |
+| Work areas are not staging lists | Rolling assignments approve designed work inside named projects/directories and exclusions; exact author paths emerge per slice and exact candidate content freezes before each checkpoint |
+| `prepare_worktree` is separate authority | Preserve known run-authored broken work and create a new checkout from a verified healthy SHA. No cleanup, copying dirt into a new baseline, automatic merge or hidden external-service authority |
 | The commit message comes from `Commit Author v2`, verbatim | The agent that decides *what to say* is not the agent that decides *what to include* |
 | It writes no project file except the exact version fields a manifest names | Its only other write is its own report. It authors nothing |
 | Replies and individual thread resolutions are explicit separate modes | No implicit posting/resolution; `fixed` needs current PR-head proof, while owner-approved `accepted-risk`/`no-change` records a disposition, not a fix or gate waiver |
@@ -243,30 +252,34 @@ one named mode at a time, and the operator refuses a gate the orchestrator has n
 
 ### Opt-In Unattended Local Checkpoint
 
-Default remains no Git authority. A future owner-approved envelope may authorize one local staging/
-commit after the entire bounded target, all required validation and independent reviews pass, without
-another owner turn. Before authoring it fixes repository, exact agent branch, starting HEAD, exact
-maximum product paths, immutable target, gates and budgets, and explicitly delegates final verified
-candidate selection to Vanguard and final verbatim message authorship to Commit Author. Neither
-delegation follows from an implementation request or allowed-path list.
+Default remains no Git authority. `single-final` retains the explicit one-complete-target checkpoint
+policy: fixed repository/branch/starting HEAD, exact maximum files, target, gates and budgets. `rolling`
+instead permits successive unique local checkpoints inside an approved timeboxed assignment, with
+work areas/exclusions and exact files chosen per slice. Both require explicit owner delegation of
+verified candidate selection to Vanguard and verbatim message authorship to Commit Author.
 
-Vanguard freezes the generated exact manifest, inspected diff, complete index/worktree content,
-current gate evidence and Commit Author message. Operator rechecks that unused authority and the
-frozen state before staging and committing, then makes one exact local checkpoint. Vanguard separately
-reads back commit, parent, message, contents and resulting state. This separates selection, prose,
-execution and verification without granting another agent mutation tools. The authoritative fields
-and refusal rules are in [protocol §6](agent-protocol-v2.md#opt-in-unattended-local-checkpoint).
+Rolling authority may expressly include `GREEN_PARTIAL`: actual changes pass every required checkpoint
+check and applicable independent review, while unfinished requirements and blockers remain recorded.
+It is not feature completion or permission to omit regression coverage, suppress failing tests, narrow
+gates or waive findings. Broken/unreviewed/stale candidates remain ineligible. All current changed
+content freezes in an exact manifest/diff/state with valid gate links and the Commit Author message.
 
-No partial/unreviewed target, unrelated input, unknown or changed candidate, or unlisted path qualifies.
-No second commit, automatic retry, amend, branch creation, push, PR action, merge, tag, version change,
-release, publication or adjacent action follows. Drift needs fresh owner approval; failed/uncertain
-effects stop for read-only reconciliation, and tool denial never permits another route or changed
-settings. Attended exact-proposal approvals remain unchanged. This is an opt-in mechanism, not approval
-for a particular project run or evidence that unattended execution works.
+Operator rechecks authority and frozen state, stages exact paths and commits once. Vanguard performs
+one independent readback, records consumption and enters `NEXT_ACTION`; a ready authorized slice starts
+without another prompt. Later parents bind only verified approved predecessors. New IDs cannot recycle
+failed operations; changed frozen content and tool refusals retain their stops. Reuse valid evidence,
+not a new validator per commit. Five minutes is a soft administration target, never a gate waiver or
+deadline extension. Product documentation precedes freeze; full Scribe wrapup is not a per-commit gate.
+
+Rolling work is local-only; the human reviews and pushes. No merge/cherry-pick/rebase, amend, release,
+ref deletion or implicit adjacent operation. Worktree isolation needs its separate grant. Attended
+exact proposals remain unchanged. See the [protocol](agent-protocol-v2.md#opt-in-unattended-local-checkpoint)
+and [rolling scenarios](#offline-assignment-scenarios). These rules do not prove unattended execution.
 
 #### Offline Checkpoint Scenarios
 
-Evaluate these against both live charters and the protocol, without a test commit or live delegation:
+These compatibility cases use `single-final` authority, not rolling authority. Evaluate against the
+live charters/protocol without a test commit or live delegation; rolling cases are in section 14.
 
 | Scenario | Required decision |
 | --- | --- |
@@ -552,7 +565,8 @@ Dimensions 1, 2, and 9 are disqualifying at any failure. The rest are comparativ
 | Build order | v2 was built beside v1, and v1 was left byte-unchanged throughout that build. **Superseded 2026-08-29 at the selector layer:** v1 now lives in `conventions/toolbelt/archive/v1/` rather than in the picker, so "beside" no longer describes what a human sees. The benchmark-then-switch gate for the **default** is unchanged |
 | Generations | Live prompts and their flat mirror carry **exactly one** generation. Named shared skills have separate live/mirror roots. Future archives include owned skill snapshots under `skills/` as well as root agents and `prompts/`, all manifest-covered. The v1 archive remains unchanged with no skills. Archive and rollback move a whole named generation after manifest validation; never overwrite a generation or copy an archive into the live prompts root. See the archive scheme for dependency compatibility |
 | Minimum complete scope | One immutable shared acceptance target per coherent slice: behavior, invariants, exclusions, owners, checks, risk gates, authorization, ceilings. No speculative abstractions, extension points, configuration, providers, retries, or lifecycle features. Necessary safety/correctness are included |
-| Owner delegation | Advisory by default; record/reconcile status at preflight, preserving valid opt-in without renewing expired authority. A bounded current-run clause enables named decisions; approved-design specification alignment must be explicitly included. Fixed profile, evidence, independent eligibility and revision/audit/baseline gates; no new workflow, operation permission or waived gate |
+| Rolling assignment | Approve designed requirements, work areas/exclusions and exact deadline once; derive slice targets/exact files just in time. Preserve remaining work and select ready dependencies after every checkpoint. No status reply, slice completion or commit implicitly ends the assignment |
+| Owner delegation | Advisory by default; preserve valid opt-in across slices/resumes. Name approved-design alignment and bounded recovery separately. Fixed profile, independent eligibility and normal technical gates; no new design, operation permission, deadline extension or review waiver |
 | Default routing | Understood reversible local work, including production, goes to its existing owner and focused independent verification. Add regression authors only for a real specification need; discovery/architecture/full review are not automatic. Public contracts, architecture, security, consequential operations and releases retain relevant specialist gates |
 | Requirements flow | Discovery captures intent → Architect writes → Reviewer attacks → one automatic repair pass → Vanguard consumes. **Vanguard drives every leg** — neither leaf holds an `agent` tool, so they never invoke each other |
 | Discovery artifacts | `docs/product-brief.md`, `docs/decision-log.md`, `docs/open-questions.md`, owned solely by `Product Discovery v2`. A non-owner leaf **reports** a proposed question and the stream it blocks; Vanguard routes it to Discovery to deduplicate and append |
@@ -571,14 +585,14 @@ Dimensions 1, 2, and 9 are disqualifying at any failure. The rest are comparativ
 | Sole ownership | `CHANGELOG.md` → `Changelog Author v2`. Root `README.md` → `README Author v2`. YAML → `Pipeline Engineer v2`. Feature requests → `Purpose Refiner v2`. Open questions → `Product Discovery v2`. Bicep/parameters → `Azure Infrastructure Engineer v2`. Supporting-type declarations/docs and bodies may share a file only through the explicit sequential reviewed handoff, never overlapping authority or concurrent writers |
 | Git and release execution | Repository Operator only, one mode per invocation. Vanguard obtains exact proposal approval or verifies the explicit unattended local-checkpoint opt-in, delegates, and independently verifies. Attended approval may cover a sequence; each step checks expected state and actual results. No agent merges/completes a PR |
 | Environment refusal | A denied or unobtainable tool approval is `BLOCKED` / `ENVIRONMENT` and the exact human command is named. **Never a second route to the same effect** — not another tool, spelling, script file, or redirect |
-| Repair loops | Protocol §5 progress-aware local iterations; no automatic fourth-compile stop. Explicit owner ceilings keep their stated meaning. Parent-mediated failed-gate/review cycles are distinct from local compiles. Narrower specialist limits, including requirements/contract single repair pass, remain; semantic disputes and repeated unchanged failures escalate |
+| Repair loops | Ordinary progress stays with its author. Explicit bounded-recovery delegation can permit one extra default-policy attempt per decision; repeated fresh evidence-backed requests are allowed before the original deadline. No counter reset, hard-owner/specialist-limit override, Git retry or waived gate |
 | Unknowns | Dependency-scoped: table and continue. Stop only per the protocol's three conditions |
 | Run artifacts | `<project-parent>/.agent-runs/<run-id>/`, outside every repository, retained 30 days. `<project-parent>` is the common parent of the **repository roots named in the run**, excluding non-repository customization roots — folding in a multi-root workspace's prompts folder resolves it to a drive root |
 | Deletion | Only completed or reviewed, unreferenced, older than 30 days. Never active, unreviewed, failed, or referenced |
-| Handoff | External active handoff, at most three short recent entries, evidence links, usable in under two minutes. Resume only when continuity needs reconciliation; checkpoint at a meaningful session/ownership boundary or pause; wrapup at sign-off. No per-repair calls, default whole-history sweep, or automatic retention action. Existing owners promote durable content in batches; Scribe verifies |
+| Handoff | Existing run record between slices/commits; Scribe at an actual session boundary, planned pause or assignment end. Compact external handoff, evidence links and batched durable promotions; no per-repair/commit wrapup or default history sweep |
 | Evidence | Mechanically generated manifests and check summaries outside repositories. Baseline per approved specification revision, comparisons at mutation boundaries, reuse only while inputs/configuration/tool/environment assumptions hold. Actual test identities/counts/failures/skips; zero tests and stale results never pass. Reports link records and summarize differences |
 | Branch refusal | A refused `prepare_branch` leaves operational reports, the external handoff, and read-only analysis; no alternate mutation route. No repository artifact may be edited on a default/shared branch, including documentation. An approved target requiring repository writes enters `STOP_SAFE`. A separately scoped discussion-only request needs no branch preparation in the first place |
-| Unattended envelope | Stop by 07:00 local; 3 repair cycles per failed gate; 8 build laps; repositories, paths, checks, reviews and capability-readiness evidence are mandatory. No Git authority by default; only explicit protocol §6 opt-in permits one fully accepted final local checkpoint with delegated candidate/message selection |
+| Unattended envelope | Exact approved date/time/time zone; 07:00 is a preparation suggestion. Default per-gate policy is 3 repairs, with explicit bounded recovery if granted. Non-rolling default is 8 build laps; rolling throughput uses the deadline unless the owner sets a hard numeric cap. Explicit local-checkpoint/isolation grants, never implicit Git authority |
 | Git | Clean baseline for authoring/branch preparation; explicit inspected checkpoint paths/content; `agent/<date>-<slug>` for commits; scoped validation/review; approved draft PRs/replies/named thread dispositions. No force-push, history rewrite, ref deletion, implicit tag/publication, or agent merge |
 | Release | Exact manifest only — repository, version file, exact old and new values, channel, tag, feed, artifacts, gates, cost cap. Never infer a version or channel |
 | Azure | No unattended deployment. Pipeline runs only when the envelope names them |
@@ -843,7 +857,7 @@ worker that can approve its own work. The authority mechanics live in
 | --- | --- |
 | `proj-a-owner-delegate-v2.agent.md` | Live/mirrored charter; `Owner Delegate v2`, scalar Astra pin, `read/search/edit` with report-only writes and no child agents. Selectable for attended advisory discussion and invocable by Vanguard |
 | [owner-decision-profile-r1.md](owner-decision-profile-r1.md) | Versioned reference with ten confirmed preferences, ten interview question/answer records, three contextual import examples and a separately tentative inference. Not an auto-loaded instruction, skill or operation grant |
-| `proj-a-vanguard-v2.agent.md` | Explicit preflight delegation status, independent eligibility checks, immutable alignment revisions, decision register and Scribe packet content; tools/model remain unchanged |
+| `proj-a-vanguard-v2.agent.md` | Assignment/delegation continuity, independent decision eligibility, immutable slice/alignment revisions, recovery consumption and morning register; tools/model unchanged |
 | `tdd-a-test-designer-v2.agent.md` / `tdd-a-test-auditor-v2.agent.md` | Separate exact expectation authoring and independent candidate-bound audit; no production, setup, gate or path authority added |
 | [validation skill](skills/prophetsway-validation/SKILL.md) and [plan template](skills/prophetsway-validation/assets/validation-plan.md) | Revision-specific evidence and preserved failures, with setup authorization/audit kept separate |
 | Current run's `run.md` and invocation reports | Exact questions/examples, alternatives, decisions, authority/rationale, actual work and owner review. Outside repositories under the existing run-artifact policy |
@@ -866,9 +880,10 @@ Owner delegation:
   Designed components and authoritative design: <exact target sections>
   Permitted decision classes or choices: <bounded list inside that design>
   Specification alignment: <explicitly include approved-design-specification-alignment in that list, or exclude it>
+  Recovery: <explicitly include bounded-recovery in that list, or exclude it>
   Profile: <absolute R1 path and generated SHA-256 evidence>
   Exclusions: <protocol exclusions plus any owner-specific hold points>
-  Limits: <unchanged paths, authors, operations, checks, reviews and budgets>
+  Limits: <original deadline, hard caps, paths, authors, operations and gates; distinguish default repair policy>
   Validity: <this run's identity and applicable expiry/revocation limits>
   Owner approval/source: <actual confirmation of this clause>
 ```
@@ -884,6 +899,17 @@ UNRESOLVED` in the summary and run record, with the exact approved current-run c
 Reconcile the owner request, target/envelope and relevant handoff. Recover a still-valid opt-in lost
 from a packet, or block it as unresolved; never silently downgrade it. No automatic renewal or reuse
 of another run's approval. A handoff and this maintenance request are not project-run authority.
+
+### Bounded Recovery
+
+An explicit `bounded-recovery` grant lets the delegate consider another attempt when the default
+no-progress/per-gate policy would stop that problem. Each request carries failure/history, new evidence,
+changed causal understanding, a materially different plan, discriminating check and bounded effort
+inside the original deadline. Vanguard independently checks eligibility and consumes the decision when
+the attempt starts. Each approval buys one attempt; there is no fixed total of fresh justified approvals
+within the window. Reworded retries, new Git authority, deadline/hard-cap extensions, specialist-limit
+overrides and waived reviews remain prohibited. Ordinary productive corrections need no delegate gate.
+See the [governing procedure](agent-protocol-v2.md#delegated-bounded-recovery).
 
 ### Approved-Design Alignment
 
@@ -996,3 +1022,83 @@ not an enforced filesystem sandbox. Model agreement is not independent factual e
 Before a fresh run, reload VS Code and check Owner Delegate, Vanguard's allowlist and Chat Diagnostics.
 File hashes do not prove picker registration or live delegation; both need observation after reload.
 This maintenance starts no autonomous project run or recommendation-only pilot.
+
+## 14. Rolling Assignments
+
+The 2026-09-27 maintenance keeps assignment completion distinct from slice and checkpoint completion.
+Vanguard owns continuation and independent readback; Repository Operator owns each exact mutation;
+Owner Delegate can decide expressly granted questions, including bounded recovery. Existing authors and
+reviewers keep their boundaries. No new agent, tool grant, skill, profile revision or archive generation.
+
+Discuss undesigned requirements before leaving. The owner approves designed work areas rather than
+guessing every future filename; Vanguard derives exact slice targets and author paths as work becomes
+ready. A blocked requirement defers its dependencies while another ready slice proceeds. The following
+is a preparation outline, not authority for any repository or operation:
+
+```text
+Assignment authority: <immutable revision and actual owner approval/source>
+Designed requirements: <approved behavior and source documents>
+Allowed repositories: <roots, initial agent branches and verified starting HEADs>
+Allowed paths: <projects/directories or files; exact paths selected per slice>
+Exclusions: <paths, responsibilities and explicit owner hold points>
+Required checks/reviews: <reusable readiness and checkpoint gates; completion obligations stay visible>
+Stop by: <absolute date, time and time zone>
+Max build laps: <deadline-bound for rolling, or an explicit hard numeric cap>
+Max repair cycles per failed gate: <default policy, distinguished from any hard owner cap>
+Owner delegation: <profile, permitted choices; explicitly include/exclude alignment and bounded-recovery>
+Local checkpoint: rolling; GREEN_PARTIAL <permitted or excluded>
+Candidate/message delegation: Vanguard selects verified content; Commit Author supplies verbatim message
+Worktree isolation: <explicit grant or none; approved external area, branch naming and source selection>
+Remote operations: none; owner reviews and pushes
+```
+
+### Checkpoint And Isolation
+
+Complete applicable documentation as part of the slice before freezing candidate content. A green
+partial checkpoint can preserve unfinished work in place, with all required current gates passing and
+remaining behavior/blockers recorded honestly. Do not split off failing tests or scope down a gate to
+make it eligible. The checkpoint is candidate/message, one Operator invocation, one independent readback
+and a compact update to the same run record. Reuse valid evidence; a five-minute overrun identifies its
+concrete cause rather than spawning a new verification project. Continue immediately when permitted.
+
+Known run-authored broken work may be parked only under explicit isolation authority. Operator creates
+a clean worktree from the last verified healthy checkpoint without altering parked changes. Vanguard
+verifies paths, identity, baseline and executable checks for that actual root; filesystem isolation does
+not authorize external resources. Keep later ready work on one continuing healthy branch. Recover parked
+behavior through existing authors against that branch, with current specifications and fresh checks,
+not automatic Git merges or blind copies. The morning record names the verified branch to review/push,
+parked incomplete work and any real owner decision; no automatic cleanup or guarantee of conflict-free
+integration is implied.
+
+### Offline Assignment Scenarios
+
+These are expected decisions for static policy review against the three live agents and shared protocol,
+not runtime delegation tests, a measured five-minute commit, or permission to make a test Git mutation.
+Exercise the positive continuation case in a separately approved fresh pilot after selector reload.
+
+| ID | Case | Required result |
+| --- | --- | --- |
+| RA01 | Successful complete checkpoint; active window; another authorized ready slice | Independent readback, consume checkpoint, NEXT_ACTION and start that slice in the same turn without another prompt |
+| RA02 | Useful unfinished work; all required checkpoint gates pass; green partial permission | Normal exact local commit with GREEN_PARTIAL status; retain unmet requirements and continue independent ready work |
+| RA03 | Next slice depends on unfinished partial behavior | Do not treat the commit as completed behavior; choose another ready slice or report the dependency |
+| RA04 | Owner asks for status during a valid assignment | Brief update, preserve deadline/grants and continue; no implicit pause, renewal or Scribe wrapup |
+| RA05 | Deadline expires before another action or while staging has already occurred | Start no new product/Git action; preserve/reconcile effects and close out honestly, without extending time |
+| RA06 | Explicit pause or cancellation | Stop launching work; preserve state and report the actual pause/cancellation; no automatic resume |
+| RA07 | Desired implementation lacks approval; independent work or read-only planning is authorized | Perform only that permitted work; record the missing decision, never infer repository/setup writes |
+| RA08 | Implementation approved but checkpoint opt-in or candidate/message delegation missing | No commit; delegate cannot supply Git authority |
+| RA09 | HEAD, branch, index, content or message changes after freeze | Stop for fresh owner approval; no silent re-freeze or substituted baseline |
+| RA10 | Single-final authority, already used or target still incomplete | No second or partial checkpoint; never silently upgrade to rolling |
+| RA11 | Failed/zero-test/stale required evidence or unresolved required review | No green checkpoint; do not narrow filters, skip tests or relabel failures as deferred behavior |
+| RA12 | Git operation failed or has uncertain effects; new ID proposed | Reconcile read-only and preserve partial effects; no retry under a fresh ID or recovery decision |
+| RA13 | Checkpoint administration exceeds five minutes | Record the concrete cause briefly; preserve gates/deadline and continue if still permitted, not more paperwork |
+| RA14 | A new class filename is needed inside approved design/work areas | Derive exact author paths in the next slice; no requirement to have predicted the name at assignment approval |
+| RA15 | New responsibility, excluded path or path escaping the approved area | Block that change; directory permission and delegate familiarity cannot expand scope |
+| RA16 | Default repair stop; explicit recovery grant; new evidence and materially different bounded plan | Delegate may approve one attempt; Vanguard independently verifies and records consumption before dispatch |
+| RA17 | That attempt fails but yields new causal evidence and another revised plan | A fresh request may earn one further attempt within the same window; no fixed total of valid approvals |
+| RA18 | Same failed proposal reworded, or generic preference grant without recovery | No extra recovery attempt; preserve history and defer/switch only as permitted |
+| RA19 | Recovery would exceed deadline, hard owner cap or specialist limit, waive review or retry Git | Refuse the override; those boundaries are not delegated |
+| RA20 | Known run-authored broken build/tests; isolation granted; independent ready slice | Quiesce writers, freeze parked state, create one new worktree from verified healthy SHA, verify readiness and continue there |
+| RA21 | Unknown dirty changes, safety stop or denied tool is presented as isolation | Preserve the stop; worktrees are not a detour around authority or safety |
+| RA22 | Destination exists/escapes allowed area, or check still points at the old root | Reject creation or dependent authoring as applicable; wrong-checkout evidence cannot prove readiness |
+| RA23 | Parked behavior becomes unblocked after other slices progress | Existing authors reconcile it against the continuing branch with current specifications and fresh checks; no automatic merge or deletion |
+| RA24 | No permitted work remains, or the requested assignment is fully complete | Record the actual stopping condition and full Scribe handoff; do not invent work merely to fill the window |
