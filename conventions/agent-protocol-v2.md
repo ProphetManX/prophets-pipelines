@@ -1,6 +1,15 @@
 # Agent Protocol v2 - Shared Delegation Mechanics
 
-**Applies to:** the active v2 roster. **Revised:** 2026-09-27. **Owner:** G. Gordon Nasseri (ProphetManX).
+**Applies to:** the active v2 roster. **Revised:** 2026-10-03. **Owner:** G. Gordon Nasseri (ProphetManX).
+
+On 2026-10-03 the owner confirmed all agents idle and authorized preparation of the bounded dashboard
+reporting pilot in section 10. Only Vanguard, Implementer and Code Reviewer participate. Default
+reporting and every existing verification/operation boundary remain unchanged; this starts no run.
+
+Later on 2026-10-03, after reporting favorable dashboard use, the owner explicitly confirmed all
+agents idle and authorized the full project-run reporting rollout in section 11. `dashboard-v1`
+supports Vanguard and its complete leaf allowlist. Section 10 still describes the earlier pilot
+mode, not the new roster limit. Existing runs, model/tool grants and required gates remain unchanged.
 
 This revision governs **new runs only**. Existing invocations and continuations retain their recorded
 protocol, acceptance revision, budgets, and gates until the owner explicitly closes or re-scopes them.
@@ -238,6 +247,11 @@ root. If no valid parent exists, obtain an explicit external run root from the o
 ```
 
 ### One artifact per invocation, two writes
+
+The explicitly authorized dashboard reporting modes in sections 10 and 11 replace the participating
+leaf's authored Markdown with one canonical JSON record and a deterministic compatibility projection.
+Their meaningful status-update lifecycle is the exception to this prose two-write rule; other runs
+retain this section unchanged. Historical records and frozen inputs are never migrated in place.
 
 Write a short `**State:** STARTED` record before the first edit or substantive read: objective/target
 link, scope, intended check, and `Scope decision: PROCEED | SPLIT`. Finalize the same file once after
@@ -1044,3 +1058,42 @@ evidence. Utilities are not authorization, a sandbox, a new agent, or a tool-per
    comparisons and focused execution. Read-only reviewers consume those records within their tools.
    Reports link authoritative generated records and summarize results/differences, not copied tables.
    Never claim unperformed independent review, whole-suite certification, or publishing readiness.
+
+## 10. Opt-In Dashboard Reporting Pilot
+
+Read [agent-dashboard-pilot-v1.md](agent-dashboard-pilot-v1.md) before invoking, authoring or consuming
+`Reporting mode: dashboard-pilot-v1`. That document and its schema define the narrow operational
+exception for Vanguard, Implementer and Code Reviewer; no other leaf opts in through a packet alone.
+
+New, explicitly authorized runs may name the exact repository-local project ledger, registered
+current-run canonical/compatibility paths, and the publisher operation. Leaves author only their own
+canonical JSON. Vanguard owns the forecast ledger and routes requests; the publisher alone generates
+the Markdown compatibility views and dashboard data. Do not require duplicate authored narratives.
+Default reporting remains Markdown. This changes no product-file authority, model/tool grant,
+required review/check, frozen setup, deadline, Git operation, retention or historical outcome.
+
+Preflight must establish compatibility with the actual report readers and gate bindings before
+dependent work. A generated report is not independent approval. Final canonical and derived bytes
+remain protected; failures or format conflicts follow the existing stop/revision routes. Current
+run control and approvals remain in their existing authoritative artifacts, not copied into a status
+board or replaced by dashboard completion flags. Toolbelt maintenance does not execute the pilot.
+
+## 11. Full Project-Run Structured Reporting
+
+`Reporting mode: dashboard-v1` supports every exact leaf in Vanguard's current allowlist. Read
+[agent-dashboard-v1.md](agent-dashboard-v1.md) before preparing, authoring or consuming this mode.
+Vanguard proposes it for newly prepared dashboard-enabled runs under the normal explicit path/
+publisher authority; all 28 leaf charters carry the same operational report-sink exception.
+Toolbelt Keeper remains outside the product-run allowlist, and no model/tool permission is added.
+
+The canonical JSON replaces only the leaf's authored operational report. The publisher generates
+compatibility Markdown with the complete role-specific body, verdicts, bindings and verbatim text.
+Existing product documents, session handoff, run control, approvals and evidence retain their owners.
+Vanguard owns the persistent plan and routes requests; leaves only author their own records/replies.
+Current schemas, exact registrations, actual reader compatibility and required independent gates
+remain mandatory. No new validation cycle is introduced merely to publish a status.
+
+Preserve existing Markdown and `dashboard-pilot-v1` runs as recorded. The schema retains the pilot's
+two-leaf restriction. A new project-level mode does not authorize adding work to an old run, changing
+frozen reports/readers, omitting a required check or restarting an expired assignment. Start the
+full-roster mode only at a freshly authorized run boundary; maintenance does not execute that run.

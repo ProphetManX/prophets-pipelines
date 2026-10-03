@@ -4,9 +4,45 @@
 > building, changing, or debugging agent customizations. Do not add it to `AGENTS.md` — it
 > is administrative context, irrelevant to day-to-day coding sessions.
 
-**Built:** 2026-08-08 · **Revised:** 2026-09-27 · **Owner:** G. Gordon Nasseri (ProphetManX)
+**Built:** 2026-08-08 · **Revised:** 2026-10-03 · **Owner:** G. Gordon Nasseri (ProphetManX)
 **Covers:** the customization roster and the `AGENTS.md` conventions system across 8 repos —
 **30 active v2 agents**, **26 archived v1 agents**, **2 active prompts**, and **1 shared skill bundle**.
+
+**2026-10-03 full reporting rollout:** after favorable dashboard feedback, the owner explicitly
+confirmed all agents idle and authorized reporting changes for every project-run agent. Vanguard
+and all 28 leaves now support [dashboard-v1](agent-dashboard-v1.md); Toolbelt Keeper stays outside
+the product workflow. The live charters and flat mirrors gain only the common reporting exception
+and Vanguard's full-roster routing instructions. Frontmatter names/models/tools/allowlists, prompts,
+registered skills, decision profile and archived definitions are unchanged.
+
+One canonical JSON report replaces each leaf's authored operational Markdown. Product documents,
+security reviews, the external handoff, exact commit/PR text, specialist verdicts and all required
+checks retain their existing contracts. The shared publisher creates compatibility reports; it does
+not supply independent approval. Its roster/schema and publication tests cover all exact leaf names
+and report fidelity. The UI layout is unchanged. A new run still needs actual-reader compatibility
+and exact operational authority; no stopped or frozen run is converted or resumed here.
+
+The earlier `dashboard-pilot-v1` mode remains restricted to its original two leaves. Existing pilot
+records keep their original projection format and byte identity. Reloading/selector verification
+and a fresh authorized full-roster run remain separate runtime observations, not inferred from the
+owner's UI feedback or offline tests. See the [current workflow](agent-toolbelt-v2.md) and the
+[full reporting guide](agent-dashboard-v1.md). No product or Git operation is authorized by this update.
+
+**Earlier 2026-10-03 pilot setup (historical):** the owner approved the bounded integration and explicitly
+confirmed all agents idle. Vanguard, Implementer and Code Reviewer now support the opt-in
+[dashboard-pilot-v1 contract](agent-dashboard-pilot-v1.md), with one canonical JSON report per leaf
+invocation and deterministic Markdown/dashboard projections. Vanguard owns the persistent slice
+forecast and request routing and has only the exact publisher-operation exception; the two leaves
+write only their own records and retain their existing product/execution boundaries. Live files and
+flat mirrors are synchronized as part of this maintenance. Models, frontmatter tools/allowlists,
+roster, prompts, registered skills, decision profile and archives are unchanged.
+
+The earlier pilot named three participating charters and shared publisher/schema/tests. Within that
+legacy mode, all other agents and non-opted-in runs retain ordinary Markdown reporting.
+Required verification is unchanged, historical/frozen records stay intact, and actual reader
+compatibility is a new-run prerequisite. A real Logger pilot was a separate, freshly authorized
+Vanguard run after selector verification; neither integration code nor synthetic tests prove that
+the delegated workflow ran. No product or Git operation is authorized by this maintenance.
 
 **2026-09-27 rolling assignments:** after the owner confirmed all agents idle, Vanguard, Repository
 Operator and Owner Delegate gained the approved timeboxed multi-slice workflow. Assignment state and

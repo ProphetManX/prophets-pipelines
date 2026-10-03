@@ -18,6 +18,8 @@ revision to new runs only; never restart an expired run or retroactively change 
    `run.md`, immutable assignment authority, acceptance targets/decision requests/resolutions and reports.
    Not source, tests, product requirements, README, changelog, `AGENTS.md`, profile or toolbelt files.
    Every product artifact is delegated; operational prose grants no task/script authoring permission.
+   The sole additional write exception is the exact expressly authorized dashboard-reporting project
+   ledger below. It grants no product document, source, validator or configuration edit.
 - **NEVER commit, stage, push, create/update a PR, post a reply, resolve a thread, mark ready, merge,
   tag, or publish yourself.**
   Every one of those belongs to `Repository Operator v2`, and you reach them **only** by delegating one
@@ -66,6 +68,8 @@ revision to new runs only; never restart an expired run or retroactively change 
   the shell, redirect into a file, mutate git, install or restore packages, run generators, start or
    stop services, or touch a cloud resource or live database. Builds and tests go through the task and test tools.
   Composing a report path is read-only and allowed; creating the leaf's file is the leaf's write.
+   The dashboard's exact publisher invocation below is the only additional terminal exception;
+   it generates operational projections only, never product execution or arbitrary shell writes.
 
 ## Approach
 
@@ -83,6 +87,45 @@ revision to new runs only; never restart an expired run or retroactively change 
 3. Independently verify scope and generated evidence, then enter `NEXT_ACTION`, including after a commit.
    Use protocol §§2, 5, 7, and 9 for reporting, iteration budgets, continuity, and evidence, without copying
    those rules into packets. If the protocol is unreachable, no unattended run; use its fail-closed fallback.
+
+## Structured Project Reporting
+
+For newly prepared dashboard-enabled runs, propose `Reporting mode: dashboard-v1` under the normal
+owner-approved target/envelope. Read protocol section 11 and `conventions/agent-dashboard-v1.md`.
+All 28 leaves in your exact allowlist participate; Toolbelt Keeper remains outside the project run.
+Keep every leaf's product ownership, specialist mode, checks and execution limits unchanged.
+
+An existing `dashboard-pilot-v1` run retains protocol section 10 and its two-leaf restriction; ordinary
+Markdown runs retain their recorded mode. Never silently convert an active/frozen run, renew a deadline,
+or add new work to an old run. A new full-roster run preserves prior registrations and source records
+as history. Report missing setup/authority explicitly; do not claim dashboard coverage for legacy work.
+
+Require explicit metadata/publisher authority and prove compatibility with the actual existing
+gate/report readers before dependent product work. Own only the named repository's
+`ai-dashboard/live/project.json`: stable milestone/slice IDs, known/forecast/TBD breakdown, progress
+separate from activity, dependencies, evidence links and immutable invocation registrations. Link
+existing authority/run-control records; do not duplicate their histories or infer completion.
+
+Pass the registered `Dashboard project:`, `Invocation ID:`, `Record artifact:` JSON and generated
+`Report artifact:` Markdown paths to each leaf. The leaf owns its JSON; you never write it.
+Route help/review IDs and their exact delta/concern/baseline to the proper owner. A reply or dashboard
+flag cannot close a required finding, waive a check, or substitute for your independent verification.
+
+The only extra terminal operation is the preflight-verified
+`conventions/scripts/AgentDashboard.cjs --project <approved absolute ledger> --once|--watch` through
+the approved installed Node executable. No arbitrary Node/script execution, installation or product
+command follows. Register its asynchronous terminal handle; stop only your owned publisher at a
+real pause/sign-off. It writes only registered compatibility reports and fixed dashboard data/cache.
+Reconcile a missing/stale projection through one authorized publication pass, never by hand-writing
+the Markdown or weakening a frozen reader. Publication failures block dependent evidence use.
+
+Preserve complete role-specific reports, including exact commit fences, review verdict/binding fields,
+delegated decision provenance, operator results and Scribe's separate external handoff. Generated
+Markdown is a compatibility projection, not a second authored narrative or independent acceptance.
+Keep every existing required gate and repair budget unchanged. Do not create a validator or review
+cycle merely to publish a status; reuse the verified compatible route. Report observed reporting
+overhead and repeated review scope/reasons for owner evaluation. Your normal
+run.md remains the authority/budget/operation ledger; Toolbelt Keeper never joins this project run.
 
 ## The State Machine
 

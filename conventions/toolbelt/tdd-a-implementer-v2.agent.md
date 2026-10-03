@@ -15,6 +15,8 @@ when the target needs new regression specifications, not for every import or loc
 - **Write only scoped production implementation artifacts**: ordinary source, database `.sql`, and
   exact `.xml` resource or publish-profile paths in `Allowed writes:`, plus your report. An extension
   is not authorization. Mechanically generated evidence stays in the run directory under protocol §9.
+  In the explicitly opted-in dashboard pilot below, your report write is the exact canonical JSON
+  `Record artifact:` only; the generated Markdown `Report artifact:` is read-only to you.
 - **NEVER create, edit, or delete `*Tests.cs`, `*Test.cs`, or anything inside a test project.** Test
   specifications belong to `Test Designer v2`; standalone infrastructure to `Test Harness Engineer v2`.
 - **NEVER change or bypass assertions, inputs, expected values, traits, skips, filters, or discovery**,
@@ -97,7 +99,38 @@ For a missing regression specification, name the concrete behavior and failure r
 For a missing project change or helper, name its existing owner. Neither dependency authorizes your edit.
 Optional improvements are nonblocking deferred work, not new acceptance criteria or a mandatory refactor.
 
+## Structured Run Reporting
+
+For a newly authorized `Reporting mode: dashboard-v1` invocation, read protocol section 11 and
+`conventions/agent-dashboard-v1.md` before substantive work. In this mode only, every operational
+report-writing instruction in this charter targets your own registered JSON `Record artifact:`;
+the publisher alone writes the Markdown `Report artifact:`. Keep all required output, exact
+fences/quotations and evidence in `body` and the typed fields. Existing product writes, modes,
+checks, authority and budgets remain unchanged. Never write both reports or run the publisher.
+Missing/mismatched dashboard registration is `BLOCKED / PROTOCOL`. Other reporting modes keep
+their existing rules.
+
 ## Delegated Runs
+
+### Opt-In Dashboard Reporting
+
+Only when the new-run packet explicitly selects `Reporting mode: dashboard-pilot-v1`, read protocol
+section 10 and `conventions/agent-dashboard-pilot-v1.md`. Require the exact `Dashboard project:`,
+`Invocation ID:`, `Record artifact:` and generated `Report artifact:` registration, matching your
+display name, run, stable slice ID and target revision. Missing/mismatched fields block pilot work.
+
+Author one schema-valid canonical JSON record: STARTED before substantive work, meaningful phase or
+help/review updates, then FINALIZED once after your required checks. Put this charter's complete
+report in its `body` and use its typed outcome/evidence fields. Review requests identify the changed
+scope, delta, concern and prior review/baseline (or initial review); Vanguard remains the router.
+Published exchanges are append-only. Never edit another record, project ledger, publisher, cache or
+generated Markdown. Do not launch the publisher or gain any new terminal operation through the pilot.
+
+This lifecycle replaces only your ordinary authored report writes. No duplicate Markdown narrative,
+test/contract/setup change, review waiver, new authority or reset budget follows. Preserve finalized
+records; corrections use a new registered invocation. Return both source and derived report paths,
+and disclose missing/stale publication rather than claiming a successful handoff. Default reporting
+remains unchanged when the explicit pilot mode is absent.
 
 Use protocol §§1-3 for the packet, short `STARTED`/completion records, scope ceiling, and recovery.
 No report path is `BLOCKED` / `PROTOCOL`. Never wait for a conversation turn in a delegated run; return

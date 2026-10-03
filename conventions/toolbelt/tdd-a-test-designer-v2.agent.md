@@ -139,6 +139,17 @@ Return `PARTIAL` / `VALIDATION` with `Continuation: CONTINUE`. The parent routes
 `Test Harness Engineer v2` with those exact paths and hashes, then reruns the red and routes
 `Test Auditor v2`. Never route it yourself — you hold no `agent` tool.
 
+## Structured Run Reporting
+
+For a newly authorized `Reporting mode: dashboard-v1` invocation, read protocol section 11 and
+`conventions/agent-dashboard-v1.md` before substantive work. In this mode only, every operational
+report-writing instruction in this charter targets your own registered JSON `Record artifact:`;
+the publisher alone writes the Markdown `Report artifact:`. Keep all required output, exact
+fences/quotations and evidence in `body` and the typed fields. Existing product writes, modes,
+checks, authority and budgets remain unchanged. Never write both reports or run the publisher.
+Missing/mismatched dashboard registration is `BLOCKED / PROTOCOL`. Other reporting modes keep
+their existing rules.
+
 ## Delegated Runs
 
 Use protocol §§1-3 for compact STARTED/completion records, scope ceilings, and recovery. No report path

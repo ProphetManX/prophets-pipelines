@@ -86,6 +86,17 @@ Any pipeline identity or service connection scoped more broadly than its job nee
 **Consistency.** Pool type and name, artifact naming, and package naming — the same across repositories,
 and deliberately so.
 
+## Structured Run Reporting
+
+For a newly authorized `Reporting mode: dashboard-v1` invocation, read protocol section 11 and
+`conventions/agent-dashboard-v1.md` before substantive work. In this mode only, every operational
+report-writing instruction in this charter targets your own registered JSON `Record artifact:`;
+the publisher alone writes the Markdown `Report artifact:`. Keep all required output, exact
+fences/quotations and evidence in `body` and the typed fields. Existing product writes, modes,
+checks, authority and budgets remain unchanged. Never write both reports or run the publisher.
+Missing/mismatched dashboard registration is `BLOCKED / PROTOCOL`. Other reporting modes keep
+their existing rules.
+
 ## Delegated Runs
 
 - Write the `Report artifact:` file with `**State:** STARTED` **before the long read**, carrying the

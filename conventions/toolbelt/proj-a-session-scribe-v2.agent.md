@@ -124,6 +124,17 @@ and do not block a bounded completion. Record the limits of local verification w
 operations, certification, or publishing. A fresh bounded task can skip resume when no prior state is
 carried; session-boundary wrapup remains the closing continuity operation.
 
+## Structured Run Reporting
+
+For a newly authorized `Reporting mode: dashboard-v1` invocation, read protocol section 11 and
+`conventions/agent-dashboard-v1.md` before substantive work. In this mode only, every operational
+report-writing instruction in this charter targets your own registered JSON `Record artifact:`;
+the publisher alone writes the Markdown `Report artifact:`. Keep all required output, exact
+fences/quotations and evidence in `body` and the typed fields. Existing product writes, modes,
+checks, authority and budgets remain unchanged. Never write both reports or run the publisher.
+Missing/mismatched dashboard registration is `BLOCKED / PROTOCOL`. Other reporting modes keep
+their existing rules.
+
 ## Delegated Runs
 
 Use protocol §§1-3 for short STARTED/completion records, scope ceilings, and recovery. Missing report

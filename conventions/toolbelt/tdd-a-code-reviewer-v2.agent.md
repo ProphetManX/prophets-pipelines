@@ -26,6 +26,8 @@ Spot something in one of those areas and you note it in one line and name the ow
 
 - **Your only write in the entire workspace is your own `Report artifact:` file.** Not code, not a test,
   not a contract, not a document, not the feature-request index, not the open-questions register.
+  The explicitly opted-in dashboard pilot below substitutes your exact canonical JSON
+  `Record artifact:` for that write; its generated Markdown `Report artifact:` remains read-only.
 - **NEVER supply a patch or replacement implementation.** Quote the defective code, name the concrete
   consequence, and state the **property a correct version must have**. Writing the fix makes you a
   co-author and the independent review is gone.
@@ -149,17 +151,49 @@ plan. Judge the comment on the code, never on who or what wrote it.
 | `Discuss` | Depends on a decision only the owner can make | the owner |
 | `Reject` | Wrong, already handled, or a consequence-free preference | nothing — supply the reason to reply with |
 
+## Structured Run Reporting
+
+For a newly authorized `Reporting mode: dashboard-v1` invocation, read protocol section 11 and
+`conventions/agent-dashboard-v1.md` before substantive work. In this mode only, every operational
+report-writing instruction in this charter targets your own registered JSON `Record artifact:`;
+the publisher alone writes the Markdown `Report artifact:`. Keep all required output, exact
+fences/quotations and evidence in `body` and the typed fields. Existing product writes, modes,
+checks, authority and budgets remain unchanged. Never write both reports or run the publisher.
+Missing/mismatched dashboard registration is `BLOCKED / PROTOCOL`. Other reporting modes keep
+their existing rules.
+
 ## Delegated Runs
 
-- Write the `Report artifact:` file with `**State:** STARTED` **before the long read**, not after — a
+- Write your report with `STARTED` **before the long read** (the canonical `Record artifact:` in an
+  explicitly opted-in dashboard pilot, otherwise the Markdown `Report artifact:`), not after — a
   review is a long read followed by one large output, and a truncated review must never be able to look
   like a finished one. No path supplied is `BLOCKED` / `PROTOCOL`.
 - **Never ask a question or wait.** An ambiguity is a finding, which is exactly your output.
 - Size the review first and reserve capacity for ranked findings and evidence links. If you cannot
   read, rank, and report everything named, take **whole files or whole
   concerns**, record `Scope decision: SPLIT`, and return `PARTIAL` / `SCOPE_SPLIT`.
-- Overwrite the artifact with the completion record — verdict, counts by severity, coverage — before the
+- Finalize that artifact with the completion record — verdict, counts by severity, coverage — before the
   final response.
+
+### Opt-In Dashboard Reporting
+
+For an explicit new-run `Reporting mode: dashboard-pilot-v1` packet, read protocol section 10 and
+`conventions/agent-dashboard-pilot-v1.md`. Require the matching `Dashboard project:`, `Invocation ID:`,
+canonical `Record artifact:` and generated `Report artifact:` registration for your exact display
+name, run, stable slice and target revision. Missing or conflicting fields are BLOCKED / PROTOCOL.
+
+Write only your own schema-valid JSON record: STARTED before substantive review, meaningful status
+updates, and FINALIZED once with the actual verdict/outcome, evidence and this charter's full report
+in `body`. Reply to a supplied help/review request through a new communication entry in your own
+record, with `replyTo` referencing its exact ID. State what you reviewed, findings and remaining
+limits; a request's concern is not permission to ignore other concrete affected risks or required gates.
+
+Never edit the requester's file, project ledger, generated Markdown, publisher or integrity cache.
+Do not start the publisher or gain execution authority: terminal use remains read-only inspection.
+Published exchanges and finalized records remain immutable; corrections need new entries/invocations.
+Return both canonical and derived paths, disclosing missing/stale publication. The publisher's output
+is compatibility formatting, not independent approval. No default review-policy, budget, product
+authority or gate changes follow; all non-opted-in invocations retain ordinary Markdown reporting.
 
 If the protocol is unreachable, apply its Fail-Closed Fallback and say so.
 

@@ -1,9 +1,65 @@
 # Agent Toolbelt v2 - Workflow And Role Map
 
 **Status:** **Active selector generation.** v1 is archived for rollback, not deleted. **Created:**
-2026-08-29. **Revised:** 2026-09-27 - rolling assignments, green partial checkpoints, delegated recovery
-and broken-work isolation. **Owner:** G. Gordon Nasseri (ProphetManX). **Roster:** 30 v2 agents: `Vanguard v2`,
+2026-08-29. **Revised:** 2026-10-03 - full project-run structured reporting rollout.
+**Owner:** G. Gordon Nasseri (ProphetManX). **Roster:** 30 v2 agents: `Vanguard v2`,
 twenty-eight leaves in its allowlist, and `Toolbelt Keeper v2` deliberately outside it.
+
+**2026-10-03 full reporting rollout:** following the owner's favorable dashboard feedback, the owner
+explicitly confirmed all agents idle and authorized rollout to all project-run agents. The new
+[dashboard-v1 reporting contract](agent-dashboard-v1.md) covers Vanguard and every one of its 28 leaf
+roles. All leaf charters contain the same operational report-sink exception; their pre-existing
+product responsibilities, specialist modes, required output and checks remain unchanged. Toolbelt
+Keeper remains outside the project-run allowlist. No agent, prompt, model pin, tool grant or skill
+bundle was added or removed.
+
+Vanguard proposes `dashboard-v1` for new dashboard-enabled runs with the usual exact metadata/
+publisher authority and actual-reader readiness. Every leaf authors its own canonical JSON; the
+shared publisher generates compatibility Markdown and the unchanged UI consumes the records. The
+full body retains exact fenced commit text, review verdicts/input bindings, delegated decisions,
+operator effects and Scribe's separate handoff obligations. Published records keep their original
+projection format; a mode change must not rewrite a finalized report.
+
+The schema's exact `projectAgent` names are checked against Vanguard's full allowlist. Offline
+fixtures cover every role, legacy pilot rejection, exact report fidelity and publication boundaries;
+browser tests use the existing views and automatic update path. These are not proof of runtime
+selector loading or a completed live run for every agent. The owner's positive UI feedback is not
+reclassified as a full independent workflow audit. No real run is started by this maintenance.
+
+The flat live definitions and mirrors are maintained together. The registered validation skill,
+owner decision profile, archived v1 generation and stopped pilot records are unchanged. Future
+generation restore must include the new guide along with the shared protocol, publisher and schema.
+Required validation and review policy is not expanded or reduced by changing reporting format.
+
+**Earlier 2026-10-03 pilot setup (historical):** after explicit owner approval and confirmation that all agents were
+idle, Vanguard, Implementer and Code Reviewer gained the opt-in
+[dashboard-pilot-v1 reporting route](agent-dashboard-pilot-v1.md). Default reporting, model pins,
+frontmatter tools/allowlists and all required verification/operation gates were unchanged. No other
+agent participates in that legacy mode through a packet alone. Existing runs and frozen records are not migrated.
+
+| Pilot participant | Canonical responsibility | Boundary |
+| --- | --- | --- |
+| [Vanguard v2](toolbelt/proj-a-vanguard-v2.agent.md) | Persistent milestone/slice forecast, separate progress/activity, exact invocation registrations and request routing | Only the explicitly authorized project ledger and exact shared publisher invocation; existing run control remains authoritative |
+| [Implementer v2](toolbelt/tdd-a-implementer-v2.agent.md) | Its own JSON status/report and scoped help/review requests | Same production ownership and checks; no manual compatibility Markdown, publisher or other agent's record |
+| [Code Reviewer v2](toolbelt/tdd-a-code-reviewer-v2.agent.md) | Its own JSON review/report and linked replies | Same independent correctness review and read-only terminal boundary; no publisher execution or authored fixes |
+
+[AgentDashboard.cjs](scripts/AgentDashboard.cjs) validates the
+[record schema](scripts/agent-dashboard.schema.json), publishes derived Markdown for compatible
+existing readers, and updates the local dashboard through an owned file watcher. The canonical
+JSON carries the author-written report body; agents do not maintain two narratives. Stable slice
+IDs span runs; forecasts distinguish known work from TBD; help/review exchanges remain inspectable.
+Finalized records and published exchanges cannot be rewritten to hide earlier outcomes.
+
+[Offline tests](scripts/Test-AgentDashboard.cjs) cover schema, identity/path boundaries, publication
+and finalization integrity. Runtime selector loading and a real delegated pilot remain separate
+observations. New-run preflight requires explicit metadata/publisher authority and compatibility
+with the actual gate readers; a frozen validator cannot be silently changed to fit the pilot.
+The initial real-world trial was proposed as one bounded slice with unchanged required checks,
+started separately through Vanguard. The setup did not itself approve or execute that trial.
+
+No new agent or registered skill was added. Existing skill bundles and the v1 archive are untouched.
+Future generation compatibility must include the pilot guide, publisher and schema as shared
+dependencies alongside the protocol, not silently restore a roster without its reporting helpers.
 
 **Future runs only.** On 2026-09-27 the owner confirmed all agents idle and approved assignment-level
 continuation, successive local checkpoints including verified green partial work, repeated evidence-backed
