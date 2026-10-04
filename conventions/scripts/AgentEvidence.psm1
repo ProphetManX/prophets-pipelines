@@ -202,7 +202,8 @@ function Invoke-AgentValidation {
         [ValidateSet('Command', 'Tests')][string]$Kind = 'Command',
         [string]$TrxPath,
         [string[]]$AllowedSkippedTests = @(),
-        [ValidateRange(1, 3600)][int]$TimeoutSeconds = 120
+        [ValidateRange(1, 3600)][int]$TimeoutSeconds = 120,
+        [Nullable[DateTimeOffset]]$LatestStartUtc
     )
     $output = Assert-EvidenceDirectory $RunDirectory
     if ($Name -notmatch '^[A-Za-z0-9][A-Za-z0-9_-]*$') { throw 'Use a unique simple check name.' }
@@ -236,7 +237,12 @@ function Invoke-AgentValidation {
     $started = [DateTimeOffset]::UtcNow
     $process = [Diagnostics.Process]::new()
     $process.StartInfo = $startInfo
+    $admittedUtc = $null
     try {
+        if ($null -ne $LatestStartUtc) {
+            $admittedUtc = [DateTimeOffset](Get-Date).ToUniversalTime()
+            if ($admittedUtc -ge $LatestStartUtc) { throw 'Validation launch deadline reached; no process was started.' }
+        }
         $null = $process.Start()
         $stdout = $process.StandardOutput.ReadToEndAsync()
         $stderr = $process.StandardError.ReadToEndAsync()
@@ -294,6 +300,10 @@ function Invoke-AgentValidation {
         ResultError = $resultError
         AllowedSkippedTests = @($AllowedSkippedTests)
         Success = $success
+    }
+    if ($null -ne $LatestStartUtc) {
+        $record | Add-Member -NotePropertyName LatestStartUtc -NotePropertyValue $LatestStartUtc.ToUniversalTime().ToString('o')
+        $record | Add-Member -NotePropertyName LaunchAdmittedUtc -NotePropertyValue $admittedUtc.ToString('o')
     }
     $path = Save-AgentEvidence $record $RunDirectory "$Name.json"
     [pscustomobject]@{ Path = $path; Record = $record }

@@ -5,13 +5,16 @@ param(
     [string]$RunDirectory,
     [string]$FixtureMode,
     [string]$TrxPath,
-    [string]$InputPath
+    [string]$InputPath,
+    [string]$LaunchMarker,
+    [switch]$DeadlineOnly
 )
 
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 
 if ($FixtureMode) {
+    if ($LaunchMarker) { [IO.File]::WriteAllText($LaunchMarker, 'synthetic child started') }
     Write-Output 'Synthetic-private-output-not-for-evidence'
     if ($FixtureMode -eq 'Command' -or $FixtureMode -eq 'Missing') { exit 0 }
     if ($FixtureMode -eq 'Malformed') { [IO.File]::WriteAllText($TrxPath, '<broken'); exit 0 }
@@ -133,6 +136,71 @@ function Invoke-Fixture {
     Invoke-AgentValidation @parameters -ArgumentList $arguments
 }
 
+function Test-LaunchDeadline {
+    param([ValidateSet('Before', 'Equal', 'After')][string]$Position)
+    $module = Get-Module AgentEvidence
+    $deadline = [DateTimeOffset]::UtcNow.AddMinutes(5)
+    $initial = $deadline.AddMinutes(-1)
+    $admission = switch ($Position) {
+        'Before' { $deadline.AddTicks(-1) }
+        'Equal' { $deadline }
+        'After' { $deadline.AddTicks(1) }
+    }
+    $marker = Join-Path $inputRoot "deadline-$Position.started"
+    $name = "$prefix-deadline-$Position"
+    Assert-Condition ($initial -lt $deadline) 'The preparation fixture must begin before the fixed deadline.'
+    & $module {
+        param($Initial, $Admission)
+        $script:DeadlineFixture = @{ Now = $Initial; Admission = $Admission; Prepared = $false; ClockReads = 0 }
+        function script:Get-Date {
+            param([switch]$AsUTC)
+            if (-not $script:DeadlineFixture.Prepared) { throw 'Deadline checked before preparation finished.' }
+            $script:DeadlineFixture.ClockReads++
+            return $script:DeadlineFixture.Now.UtcDateTime
+        }
+        function script:Get-FileHash {
+            param([string]$LiteralPath, [string]$Algorithm)
+            $result = Microsoft.PowerShell.Utility\Get-FileHash -LiteralPath $LiteralPath -Algorithm $Algorithm
+            if ($LiteralPath -eq $script:EvidenceModulePath) {
+                $script:DeadlineFixture.Prepared = $true
+                $script:DeadlineFixture.Now = $script:DeadlineFixture.Admission
+            }
+            return $result
+        }
+    } $initial $admission
+    try {
+        $failure = $null
+        $result = $null
+        try {
+            $result = Invoke-AgentValidation -FilePath (Get-Process -Id $PID).Path -WorkingDirectory $inputRoot `
+                -Configuration $configuration -InputManifestPath $manifestPath -RunDirectory $RunDirectory `
+                -Name $name -Kind Command -LatestStartUtc $deadline `
+                -ArgumentList @('-NoProfile', '-File', $testScriptPath, '-FixtureMode', 'Command', '-LaunchMarker', $marker)
+        }
+        catch { $failure = $_.Exception.Message }
+        $clockReads = & $module { $script:DeadlineFixture.ClockReads }
+        Assert-Condition ($clockReads -eq 1) 'The admission clock was not checked exactly at the prepared launch boundary.'
+        if ($Position -eq 'Before') {
+            Assert-Condition ($null -eq $failure -and $result.Record.Success -and [IO.File]::Exists($marker)) 'An admitted pre-deadline command did not run.'
+            Assert-Condition ([DateTimeOffset]::Parse($result.Record.LatestStartUtc) -eq $deadline) 'The configured admission deadline was not recorded.'
+            Assert-Condition ([DateTimeOffset]::Parse($result.Record.LaunchAdmittedUtc) -eq $admission) 'The actual admission-clock observation was not recorded.'
+        }
+        else {
+            Assert-Condition ($failure -eq 'Validation launch deadline reached; no process was started.') 'The expired admission was not explicitly rejected.'
+            Assert-Condition (-not [IO.File]::Exists($marker)) 'A child process started at or after the admission deadline.'
+            Assert-Condition (-not [IO.File]::Exists((Join-Path $RunDirectory "evidence\$name.json"))) 'Refused admission was recorded as executed evidence.'
+        }
+    }
+    finally {
+        & $module {
+            Remove-Item Function:script:Get-Date -ErrorAction SilentlyContinue
+            Remove-Item Function:script:Get-FileHash -ErrorAction SilentlyContinue
+            Remove-Variable DeadlineFixture -Scope Script -ErrorAction SilentlyContinue
+        }
+    }
+}
+
+if (-not $DeadlineOnly) {
 Test-Case 'Manifest round-trip and linked inventory' {
     $restored = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -Depth 30
     Assert-Condition ((Compare-AgentManifest $restored).Matches -and $restored.Files.Count -eq 3) 'Round-trip or inventory failed.'
@@ -238,12 +306,18 @@ Test-Case 'Changed result artifact invalidates reuse' {
 Test-Case 'Command-only validation does not claim test execution' {
     $check = Invoke-Fixture 'Command' @() 'Command'
     Assert-Condition ($check.Record.Success -and $check.Record.Kind -eq 'Command' -and $null -eq $check.Record.Results) 'Command-only evidence is mislabeled.'
+    Assert-Condition ($check.Record.PSObject.Properties.Name -notcontains 'LatestStartUtc') 'An omitted deadline must retain the existing evidence shape.'
+}
+}
+
+foreach ($position in @('Before', 'Equal', 'After')) {
+    Test-Case "Prepared process launch admission: $position deadline" { Test-LaunchDeadline $position }
 }
 
 $summary = [pscustomobject][ordered]@{
     Suite = 'AgentEvidence offline self-tests'
     Command = $PSCommandPath
-    Arguments = @('-RunDirectory', $RunDirectory)
+    Arguments = @('-RunDirectory', $RunDirectory) + $(if ($DeadlineOnly) { @('-DeadlineOnly') } else { @() })
     Invocation = $MyInvocation.Line.Trim()
     HostExecutable = (Get-Process -Id $PID).Path
     Configuration = @{ PowerShellVersion = $PSVersionTable.PSVersion.ToString(); Environment = 'offline synthetic fixtures' }

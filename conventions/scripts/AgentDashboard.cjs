@@ -228,12 +228,37 @@ function runCli() {
     const args = process.argv.slice(2);
     check(args.length === 3 && args[0] === "--project" && ["--once", "--watch"].includes(args[2]), "Usage: node AgentDashboard.cjs --project <absolute project.json> --once|--watch");
     const projectFile = safePath(args[1]);
-    let result = publishProject(projectFile);
+    const dashboard = safePath(path.dirname(path.dirname(projectFile)));
+    check(identity(projectFile) === identity(path.join(dashboard, "live", "project.json")) && path.basename(dashboard) === "ai-dashboard", "Health reporting requires the canonical dashboard ledger path.");
+    const healthFile = safePath(path.join(dashboard, "data", "publisher-health.js"));
+    const healthProject = path.basename(path.dirname(dashboard));
+    let result;
+    const health = (status, reason) => writeAtomic(healthFile, `window.AI_DASHBOARD_HEALTH = ${escapedJson({
+        schemaVersion: 1, projectId: healthProject, status, reason, updatedAt: new Date().toISOString(),
+        lastAcceptedAt: result?.data.publishedAt || null
+    })};\n`);
+    try {
+        result = publishProject(projectFile);
+        health(args[2] === "--watch" ? "watching" : "stopped", args[2] === "--watch" ? "watching-records" : "one-shot-complete");
+    } catch (error) {
+        try { health("blocked", "publication-rejected"); } catch { console.error("Publisher health could not be written; treat its previous status as stale."); }
+        throw error;
+    }
     console.log(`Published ${result.data.invocations.length} current invocation records and ${result.data.communications.length} exchanges.`);
     if (args[2] === "--once") return;
     const watchers = new Map();
     let pending;
-    const close = () => { clearTimeout(pending); for (const watcher of watchers.values()) watcher.close(); watchers.clear(); };
+    let heartbeat;
+    let closed = false;
+    const close = (status = "stopped", reason = "owner-stop") => {
+        if (closed) return;
+        closed = true;
+        clearTimeout(pending);
+        clearInterval(heartbeat);
+        for (const watcher of watchers.values()) watcher.close();
+        watchers.clear();
+        try { health(status, reason); } catch { console.error("Publisher health could not be written; treat its previous status as stale."); }
+    };
     const refreshWatchers = () => {
         for (const directory of result.watched) {
             if (watchers.has(directory)) continue;
@@ -243,19 +268,25 @@ function runCli() {
                 pending = setTimeout(() => {
                     try {
                         result = publishProject(projectFile);
+                        health("watching", "watching-records");
                         refreshWatchers();
                         console.log(`Published ${result.data.invocations.length} current invocation records and ${result.data.communications.length} exchanges.`);
-                    } catch (error) { close(); console.error(`Dashboard publisher stopped: ${error.message}`); process.exitCode = 1; }
+                    } catch (error) { close("blocked", "publication-rejected"); console.error(`Dashboard publisher stopped: ${error.message}`); process.exitCode = 1; }
                 }, 250);
             });
-            watcher.on("error", (error) => { close(); console.error(`Dashboard watcher stopped: ${error.message}`); process.exitCode = 1; });
+            watcher.on("error", (error) => { close("blocked", "watcher-failed"); console.error(`Dashboard watcher stopped: ${error.message}`); process.exitCode = 1; });
             watchers.set(directory, watcher);
         }
     };
-    refreshWatchers();
+    try { refreshWatchers(); }
+    catch (error) { close("blocked", "watcher-failed"); throw error; }
+    heartbeat = setInterval(() => {
+        try { health("watching", "watching-records"); }
+        catch { close("blocked", "health-write-failed"); console.error("Dashboard publisher stopped because health publication failed."); process.exitCode = 1; }
+    }, 15000);
     console.log("Watching registered canonical records only. Ctrl+C stops this publisher.");
-    process.once("SIGINT", close);
-    process.once("SIGTERM", close);
+    process.once("SIGINT", () => close());
+    process.once("SIGTERM", () => close());
 }
 
 module.exports = { publishProject };

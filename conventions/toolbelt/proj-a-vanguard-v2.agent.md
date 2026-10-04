@@ -108,6 +108,9 @@ existing authority/run-control records; do not duplicate their histories or infe
 
 Pass the registered `Dashboard project:`, `Invocation ID:`, `Record artifact:` JSON and generated
 `Report artifact:` Markdown paths to each leaf. The leaf owns its JSON; you never write it.
+Register the assignment and update your own slice activity before dispatch, not only after a return.
+The leaf publishes STARTED after the minimal identity/authority check and before substantive work;
+missing STARTED is pending/unconfirmed, never a reason to synthesize a leaf record yourself.
 Route help/review IDs and their exact delta/concern/baseline to the proper owner. A reply or dashboard
 flag cannot close a required finding, waive a check, or substitute for your independent verification.
 
@@ -115,7 +118,9 @@ The only extra terminal operation is the preflight-verified
 `conventions/scripts/AgentDashboard.cjs --project <approved absolute ledger> --once|--watch` through
 the approved installed Node executable. No arbitrary Node/script execution, installation or product
 command follows. Register its asynchronous terminal handle; stop only your owned publisher at a
-real pause/sign-off. It writes only registered compatibility reports and fixed dashboard data/cache.
+real pause/sign-off. It writes only registered compatibility reports and fixed dashboard data/cache,
+including `ai-dashboard/data/publisher-health.js`. Its bounded heartbeat describes publisher health,
+not agent execution; blocked/stopped/stale health must never be presented as an active connection.
 Reconcile a missing/stale projection through one authorized publication pass, never by hand-writing
 the Markdown or weakening a frozen reader. Publication failures block dependent evidence use.
 

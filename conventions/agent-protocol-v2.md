@@ -1097,3 +1097,14 @@ Preserve existing Markdown and `dashboard-pilot-v1` runs as recorded. The schema
 two-leaf restriction. A new project-level mode does not authorize adding work to an old run, changing
 frozen reports/readers, omitting a required check or restarting an expired assignment. Start the
 full-roster mode only at a freshly authorized run boundary; maintenance does not execute that run.
+
+The owner-approved 2026-10-03 reporting repairs clarify early STARTED publication, a single final
+summary/body transition, and separate publisher health in the linked guide. The fixed
+`publisher-health.js` heartbeat/error record is mutable operational visibility, not acceptance
+evidence. An integrity rejection remains fatal to publication; never present the last accepted
+snapshot as an active connection or clear integrity state to bypass the stop.
+
+The shared validation helper also supports the optional `LatestStartUtc` admission boundary after
+preparation and immediately before `Process.Start`. Runtime `TimeoutSeconds` is distinct. The
+registered validation skill/template defines consumption and focused checks; existing Logger
+validators/plans are not revised by shared-toolbelt maintenance or silently rebound to a new helper.

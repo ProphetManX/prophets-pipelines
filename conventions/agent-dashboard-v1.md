@@ -48,7 +48,7 @@ available. Report that boundary explicitly rather than claiming structured cover
 | `<repository>/ai-dashboard/live/project.json` | Vanguard | Milestone/slice forecast, progress/activity, dependencies, evidence links and immutable invocation registrations |
 | Exact current-run `Record artifact:` JSON | That registered leaf invocation only | Its canonical operational status, complete report and help/review exchanges |
 | Exact current-run `Report artifact:` Markdown | Shared deterministic publisher only | Compatibility projection, never another agent-authored narrative |
-| Fixed `ai-dashboard/data/pilot-data.js` and publication-state/lock paths | Shared deterministic publisher only | Existing offline UI projection and integrity bindings; legacy filenames remain for compatibility |
+| Fixed `ai-dashboard/data/pilot-data.js`, `publisher-health.js` and publication-state/lock paths | Shared deterministic publisher only | Work projection, publisher heartbeat/error state and integrity bindings; legacy filenames remain for compatibility |
 | Product documents, contracts, source, tests, setup, handoff, run control and authority | Their existing owners | Unchanged charter and approval boundaries; these are not replaced by dashboard reporting |
 
 In this mode, every charter instruction to write/update/finalize its operational `Report artifact:`
@@ -85,11 +85,22 @@ and null outcome/reason/continuation. Update that same JSON at meaningful phase,
 help/review boundaries, not every compiler correction or file save. Record observable actions and
 concise findings, not private reasoning.
 
+After the minimal registration/authority check, save the valid STARTED record before substantive
+investigation. Vanguard registers the assignment and updates its own activity before dispatch;
+registration alone is queued work, not proof an agent started. Do not postpone the first record until
+completion. The display distinguishes queued, reported active, and finalized invocations and does not
+derive current activity from an older imported run's completion status.
+
 After the required work and checks, FINALIZE once with the actual outcome/reason/continuation,
 non-working activity, evidence references, and the complete charter-required report in `body`.
 Typed fields index the report; they do not replace required coverage, findings, approval provenance,
 refusals or missing-work statements. Do not truncate a required report to fit a field: use the
 existing coherent-scope split/stop rules and preserve every unfulfilled obligation.
+
+Draft and validate the final summary/body before marking the record FINALIZED. Apply the completed
+fields and final state in one last edit. Once finalized, no wording, timestamp, tense, formatting or
+summary correction is permitted in place; use a fresh correction/recovery invocation. This rule
+includes Session Scribe's operational report even while its separate handoff is still being completed.
 
 Preserve role-specific output exactly:
 
@@ -150,6 +161,14 @@ archive references, not deleted evidence. At pause/sign-off, stop only the owned
 last accepted snapshot readable and activity honest. Stale status is not proof of failure or progress.
 Publisher failure stops dependent evidence consumption for read-only reconciliation through the
 existing permitted route. Never clear its integrity state or overwrite reports to make it pass.
+
+`publisher-health.js` is separate mutable operational health, never a gate input or substitute report.
+The owned watcher refreshes it every 15 seconds and records `watching`, `stopped`, or `blocked`; a
+one-shot publication ends as stopped. The page treats a watching heartbeat older than 60 seconds as
+unconfirmed. An abrupt process termination or unwritable health file may leave a stale record, not a
+fresh stopped signal. An integrity rejection still stops publishing and preserves accepted work data;
+the health banner exposes that failure instead of presenting the last snapshot as a live connection.
+No command, private exception detail or product-acceptance claim is stored in this health record.
 
 [Test-AgentDashboard.cjs](scripts/Test-AgentDashboard.cjs) checks the roster, both modes, schema,
 report fidelity and publisher boundaries using temporary fixtures. Dashboard browser checks exercise

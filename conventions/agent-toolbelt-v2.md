@@ -5,6 +5,21 @@
 **Owner:** G. Gordon Nasseri (ProphetManX). **Roster:** 30 v2 agents: `Vanguard v2`,
 twenty-eight leaves in its allowlist, and `Toolbelt Keeper v2` deliberately outside it.
 
+**2026-10-03 runtime reporting/launch repairs:** after a stopped run exposed a finalized Scribe
+summary edit and the helper's pre-launch timing gap, the owner confirmed all agents idle and approved
+bounded repair. `Invoke-AgentValidation` now accepts optional `LatestStartUtc`, checked after all
+preparation immediately before launch; omitted callers retain their prior behavior/result shape.
+Before/at/after synthetic checks prove admission/rejection and no child on expiry. Current product
+validators still require their own explicit input/plan revision and independent review to consume it.
+
+The UI now prioritizes reported STARTED work and uses current structured activity instead of a
+historical headline. A separate fixed publisher-health file reports heartbeat/stopped/blocked state;
+it cannot clear report-integrity or product gates. Vanguard's scoped output path and Scribe's final
+transition instructions, the shared guide, and the live/mirrored validation skill are updated. No
+model/tool grants, other role boundaries, archive, product test or deployment policy changes follow.
+Finalized-record recovery is an explicitly authorized exact-byte operation with observed edits
+preserved, not a general invitation to rewrite reports. No product run resumes from these repairs.
+
 **2026-10-03 full reporting rollout:** following the owner's favorable dashboard feedback, the owner
 explicitly confirmed all agents idle and authorized rollout to all project-run agents. The new
 [dashboard-v1 reporting contract](agent-dashboard-v1.md) covers Vanguard and every one of its 28 leaf

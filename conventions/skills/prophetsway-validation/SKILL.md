@@ -134,6 +134,16 @@ Use the approved command and runner syntax, loading a relevant test-runner skill
 needed. Do not invent a target or silently narrow a filter after a failure. Record tool/runtime identity
 and environment assumptions alongside project/target/configuration/selection.
 
+When the approved plan has an absolute latest command-start boundary, pass that exact UTC instant as
+`LatestStartUtc` to `Invoke-AgentValidation`. The helper checks it after input/executable/module
+preparation, immediately before `Process.Start`; at or after the boundary it throws without launching
+a child or producing successful execution evidence. A caller precheck is not sufficient across that
+intervening I/O. `TimeoutSeconds` still limits post-launch runtime and is not an admission deadline.
+Successful deadline-bound records include `LatestStartUtc` and `LaunchAdmittedUtc`. An omitted deadline
+retains the existing call/result shape. This is a launch-admission check, not a real-time scheduler or
+an extension of the approved stop time. Consuming a changed helper in frozen setup requires the normal
+explicit input/plan revision and independent audit; this procedure never silently updates an old run.
+
 Two snapshots have different purposes:
 
 - The specification/setup/authority baseline is immutable for its approved revision.

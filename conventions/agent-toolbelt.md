@@ -8,6 +8,14 @@
 **Covers:** the customization roster and the `AGENTS.md` conventions system across 8 repos —
 **30 active v2 agents**, **26 archived v1 agents**, **2 active prompts**, and **1 shared skill bundle**.
 
+**2026-10-03 targeted reporting repairs:** under fresh idle confirmation and bounded owner approval,
+the shared validation helper gains optional post-preparation `LatestStartUtc` admission and evidence;
+the current Logger validator/plan is not edited or declared ready. Reporting now exposes STARTED work
+before completion and separate publisher health, retaining accepted snapshots and fatal integrity
+guards. Vanguard/Scribe guidance and the registered validation skill/template are updated live first
+and mirrored. Other agent metadata, roles, archives and required product gates are unchanged. The
+[reporting guide](agent-dashboard-v1.md) and [current workflow](agent-toolbelt-v2.md) describe the limits.
+
 **2026-10-03 full reporting rollout:** after favorable dashboard feedback, the owner explicitly
 confirmed all agents idle and authorized reporting changes for every project-run agent. Vanguard
 and all 28 leaves now support [dashboard-v1](agent-dashboard-v1.md); Toolbelt Keeper stays outside

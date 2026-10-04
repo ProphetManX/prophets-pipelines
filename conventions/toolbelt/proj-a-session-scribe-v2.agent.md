@@ -135,6 +135,12 @@ checks, authority and budgets remain unchanged. Never write both reports or run 
 Missing/mismatched dashboard registration is `BLOCKED / PROTOCOL`. Other reporting modes keep
 their existing rules.
 
+Prepare and validate the complete final summary, body and fields while the canonical record is still
+STARTED. Commit FINALIZED and its complete outcome fields in one final edit only after that review.
+After FINALIZED, even a wording or tense correction requires a new record; never polish the frozen
+summary in place. The separate handoff remains your normal writable artifact, not an exception to
+another invocation's immutability. Preserve the handoff's existing three-entry recent-history limit.
+
 ## Delegated Runs
 
 Use protocol §§1-3 for short STARTED/completion records, scope ceilings, and recovery. Missing report

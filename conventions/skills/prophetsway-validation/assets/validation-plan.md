@@ -66,6 +66,7 @@ Inputs/tool/environment assumptions:
 Fresh evidence/TRX/coverage paths beneath this run's evidence directory:
 Build-only versus executed-test classification:
 Operation limits and safe-output prerequisites:
+Absolute latest command-start UTC instant and LatestStartUtc binding, when required:
 Required reviewer and exact review subject/input binding:
 ```
 
@@ -79,6 +80,7 @@ being interpreted optimistically. Compiling an example or snippet does not autho
 | --- | --- | --- |
 | Missing or stale result | Reject | `<record>` |
 | Failed command or incomplete result | Reject | `<record>` |
+| Preparation crosses an approved absolute command-start boundary | Reject before child launch; no successful execution claim | `<before/at/after admission evidence, when applicable>` |
 | Zero executed tests | Reject | `<record>` |
 | Unapproved skipped identity | Reject | `<record>` |
 | Changed protected specification or authority input outside the exact approved revision | Reject; no rebaseline | `<record>` |

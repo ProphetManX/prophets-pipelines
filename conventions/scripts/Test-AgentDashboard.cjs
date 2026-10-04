@@ -321,5 +321,30 @@ try {
             assert.ok(fs.readFileSync(path.join(run, `${id}.md`), "utf8").includes(body), agent);
         }
     });
+    check("one-shot publication reports an intentionally stopped publisher", () => {
+        const command = require("node:child_process").spawnSync(process.execPath, [path.join(__dirname, "AgentDashboard.cjs"), "--project", ledger, "--once"], { encoding: "utf8" });
+        assert.equal(command.status, 0, command.stderr);
+        const healthText = fs.readFileSync(path.join(repository, "ai-dashboard", "data", "publisher-health.js"), "utf8");
+        const health = JSON.parse(healthText.slice("window.AI_DASHBOARD_HEALTH = ".length).trim().slice(0, -1));
+        assert.equal(health.status, "stopped");
+        assert.equal(health.reason, "one-shot-complete");
+        assert.ok(health.lastAcceptedAt);
+    });
+    check("rejected publication exposes health without changing accepted data or reports", () => {
+        const snapshotPath = path.join(repository, "ai-dashboard", "data", "pilot-data.js");
+        const accepted = fs.readFileSync(snapshotPath);
+        const original = fs.readFileSync(canonical);
+        const projected = fs.readFileSync(report);
+        write(canonical, { ...JSON.parse(original.toString("utf8")), summary: "Unapproved post-finalization change" });
+        const command = require("node:child_process").spawnSync(process.execPath, [path.join(__dirname, "AgentDashboard.cjs"), "--project", ledger, "--once"], { encoding: "utf8" });
+        assert.equal(command.status, 1);
+        const healthText = fs.readFileSync(path.join(repository, "ai-dashboard", "data", "publisher-health.js"), "utf8");
+        const health = JSON.parse(healthText.slice("window.AI_DASHBOARD_HEALTH = ".length).trim().slice(0, -1));
+        assert.equal(health.status, "blocked");
+        assert.equal(health.reason, "publication-rejected");
+        assert.deepEqual(fs.readFileSync(snapshotPath), accepted);
+        assert.deepEqual(fs.readFileSync(report), projected);
+        fs.writeFileSync(canonical, original);
+    });
     console.log(`PASS: ${checks} schema/publication checks. Only newly owned temporary fixtures were used.`);
 } finally { fs.rmSync(root, { recursive: true, force: true }); }
