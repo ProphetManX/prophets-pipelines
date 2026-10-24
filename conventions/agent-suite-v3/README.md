@@ -22,6 +22,7 @@ and the owned legacy MCP entry, only after native profile parity is verified. Di
 definitions stop migration for reconciliation; no unrelated profile is deleted.
 Run `scripts\Open-Dashboard.ps1` to start or open the read-only dashboard at
 `http://127.0.0.1:47831/`. The dashboard runs locally and has no external telemetry.
+It uses a near-black background with light gray text regardless of the operating-system theme.
 After updating Python service code, restart the owned dashboard process before reopening:
 an already-running process retains its imported modules. Do not launch a second copy;
 the server exclusively owns its listening port on Windows and refuses an occupied port.
@@ -67,3 +68,38 @@ Select a run in the dashboard; its URL fragment preserves that selection across 
 Both the run list and selected details refresh every five seconds. Registered workers appear
 before their first report; subsequent status and timestamps are last-reported observations,
 not heartbeats. Linked handoff events show both participants.
+
+A selected run reads top to bottom as **Where things stand** (latest report, each slice's last
+status, evidence kinds and counts), a **Timeline** with one bar per worker invocation grouped by
+role (click a bar to list only that worker's events), and an **Activity** feed with the newest
+event first. Feed rows expand to full text, gaps and evidence; *Key events only* hides routine
+handoffs, starts and review requests. New events appear at the top without moving the row you
+are reading.
+
+Reporting revision 2 separates `review_verdict` from the reporter's `status`. A historical
+review without structured verdict metadata says **not recorded**; the UI never guesses from prose.
+Intentional RED test evidence declares `expected_outcome: red` and an `expectation_note`.
+A mechanically observed RED is labeled as expected, not passing, and cannot replace passing
+completion evidence. Existing failed or missing evidence is never retroactively relabeled.
+
+Delegations appear as one expandable activity item per worker invocation, containing the original
+handoff, start, return and outcome events. **Raw events** restores the full newest-first audit feed.
+Every nested event retains its reporter, timestamp, verdict, evidence and gaps.
+
+### Explicit journal migration (v1 to v2)
+
+Stop owned dashboard/MCP processes and finish active assignments before changing the reporting
+contract. Install the updated package, then run this maintenance command from its `service` directory:
+
+```powershell
+python -m agent_suite.migrate --database "$env:LOCALAPPDATA\ProphetsWay\AgentSuite\v3\journal.sqlite3" --backup "<new-backup-path>"
+```
+
+The backup path must not exist. The command makes a SQLite-consistent backup before an additive,
+transactional migration. Event IDs, summaries, gaps and evidence results remain unchanged; old
+verdicts default to null and evidence expectations to pass/empty note. Migration is idempotent;
+unknown schema versions are refused. Worker tools refuse v1 rather than silently migrating it.
+New empty journals start at v2. Restart the dashboard and start a fresh Copilot chat so the MCP
+process/tool schema and reporting skill are rediscovered. For rollback, stop the updated processes,
+restore the backup together with the previous service package, then restart; do not run the old
+service against a v2 database.

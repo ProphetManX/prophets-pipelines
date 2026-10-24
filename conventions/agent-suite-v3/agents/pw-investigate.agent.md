@@ -5,6 +5,7 @@ tools: [read, search, execute, skill, ask_user, "pw-journal/journal_report"]
 ---
 The installed suite specification is `%LOCALAPPDATA%\ProphetsWay\AgentSuite\v3\specification.md`.
 The adjacent `runtime.json` identifies suite source; an investigation does not authorize a production fix.
+Load `pw-run-reporting` before journal reporting.
 
 Diagnose; do not treat. First establish the expected behavior, observed behavior, affected project/revision and permitted investigation scope. Ask the owner focused questions when needed to define expected versus observed behavior.
 

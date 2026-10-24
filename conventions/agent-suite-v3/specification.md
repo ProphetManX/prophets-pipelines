@@ -82,11 +82,25 @@ missing required review are not green.
 
 ## Reporting contract
 
+Reporting revision 2 uses SQLite schema version 2. Existing calls remain valid. Maintenance
+explicitly migrates v1 databases with a backup; worker tool calls never migrate a live database.
+Historical events and evidence remain unchanged and receive only nullable/default metadata.
+
 - Workers send short factual milestones to the local MCP journal. Do not report private model
   reasoning, credentials, full prompts, indiscriminate tool output, or secrets.
 - Start, assignment, meaningful phase, review, blocker, completion claim, failure and interruption
   are meaningful reporting events. Routine keystrokes and every trivial correction are not.
 - The runtime/journal keeps each event append-only. Corrections are new events.
+- `review_returned` accepts a separate optional `review_verdict` (nonempty text, at most 160
+  characters), including a Lead relay. Work `status` is not a review verdict; omitted verdicts
+  remain unspecified rather than being inferred from prose. Other event types reject a verdict.
+- Test evidence defaults to `expected_outcome: pass`. Intentional RED uses `expected_outcome: red`
+  and a nonempty `expectation_note` (at most 500 characters) naming the expected failures and reason.
+  RED is supported only for `test_result`. A mechanically observed RED requires a Failed TRX,
+  nonzero complete execution, actual failures, consistent counters and no skipped tests.
+  Missing/malformed/zero/skipped/inconsistent or unexpectedly passing results remain gaps.
+  Observed expected RED is not a passing result or independent verification of exact failure
+  identities; it never substitutes for separate passing test evidence in a completion claim.
 - A completion claim is persisted even when incomplete; the response identifies specific gaps.
   Missing evidence must not disappear from the view.
 - Unless a slice explicitly supplies another evidence policy, a completion claim requires both a
@@ -103,8 +117,14 @@ missing required review are not green.
 - The browser is read-only. Every five seconds it refreshes the run list and selected details;
   the selected run survives reload through the URL fragment. Registered invocations appear
   before their first event, clearly distinguished from last-reported worker status.
-  It shows the objective, work board, invocation activity, event
-  exchanges and evidence references; opening it does not launch or authorize engineering work.
+  It shows the objective, a summary of where things stand (latest report, slice status, claimed and
+  attached evidence kinds), a timeline with one bar per worker invocation, and a newest-first event
+  feed whose rows expand to full text, gaps and evidence references; opening it does not launch or
+  authorize engineering work.
+- The feed groups a delegated worker's exchange and reports into one expandable item, ordered by
+  its latest event. All original events remain available inside the item and in a raw-events view.
+  Worker identities, reporters, verdicts, gaps and evidence are preserved; grouping does not
+  rewrite historical data or convert reporter status into a review decision.
 - Dashboard/API failure is reported as observability failure. It does not fabricate activity,
   silently mark an incomplete slice green, or erase completed product evidence.
 - Keep schema and validation policy migrations versioned, reviewed and explicit. Runtime workers

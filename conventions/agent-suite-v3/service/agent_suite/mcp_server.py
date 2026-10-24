@@ -8,7 +8,7 @@ from .journal import Journal, JournalError
 
 
 SERVER_NAME = "pw-journal"
-SERVER_VERSION = "3.0.0"
+SERVER_VERSION = "3.1.0"
 PROTOCOL_VERSION = "2025-06-18"
 
 TOOLS = [
@@ -109,6 +109,12 @@ TOOLS = [
                     ],
                 },
                 "summary": {"type": "string"},
+                "review_verdict": {
+                    "type": ["string", "null"],
+                    "description": "Reported review verdict on review_returned only, independent of reporter work status. Omit for legacy unspecified verdicts; never infer from prose.",
+                    "minLength": 1,
+                    "maxLength": 160,
+                },
                 "counterparty_invocation_id": {"type": "string"},
                 "evidence": {
                     "type": "array",
@@ -121,6 +127,14 @@ TOOLS = [
                             },
                             "uri": {"type": "string"},
                             "summary": {"type": "string"},
+                            "expected_outcome": {
+                                "type": "string", "enum": ["pass", "red"], "default": "pass",
+                                "description": "Intentional TDD red is only valid for test_result with an expectation_note; it is never passing completion evidence.",
+                            },
+                            "expectation_note": {
+                                "type": "string", "maxLength": 500,
+                                "description": "For red, identify expected failing tests/requirements and why. Mechanical counters do not verify these exact identities.",
+                            },
                         },
                         "required": ["kind", "uri", "summary"],
                         "additionalProperties": False,

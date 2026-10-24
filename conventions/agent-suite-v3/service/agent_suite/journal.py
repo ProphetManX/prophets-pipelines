@@ -5,13 +5,13 @@ import os
 import re
 import sqlite3
 import xml.etree.ElementTree as ET
-from contextlib import contextmanager
+from contextlib import closing, contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterator
 
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 ROLES = {"lead", "design", "investigate", "tests", "build", "review"}
 EVENT_TYPES = {
     "run_started",
@@ -105,12 +105,29 @@ class Journal:
         finally:
             connection.close()
 
+    @staticmethod
+    def migrate(database: str | Path) -> None:
+        path = Path(database)
+        if not path.is_file():
+            raise JournalError("Migration requires an existing journal database.")
+        with closing(sqlite3.connect(path, timeout=10)) as db, db:
+            db.execute("BEGIN IMMEDIATE")
+            version = db.execute("PRAGMA user_version").fetchone()[0]
+            if version == SCHEMA_VERSION:
+                return
+            if version != 1:
+                raise JournalError(f"Journal schema version {version} is unsupported; use a reviewed migration.")
+            db.execute("ALTER TABLE events ADD COLUMN review_verdict TEXT")
+            db.execute("ALTER TABLE evidence ADD COLUMN expected_outcome TEXT NOT NULL DEFAULT 'pass'")
+            db.execute("ALTER TABLE evidence ADD COLUMN expectation_note TEXT NOT NULL DEFAULT ''")
+            db.execute("PRAGMA user_version = 2")
+
     def _initialize(self) -> None:
         with self._connect() as db:
             db.execute("PRAGMA journal_mode = WAL")
             version = db.execute("PRAGMA user_version").fetchone()[0]
             if version not in (0, SCHEMA_VERSION):
-                raise JournalError(f"Journal schema version {version} is unsupported; use a reviewed migration.")
+                raise JournalError(f"Journal schema version {version} requires an explicit reviewed migration; run python -m agent_suite.migrate with a backup.")
             if version == 0:
                 db.executescript(
                     """
@@ -150,6 +167,7 @@ class Journal:
                         gaps TEXT NOT NULL,
                         created_at TEXT NOT NULL,
                         counterparty_invocation_id TEXT,
+                        review_verdict TEXT,
                         FOREIGN KEY(invocation_id) REFERENCES invocations(invocation_id),
                         FOREIGN KEY(counterparty_invocation_id) REFERENCES invocations(invocation_id)
                     );
@@ -159,11 +177,13 @@ class Journal:
                         kind TEXT NOT NULL,
                         uri TEXT NOT NULL,
                         summary TEXT NOT NULL,
-                        check_result TEXT NOT NULL
+                        check_result TEXT NOT NULL,
+                        expected_outcome TEXT NOT NULL DEFAULT 'pass',
+                        expectation_note TEXT NOT NULL DEFAULT ''
                     );
                     CREATE INDEX events_run_order ON events(run_id, event_id);
                     CREATE INDEX events_invocation_order ON events(invocation_id, event_id);
-                    PRAGMA user_version = 1;
+                    PRAGMA user_version = 2;
                     """
                 )
 
@@ -265,6 +285,12 @@ class Journal:
                 raise JournalError(f"evidence[{index}].kind must be one of: {', '.join(sorted(EVIDENCE_KINDS))}.")
             uri = _clean_text(item.get("uri"), f"evidence[{index}].uri", 800)
             summary = _clean_text(item.get("summary"), f"evidence[{index}].summary", 500)
+            expected = item.get("expected_outcome", "pass")
+            if not isinstance(expected, str) or expected not in {"pass", "red"}:
+                raise JournalError(f"evidence[{index}].expected_outcome must be pass or red.")
+            note = _clean_text(item.get("expectation_note", ""), f"evidence[{index}].expectation_note", 500, optional=True)
+            if expected == "red" and (kind != "test_result" or not note):
+                raise JournalError("Expected RED requires test_result evidence and a nonempty expectation_note.")
             supplied.add(kind)
             result = "reference_only"
             if kind in {"test_result", "build_result", "review", "diff", "report"}:
@@ -282,25 +308,30 @@ class Journal:
                 else:
                     result = "present_not_independently_verified"
                     if kind == "test_result":
-                        trx_result = self._check_trx(resolved)
-                        if trx_result == "tests_passed_mechanically":
-                            result = "tests_passed_mechanically; not independently verified"
+                        trx_result = self._check_trx(resolved, expected)
+                        if trx_result in {"tests_passed_mechanically", "expected_red_observed"}:
+                            result = f"{trx_result}; not independently verified"
                         else:
                             result = trx_result
-                            gaps.append(f"Test result did not establish a nonzero passing run: {uri} ({result})")
-            checked.append({"kind": kind, "uri": uri, "summary": summary, "check_result": result})
+                            gaps.append(f"Test result did not establish the expected {expected} run: {uri} ({result})")
+            checked.append({"kind": kind, "uri": uri, "summary": summary, "check_result": result,
+                            "expected_outcome": expected, "expectation_note": note})
+        if "test_result" in required and any(item["expected_outcome"] == "red" for item in checked):
+            if not any(item["kind"] == "test_result" and item["check_result"].startswith("tests_passed_mechanically;") for item in checked):
+                gaps.append("Expected RED is not passing completion evidence; attach a separate nonzero passing test_result.")
         for kind in required:
             if kind not in supplied:
                 gaps.append(f"Required evidence is missing: {kind}")
         return checked, gaps
 
     @staticmethod
-    def _check_trx(path: Path) -> str:
+    def _check_trx(path: Path, expected: str = "pass") -> str:
         try:
             root = ET.parse(path).getroot()
             summary = next(node for node in root.iter() if node.tag.endswith("ResultSummary"))
-            if summary.get("outcome") not in {"Completed", "Passed"}:
-                return "tests_failed" if summary.get("outcome") == "Failed" else "trx_summary_not_passing"
+            outcome = summary.get("outcome")
+            if outcome not in {"Completed", "Passed"} and not (expected == "red" and outcome == "Failed"):
+                return "tests_failed" if outcome == "Failed" else "trx_summary_not_passing"
             counters = summary.find(".//{*}Counters")
             if counters is None:
                 return "trx_counters_missing"
@@ -310,6 +341,14 @@ class Journal:
                 return "trx_counters_inconsistent"
             if values["executed"] == 0 or values["total"] == 0:
                 return "zero_tests_executed"
+            if expected == "red":
+                if values["notExecuted"]:
+                    return "tests_skipped_require_review"
+                if values["total"] != values["executed"] or values["passed"] + values["failed"] != values["executed"]:
+                    return "trx_counters_inconsistent"
+                if outcome == "Failed" and values["failed"] > 0:
+                    return "expected_red_observed"
+                return "expected_red_not_observed"
             if values["failed"]:
                 return "tests_failed"
             if values["notExecuted"]:
@@ -328,8 +367,13 @@ class Journal:
         summary: Any,
         evidence: Any = None,
         counterparty_invocation_id: Any = None,
+        review_verdict: Any = None,
     ) -> dict[str, Any]:
         invocation_id = _validate_id(invocation_id, "invocation_id")
+        if review_verdict is not None:
+            review_verdict = _clean_text(review_verdict, "review_verdict", 160)
+            if event_type != "review_returned":
+                raise JournalError("review_verdict is only valid on review_returned events.")
         if event_type not in EVENT_TYPES:
             raise JournalError(f"event_type must be one of: {', '.join(sorted(EVENT_TYPES))}.")
         if status not in STATUSES:
@@ -375,8 +419,8 @@ class Journal:
             cursor = db.execute(
                 """INSERT INTO events
                    (run_id, slice_id, invocation_id, event_type, status, summary, gaps, created_at,
-                    counterparty_invocation_id)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                    counterparty_invocation_id, review_verdict)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                 (
                     invocation["run_id"],
                     invocation["slice_id"],
@@ -387,18 +431,20 @@ class Journal:
                     json.dumps(gaps),
                     _now(),
                     counterparty["invocation_id"] if counterparty else None,
+                    review_verdict,
                 ),
             )
             event_id = cursor.lastrowid
             for item in checked:
                 db.execute(
-                    "INSERT INTO evidence (event_id, kind, uri, summary, check_result) VALUES (?, ?, ?, ?, ?)",
-                    (event_id, item["kind"], item["uri"], item["summary"], item["check_result"]),
+                    "INSERT INTO evidence (event_id, kind, uri, summary, check_result, expected_outcome, expectation_note) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    (event_id, item["kind"], item["uri"], item["summary"], item["check_result"], item["expected_outcome"], item["expectation_note"]),
                 )
         return {
             "recorded": True,
             "event_id": event_id,
             "status": visible_status,
+            "review_verdict": review_verdict,
             "gaps": gaps,
             "evidence": checked,
             "notice": "Journal status and mechanical file checks are not an independent product review or completion verification.",
@@ -442,7 +488,7 @@ class Journal:
             events = db.execute(
                 """SELECT e.event_id, e.slice_id, e.invocation_id, i.role AS role,
                           e.counterparty_invocation_id, peer.role AS counterparty_role,
-                          e.event_type, e.status, e.summary, e.gaps, e.created_at
+                          e.event_type, e.status, e.review_verdict, e.summary, e.gaps, e.created_at
                    FROM events e
                    JOIN invocations i ON i.invocation_id = e.invocation_id
                    LEFT JOIN invocations peer ON peer.invocation_id = e.counterparty_invocation_id
@@ -456,7 +502,7 @@ class Journal:
                 item["evidence"] = [
                     dict(row)
                     for row in db.execute(
-                        "SELECT kind, uri, summary, check_result FROM evidence WHERE event_id = ? ORDER BY evidence_id",
+                        "SELECT kind, uri, summary, check_result, expected_outcome, expectation_note FROM evidence WHERE event_id = ? ORDER BY evidence_id",
                         (item["event_id"],),
                     )
                 ]

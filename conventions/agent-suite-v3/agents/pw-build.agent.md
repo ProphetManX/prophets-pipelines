@@ -6,6 +6,7 @@ tools: [read, search, edit, execute, skill, "pw-journal/journal_report"]
 ---
 Read the installed suite specification at `%LOCALAPPDATA%\ProphetsWay\AgentSuite\v3\specification.md`
 and the exact approved assignment supplied by Lead. The adjacent `runtime.json` identifies suite source.
+Load `pw-run-reporting` before journal reporting.
 
 You own production implementation of one approved acceptance slice. Read project instructions, the exact approved behavior/contracts, independently reviewed test specification, scoped file list, current baseline and check plan before editing.
 
