@@ -1,254 +1,670 @@
 ---
-written: 2026-08-23T14:10:00
+written: 2026-08-25T01:42:00
 head:
-  prophets-pipelines: 63dd56b              # main — HEAD UNMOVED since last night. DIRTY ×2: stages/deploy-release.yml AND this file. Measured this run
-  ProphetsWay.BaseDataAccess: 48fa10c      # main — 3.2.0-504.Alpha PUBLISHED from this commit at 2026-08-23T04:45. Carried, not re-measured
-  ProphetsWay.EFTools: b18052a             # main. DIRTY: ProphetsWay.EFTools.sln — STILL DISCARD, see last night's correction. Carried
-  ProphetsWay.Example: 76860c1             # carried, not re-measured this run
-  ProphetsWay.Logger: 66bfa3c              # carried
-  ProphetsWay.Utilities: bb7bcaa           # master — carried
-  ProphetsWay.Hasher: 4b286ae              # master — carried
-  ProphetsWay.BPA: 4c0ba1f                 # main — untracked .toolbelt-stress-* fixtures only. Carried
-status: live                               # CHECKPOINT 2026-08-23 14:10, mid-session, written for a VS Code relaunch. NOT a clean wrap — reconcile against git
+  ProphetsWay.EFTools: e2f2120             # main, 0/0 — UNCHANGED since 08-24. DIRTY ×11: 7 tracked test files +
+                                           # 2 tracked docs + 2 UNTRACKED (TestStore.cs, ProviderSelectionTests.cs).
+                                           # MEASURED this checkpoint. e2f2120f59b4fdb47208cb82bb37c3e956d4440a
+  ProphetsWay.Example: 39d0e72             # submodule pointer CONFIRMED this checkpoint: 3.1.1-1-g39d0e72. Repo itself not re-measured
+  ProphetsWay.BaseDataAccess: 30bfc71      # main, 0/0, clean. NOT re-measured this checkpoint — out of scope
+  prophets-pipelines: 8095b6e              # main, 0/0. DIRTY ×1: docs/session-handoff.md (this file). MEASURED this checkpoint
+  ProphetsWay.BPA: 4c0ba1f                 # main, 0/0, clean. NOT re-measured this checkpoint — out of scope
+  ProphetsWay.Logger: 66bfa3c              # main, 0/0, clean. NOT re-measured this checkpoint — out of scope
+  ProphetsWay.Utilities: bb7bcaa           # master, 0/0, clean. NOT re-measured this checkpoint — out of scope
+  ProphetsWay.Hasher: 4b286ae              # master, 0/0, clean. NOT re-measured this checkpoint — out of scope
+status: live                               # CHECKPOINT 2026-08-25 01:42 by Session Scribe, delegated, scoped to EFTools +
+                                           # prophets-pipelines. Supersedes the 2026-08-24 22:52 checkpoint.
+                                           # 🔴 THE SUITE IS RED BY DESIGN — 327/328. Auto-save, not a clean wrap;
+                                           # reconcile against git before trusting the five unscoped heads.
 ---
 
 # Session Handoff
 
-> 🚨🚨 **READ FIRST — TWO UNCOMMITTED FILES IN `prophets-pipelines`, AND THIS IS ONE OF THEM.**
-> Measured 2026-08-23 14:10 with `git status --short` and `git diff --stat` in
-> `C:\Projects\ProphetManX\prophets-pipelines`:
+---
+
+# 🔴 CHECKPOINT — 2026-08-25 01:42. GATE 1 IS AT ITS FINAL RED MICRO-LAP. **NOT GREEN RIGHT NOW.**
+
+> ⚠️ **Read this before any figure below.** Gate 1 *was* green — twice, at 303/303 and again at 327/327 —
+> and that evidence is real and preserved. **It is not the current state.** A deliberate red-phase test was
+> added afterwards and the suite now stands at **328 total / 327 passed / 1 failed**. **Never report Gate 1
+> as currently green.** The failure is intended, is the correct failure, and is one owner edit from closing.
 >
-> | File | Delta | Why it must not be lost |
-> |---|---|---|
-> | `stages/deploy-release.yml` | **+34 / −35** (69 lines touched) | The complete, twice-audited, owner-approved release-stage change set. **Not committed.** |
-> | `docs/session-handoff.md` | **+420 / −1536** | **This file.** `HEAD` still holds the `live` checkpoint of 2026-08-22 23:55. The `fresh` sign-off written at 00:47 — everything below the checkpoint block — **exists only in the working tree.** Losing it loses last night's entire record. |
->
-> **`HEAD` is `63dd56b`, unmoved since last night. Nothing was staged, committed or pushed.** Committing
-> is the owner's decision — but these two files are the session. The Source Control UI not rendering them
-> was a **VS Code display glitch**; `git status` sees both on disk and the repository state is sound.
+> 🔒 **The remaining step cannot be delegated.** `Vanguard` cannot write code, and **no remaining leaf
+> charter permits a behaviour-changing edit inside a test project on a red baseline.** The owner makes the
+> edit. Exact instructions are below and are copy-ready.
 
----
+**Measured this checkpoint** with `git status --porcelain`, `git log --oneline`, `git diff --stat`,
+`git diff --check` and `git submodule status` in `ProphetsWay.EFTools` and `prophets-pipelines`.
+**`ProphetsWay.EFTools` HEAD is still `e2f2120`, `main`, 0/0 — no commit has been taken all cycle.** The
+entire Gate 1 body of work is **uncommitted**: 9 modified tracked files and 2 untracked files.
+`git diff --check` exits **0** — the worktree is whitespace-clean.
 
-## ⏱ CHECKPOINT — 2026-08-23 14:10 · `live`
+## ✅ Prior green evidence — real, earned, and NOT the current state
 
-**Everything from here to the horizontal rule marked *END OF CHECKPOINT* is today. Last night's `fresh`
-sign-off is preserved verbatim below it — both nights survive in this file, and only in this file.**
+Each row is one completed lap with a receipt. **These figures were true when measured and are superseded
+as a description of *now*.** They are the certification evidence Gate 1 rests on; do not discard them.
 
-### Where We Are
-
-One repo, one file, one defect chased to ground. `ProphetsWay.BaseDataAccess` **3.2.0-504.Alpha published
-successfully** overnight, which **closed last night's blocking question A** and unblocked the EFTools
-follow-on. A `409 Conflict` in the `Deploy Alpha` log then drove a full session on
-`prophets-pipelines/stages/deploy-release.yml` — **three `Pipeline Engineer` laps behind two
-`Pipeline Auditor` gates** — ending in a ready-to-commit change set that also fixes a **silent, unrelated
-defect that had been shipping empty GitHub releases.**
-
-### Current Focus
-
-**Nothing is mid-edit.** `stages/deploy-release.yml` is complete and gated. The next action is a **commit
-decision**, not more work.
-
----
-
-### 🔬 THE MEASURED FINDING — the session's most valuable output
-
-> **`nuget.exe` 6.4.0 auto-pushes a co-located `.snupkg`. MEASURED, not inferred.**
-
-From the **`Push NuGet Alpha Package`** step log — `ProphetsWay.BaseDataAccess` 3.2.0-504.Alpha,
-`Deploy Alpha`, **2026-08-23T04:45**:
-
-```text
-[command]...nuget.exe push D:\a\1\a\Alpha\ProphetsWay.BaseDataAccess.3.2.0-504.Alpha.nupkg ...
-Pushing ...3.2.0-504.Alpha.nupkg to 'https://www.nuget.org/api/v2/package'...
-  Created https://www.nuget.org/api/v2/package/ 503ms
-Your package was pushed.
-Pushing ...3.2.0-504.Alpha.snupkg to 'https://www.nuget.org/api/v2/symbolpackage'...
-  Created https://www.nuget.org/api/v2/symbolpackage/ 207ms
-Your package was pushed.
-```
-
-**The command line names only the `.nupkg`.** The `.snupkg` push was unprompted and returned **`Created`**
-(HTTP 201) — so **symbols published successfully**, and the feed **does** expose a symbol endpoint. The
-explicit second push then `409`'d against symbols the feed had accepted ~200 ms earlier. The agent also
-resolved **6.4.0 from tool cache before any pin existed**, so pinning holds observed behaviour rather than
-changing it.
-
-**The owner's opening hypothesis was wrong and was corrected:** nuget.org fully supports a `.nupkg` and a
-`.snupkg` at the same version. This was never a one-package-per-version limit.
-
-#### 🧭 Process lesson — record this, it is why the gate exists
-
-The lead first argued auto-push was proven **"by elimination"** from the 409. **`Pipeline Auditor` refuted
-that:** a nuget.org `409 pending validation` is returned **both** when a symbol package is already in
-flight **and** when the parent package version is still validating — and the parent had been pushed
-seconds earlier, so the 409 alone eliminated **nothing**. The auditor also noted the discriminator was
-**free**, because nuget.exe names every file it uploads. The owner pulled the log and it settled in one
-read. **A lead's inference was wrong, an adversarial gate caught it, and a free measurement replaced it.**
-
----
-
-### The change set — `stages/deploy-release.yml`, uncommitted
-
-**The reported symptom.** `Push NuGet Alpha Symbol Package` failed `409 Conflict — "another copy of this
-symbols package pending validation"`, printing two red `##[error]` lines. **`continueOnError: true` held,
-so the release did not fail.**
-
-**Three behavioural changes vs `HEAD`, all in one file:**
-
-| # | Change | Why |
+| Lap | Receipt | Measured result |
 |---|---|---|
-| 1 | **`NuGetToolInstaller@1`, `versionSpec: '6.4.0'`** — fatal, placed **first** inside the `PostTargetToNuGet` guard | Governs every `NuGetCommand@2` and precedes the irreversible GitHub steps. Pins the *observed* behaviour |
-| 2 | **`DownloadBuildArtifacts@0` for `{PackageType}` hoisted** above both GitHub release invocations, renamed `Download {PackageType} Artifact` | Fixes the silent defect below |
-| 3 | **Deleted** the `Detect/Stage {PackageType} Symbol Package` PowerShell step **and** the explicit `Push NuGet {PackageType} Symbol Package` task | A **full revert of `63dd56b`'s symbol machinery** — nuget.exe already does it. `HasSymbolPackage` now has **no reader left in any YAML** |
+| **Test migration** — enum-order fix + every non-exempt provider call site routed through the `TestStore` seam | `…test-designer-20260825-001530-6p7m.md`, `COMPLETE` | `EFTOOLS_PROVIDER=SqlServer`: build 0/0; **full suite 303 / 303 / 0** (13 s); gate `Scope=Contract\|Guard=Seam` **278 / 278 / 0**; `ProviderSelectionTests` **33 / 33 / 0**; `sys.databases LIKE 'EFToolsTest[_]%'` → **0 orphans**. Residual scanner green with an empty site list |
+| **Cleanup / isolation surface** — `TestStore.cs` reporting cleanup, per-store `ClearPool` replacing process-global `ClearAllPools` | `…implementer-20260825-005358-rx3o.md`, `COMPLETE` | Baseline 21 failed / 36 passed → **`ProviderSelectionTests` 57 / 57 / 0**; **`Area=StoreCleanup` 24 / 24 / 0**; **full suite 327 / 327 / 0**; gate **302 / 302 / 0**; `sys.databases` → **0 orphans, no identities**. All 24 `*Tests.cs` files verified unmodified after the run |
+| **Final correctness review** | `…code-reviewer-20260825-011452-h19l.md`, `COMPLETE` | 9 findings: **0 Must Fix**, 3 Should Fix, 6 Consider, 4 Untested Behaviour. **Verdict: ship with minor changes; checkpoint MAY PROCEED.** Read-only — repository unchanged |
 
-**Net: three tasks collapse to one.** `Push NuGet {PackageType} Package` is **byte-unchanged** — verified
-by the lead running `git diff` filtered to non-comment lines.
+**The counts reconcile exactly:** 270 pre-existing → **303** (+33 `ProviderSelectionTests`) → **327**
+(+24 `Area=StoreCleanup`) → **328** (+1 this lap). Any figure that does not sit on that ladder is wrong.
 
-### 🔴 The silent defect this also fixes — unrelated to symbols, and the strongest reason to take the change
+## 🔴 The current state — one red case, and it is the right one
 
-`steps/create-github-release.yml` globs `.../{PackageType}/*.nupkg` for its `assets`, but the download that
-populates that folder **previously ran *after* the release steps.** On the hosted agent every consumer
-defaults to, **every Beta and Release GitHub release for `BaseDataAccess`, `EFTools` and `Logger` was
-created with no package attached** — silently, green. The hoist fixes it. **Both auditor passes rated this
-the strongest reason to take the change set.**
+**Lap:** final red-phase `Test Designer` run — receipt `…test-designer-20260825-012254-4sm1.md`, `PARTIAL`
+**by design** ("all four packet tasks landed and validated; `PARTIAL` because this is a deliberate red-phase
+change"). It changed **two files only** — `ProviderSelectionTests.cs` and `IdentifierResolutionTests.cs`.
+**`TestStore.cs` was read-only in that lap**, which is precisely why the suite is red.
 
-### Settled owner decisions — quoted, not paraphrased
-
-> *"go ahead and address all three findings, nothing is so large or intertwined that we can't do all three
-> at the same time"*
-
-> *"yes, have the pipeline engineer do the fixes, i'm ok with the risk that the symbols don't get included
-> somehow, i'll own that decision."*
-
----
-
-### Closed today
-
-| Item | Outcome |
+| Measurement | Value |
 |---|---|
-| **Open Question A** — did 3.2.0 publish, did symbols push? | ✅ **CLOSED.** The alpha publish **fired and succeeded**; **symbols published**; the release never failed. FR 8's Source Link work is **live** — `IncludeSymbols` / `SymbolPackageFormat=snupkg` confirmed in `ProphetsWay.BaseDataAccess.csproj` **lines 33–34** |
-| **Open Question B** — amend `63dd56b`? | ⚪ **Largely MOOT.** Its defective message described a change that is now **reverted**. Amending a message for undone work is probably wasted effort. **Owner's call, but the stakes collapsed** |
-| Last night's item 1 | Done — this is what item 1 asked for |
+| `dotnet build ProphetsWay.EFTools.Tests.csproj -c Debug` | **exit 0**, six projects, **0 warnings / 0 errors** |
+| Full `dotnet test` | **Total 328 · Passed 327 · Failed 1 · Skipped 0** — 1 m 30 s |
+| `--filter "Area=StoreCleanup"` | **25 total · 24 passed · 1 failed** (area count 24 → 25) |
+| Conformance gate `--filter "Scope=Contract\|Guard=Seam"` | **303 with 1 red** — ⚠️ **derived** from the class-level `Guard=Seam` trait, **not separately re-run** |
+| Orphan risk from the new case | **None** — it opens no store and touches no database |
+
+**The one failing test, named exactly:**
+`ShouldRegisterAStoreBeforeProvisioningItAndForgetItIfProvisioningFails` — `Area=StoreCleanup`, inheriting
+the class-level `Guard=Seam`. It is **structural**: it walks the IL of the compiled
+`TestStore.Store(TestStoreProvider, string)` constructor and locates registration, provisioning and
+rollback **by shape**, not by name or line number.
+
+**Its failure message, verbatim:** `registration should be less than 6 but was 9` — the constructor *"brings
+the store into being (`Microsoft.Data.Sqlite.SqliteConnection..ctor`) before it registers the identity
+(`ProphetsWay.EFTools.Tests.TestStore.RegisterIdentity`)"*. **That is the real defect**, independently found
+by the `Code Reviewer` as Should Fix 1: a window in which a database exists on the server and is absent from
+`LiveIdentities`, producing a false-positive orphan and a flaky
+`ShouldLeaveNoDisposableStoreBehindOnTheServer`. **The test is correct and the code is wrong. Do not weaken,
+skip, retrait or delete it.**
+
+**Also landed in that lap, all green:** `ShouldRouteEveryFixtureStoreThroughTheReportingCleanup` widened from
+methods *named* `WithStore` to **every method in the six fixture classes whose IL calls `OpenStore`**; both
+plain-`using` store sites in `IdentifierResolutionTests` converted to `store` + `completed` +
+`try/finally` → `TestStoreCleanup.DisposeReportingFailure`; and the stale *"red until the surface is
+written"* clause removed from `TestStoreCleanup`'s `<remarks>`. That closes `Code Reviewer` Should Fix 2 and 3.
+
+## 🔒 The blocker — a charter boundary, **not** a code failure
+
+**Receipt `…implementer-20260825-013558-w2a0.md` — `State: BLOCKED`, `Changed paths: none`, validation not
+run.** The `Implementer` charter absolutely forbids editing anything inside a test project, and
+`ProphetsWay.EFTools.Tests/TestStore.cs` is inside one; the packet permitted no other path. **It wrote
+nothing and ran nothing — so it reported nothing, honestly, rather than fabricating post-change counts.**
+
+🚫 **Do not treat this as a build or test failure, and do not re-invoke `Implementer` on it.** The supplied
+baseline it declined to alter is exactly the 327/328 above. `TestStore.cs`'s last write time is **00:57**,
+before the 01:22 red lap and the 01:35 blocked run — corroborating that neither touched it.
+
+## ✍️ THE OWNER'S EDIT — one constructor, copy-ready
+
+**File:** `ProphetsWay.EFTools/ProphetsWay.EFTools.Tests/TestStore.cs` (324 lines)
+**Method:** `Store(TestStoreProvider, string)` — the constructor, nothing else in the file.
+
+1. **Register before provisioning.** After the `IsDisposableIdentity` refusal and after assigning the
+   provider and identity fields, call **`RegisterIdentity(identity)`** — **above both provider branches**,
+   so nothing is created on any server before the registry knows about it.
+2. **Wrap the provisioning in a `try`** — the SQLite keeper construction **and** its `Open()`, and the SQL
+   Server `CreateSqlServerDatabase(identity)`.
+3. **On failure, roll back and rethrow:** dispose the partially constructed **`_sqliteKeeper` if it is
+   non-null** (`SqliteConnection` inherits `Component`'s finalizer, so a leaked keeper takes the shared
+   in-memory database with it), call **`ForgetIdentity(identity)`**, then **rethrow**.
+
+**Do not edit either test file to accommodate this.** The guard asserts rollback *after* provisioning
+precisely because a handler is emitted after its protected region — an unconditional `ForgetIdentity`
+will not satisfy it.
+
+### Then re-run, with `EFTOOLS_PROVIDER=SqlServer`, from `C:\Projects\ProphetManX\ProphetsWay.EFTools`
+
+| # | Command | Expected |
+|---|---|---|
+| 1 | `dotnet build .\ProphetsWay.EFTools.Tests\ProphetsWay.EFTools.Tests.csproj -c Debug --nologo` | exit 0, **0 warnings / 0 errors** |
+| 2 | `dotnet test .\ProphetsWay.EFTools.Tests\ProphetsWay.EFTools.Tests.csproj --filter "Area=StoreCleanup"` | **25 / 25 / 0** |
+| 3 | `dotnet test .\ProphetsWay.EFTools.Tests\ProphetsWay.EFTools.Tests.csproj` | **328 / 328 / 0** |
+| 4 | `dotnet test .\ProphetsWay.EFTools.Tests\ProphetsWay.EFTools.Tests.csproj --filter "Scope=Contract\|Guard=Seam"` | **303 / 303 / 0** — and this *measures* the figure only derived above |
+| 5 | `sqlcmd -S localhost -E -Q "SELECT COUNT(*) FROM sys.databases WHERE name LIKE 'EFToolsTest[_]%'"` | **0** |
+
+**Only when all five pass is Gate 1 green again**, and only then is the change set ready for
+`Commit Author`. **Committing remains the owner's decision; nothing was staged, committed or pushed by this
+checkpoint.**
+
+## 📌 Deferred, and deliberately not lost
+
+| Item | Owner | Why it is deferred, not dropped |
+|---|---|---|
+| **Direct SQL Server / `Microsoft.Data.SqlClient` `PackageReference`** | **`Modernizer`** | `Code Reviewer` **Must Fix 2**, *open and accepted by owner decision*, deferred until this cycle is green. **This is the one deferred item most likely to be forgotten — it is a Must Fix carried on purpose, not a resolved finding.** The test project uses SqlClient types transitively today |
+| `Code Reviewer` Should Fix 5 — startup provider validation in `TestSeam.cs` | `Test Designer` | Open, unimplemented. `Test Auditor` ranked it post-Gate-1 / legibility. Not blocking |
+| `Code Reviewer` Should Fix 7 — extract the IL scanner | — | `Refactorer` correctly declined (test code). Not blocking |
+| 6 *Consider* + 4 *Untested Behaviour* findings | `Test Auditor` | Incl. the `reporting == null` fallback, the `!bodySucceeded` branch, `OpenStore`/`ConfigureExisting` argument validation, `SINGLE_USER` left set on a failed drop, `_disposed` read outside `_disposeLock`. Post-Gate-1 |
+| SQLite whole-suite leg — `EFTOOLS_PROVIDER=Sqlite` | `Test Designer` | A later **non-gating** leg by prior settled decision |
+| A real cleanup **failure** path | `Test Auditor` | Shape, quiet path, idempotence and routing are pinned; the failure branch still is not. Named as residual risk in the review |
+
+## 🔵 Gate 2 — Azure SQL. A release gate, and NOT STARTED
+
+**Settled owner decision: local Microsoft SQL Server *and* Azure SQL certification are BOTH release gates
+before the EFTools 3.0.0 tag and publish.** This **answers the old Q5 / P2** — Azure SQL is a certified leg,
+not merely in-scope-uncertified. Per the `Purpose Refiner` receipts the durable record now carries **D20–D22**
+and **FR 19** in `ProphetsWay.EFTools/docs/`; ⚠️ **this checkpoint did not open those documents** — that is
+read from the receipts, so verify the wording there before quoting it.
+
+**Undecided and blocking Gate 2:** the **Azure infrastructure repository** (does one exist, is one to be
+created, where does it live) and **10 other FR 19 inputs**. Nothing about Gate 2 has been started, and
+**no Azure deployment is authorized.**
+
+**Still unauthorized, unchanged:** any version bump, tag, publish, `.yml` change, or Azure deployment.
 
 ---
 
-### Next Session — Start Here
+> 🔧 **CHECKPOINT — 2026-08-24 22:52. Stage 1 of the SQL Server certification cycle is COMPLETE.**
+> ⚠️ **PARTIALLY SUPERSEDED by the 2026-08-25 01:42 checkpoint above.** Its Stage 1 record stands; its
+> closing claims that *"Stage 3 has NOT started"* and *"nothing test-facing has been written"* are **dead** —
+> Stage 3 ran to green twice and is now at a final red micro-lap. Read the 08-25 section first.
+>
+> Scope was **two repos**: `ProphetsWay.EFTools` and `prophets-pipelines`. Both were **measured with
+> `git log -1 --format='HEAD %H %s'` and `git status -sb -uall`** in this pass, plus `git diff --stat`
+> and `git submodule status` in EFTools. The other five heads are **carried, not re-measured** — they are
+> labelled as such in the frontmatter. **The whole 2026-08-23 sign-off below is retained** and is still
+> the substantive historical record; this checkpoint amends its Current Focus, Next Session, In Flight
+> and Uncommitted sections and rewrites the release-gate section immediately below.
+>
+> ⚠️ **This is a `live` auto-save, not a sign-off.** ⚠️ **Stage 3 has NOT started.** Nothing test-facing
+> has been written.
+
+---
+
+# ✅ 2026-08-24 — THE PACKAGING COMMIT LANDED, THE GATE MOVED, AND STAGE 1 IS DONE
+
+**Measured this checkpoint.** `ProphetsWay.EFTools` HEAD is
+**`e2f2120f59b4fdb47208cb82bb37c3e956d4440a`** — subject *"Complete package metadata and enable Source
+Link"* — on `main`, **0 ahead / 0 behind**. Task 0 of the 08-23 list is **done**. 🔄 **The worktree is no
+longer clean**, as it was at 22:30: `docs/feature-requests.md` and `docs/purpose-and-scope.md` now carry
+**the expected Stage 1 `Purpose Refiner` edits**. Three files are dirty across two repos — see
+*Uncommitted Changes*. **Nothing is accidental and nothing is mid-edit.**
+
+## 🔴 The release gate — the owner's exact words, preserved
+
+> *"if we can't say EFTools is cleared to work in SQL Server, then it's not worth pushing out."*
+
+**SQL Server certification is a release gate, not a preference. `ProphetsWay.EFTools` 3.0.0 stays
+untagged and unpublished until that evidence exists.** No version bump, tag or publish is authorized.
+**Azure SQL as an *additional* certification leg remains an open owner decision** — now durably recorded
+as **Q5** in `ProphetsWay.EFTools/docs/purpose-and-scope.md`, and still unanswered.
+
+## ✅ Stage 1 is COMPLETE — the owner approved the stages, and both leaves reported
+
+**New owner statement, verbatim, superseding the "unapproved route" wording this section used to carry:**
+
+> *"i have a local instance of mssql running on local host, if we need to deploy the schema from Example's
+> sqlproj dacpac, we can deploy it locally to then run our tests against it. please go ahead with your
+> planned stages"*
+
+**Still no authorization for:** a version bump, a tag, a publish, any `.yml` change, or any Azure
+deployment. Unchanged.
+
+### Leaf 1 — `Purpose Refiner`: FR 11 reconciled, D20 / D21 / Q5 recorded
+
+**Receipt:** `C:\Users\Proph\AppData\Local\Temp\vanguard-receipt-purpose-refiner-20260824-223611-0amv.md`,
+`State: COMPLETE`. Changed exactly two files, both uncommitted — see *Uncommitted Changes*.
+
+| What landed | Detail |
+|---|---|
+| **D20** | Whole-suite SQL Server certification is a **release gate** on EFTools 3.0.0. Owner quote carried verbatim into the durable record |
+| **D21** | **Local MSSQL is the certification environment**; deploying the `ProphetsWay.Example` DACPAC locally is authorized; the target is **one complete 270/270 SQL Server run**. Explicitly framed as *available evidence, not certification* |
+| **Q5 — OPEN** | **Azure SQL**: certified leg, in-scope-uncertified, or out of scope for 3.x? **Owner decision required.** Deliberately **not** filed as a feature request — a request implies work is wanted, and the scope call comes first. This is the old **P2** in its durable form |
+| FR 11 | **Release-blocking classification changed; the status token is unchanged at `Scheduled`.** Its dead "fact 2" re-scoped, and the corrected implementation scope recorded in the entry |
+
+> ⚠️ **No status transition was taken on any entry — `Purpose Refiner` reported "Status transitions
+> applied: None."** So **FR 16 is still `Proposed`** despite being materially closed by `e2f2120`, and
+> **FR 18 is still open** despite `TestResults/` being gone. Both are follow-ups, not Stage 1 misses.
+
+### Leaf 2 — `Modernizer` recon: no blocker, and the packaging gap is proven closed
+
+**Receipt:** `C:\Users\Proph\AppData\Local\Temp\vanguard-receipt-modernizer-20260824-223611-gbus.md`,
+`State: COMPLETE`, **read-only — changed paths: none.**
+
+| Check | Result |
+|---|---|
+| `dotnet build ProphetsWay.EFTools.sln -c Debug` | **0 errors / 0 warnings**, 7 projects / 10 TFM outputs, incl. `ProphetsWay.Example.Database.dacpac` **under the .NET CLI** |
+| `dotnet pack` + unpack | **`.nupkg` *and* `.snupkg`**; nuspec carries `<repository type="git" … commit="e2f2120…">`; README, CHANGELOG, `profile.png` and the XML doc all packed. **`e2f2120` closed the csproj packaging gap completely — proven by packing, not by reading** |
+| `sqlcmd -S localhost -E` (read-only catalog query) | **Local SQL Server is reachable.** Database `ProphetsWay.Example` **exists with all seven tables**, `dbo.Departments` and `dbo.CompanyResources` included |
+| `SqlPackage /Action:DeployReport` (**read-only**) | `<DeploymentReport><Alerts /></DeploymentReport>` — **zero schema drift. No deployment was performed**, and D21's DACPAC authorization is **not needed** |
+| `dotnet test --list-tests --no-build` | **270 cases discovered. No test was executed** |
+| `--outdated` / `--deprecated` / `--vulnerable` | Library and DAL projects clean; **no vulnerable package anywhere**. Three test-only packages behind, `xunit` 2.9.3 flagged *Legacy* → `xunit.v3`. **Do not bump before the certification run — runner/SDK bumps perturb discovery** |
+
+**Verdict: no build, dependency, reference or packaging blocker stands between here and the certification
+run.**
+
+## ⚠️ The implementation scope must be RE-DERIVED — do not trust the 08-23 wording
+
+The 08-23 sign-off and FR 11 both say *"make `Constants.GetExampleDataAccess` provider-selectable, then
+run all 270 against SQL Server alone."* **That is not sufficient, and stating it as the plan will send the
+next agent down a route that cannot reach the target.**
+
+| Group | How it picks a provider today | What a `Constants` change reaches |
+|---|---|---|
+| **13 adapted upstream classes** | `TestSeam`'s `[ModuleInitializer]` → `TestDataAccessFactory.Use(() => Constants.GetExampleDataAccess, …)` | ✅ **Yes** — this is the seam |
+| **8 locally-written classes** | Each **constructs its own SQLite in-memory / InMemory `DbContext` directly**; `AlternateKeyGuardSpikeTests` parameterizes both per `[Theory]` | ❌ **No** — they never call `Constants`, so changing it does not move them |
+
+**Reaching an all-270 SQL Server run therefore requires provider-selectable wiring the locally-written
+classes actually consume, not a one-line edit at the seam.** ✅ **Both Stage 1 leaves independently
+re-verified this from source and agree**: `Purpose Refiner` grepped
+`UseSqlite|UseSqlServer|UseInMemoryDatabase|SqliteConnection` and `EnsureCreated` across the test project
+— **seven store-backed local classes build their own context and provision their own schema in-process,
+and none of them calls `Constants`**; `Modernizer` put the same figure as **roughly 126 of the 270 cases
+never touching SQL Server**. `CompanyResourceConversionTests` is the eighth local class and is
+**reflection-only — no store, no connection**, so it needs no provider at all.
+
+**Three things Stage 3 must settle, and none of them is decided:** the shape of the provider-selectable
+wiring the seven store-backed classes consume (including **schema provisioning**, since they currently
+call `EnsureCreated` themselves); what happens to `AlternateKeyGuardSpikeTests`, which **deliberately**
+parameterizes two providers per `[Theory]`; and **per-test isolation on a real shared SQL Server**, which
+an in-process SQLite connection gave for free and a shared database does not.
+
+## 📋 The route — **APPROVED by the owner. Stage 1 done; Stage 3 NOT started.**
+
+| Stage | What | Agent | State |
+|---|---|---|---|
+| **1** | Reconcile FR 11 + record D20/D21/Q5; build & dependency recon | `Purpose Refiner` + `Modernizer` | ✅ **COMPLETE** — 2026-08-24, both receipts `COMPLETE` |
+| **2** | **Checkpoint / Direction Check** | `Session Scribe` | ✅ **This checkpoint** |
+| **3** | **One coherent test-facing lap** — provider-selectable wiring that reaches **both** groups above, then a real **all-270 run against SQL Server**. Target **270/270, green** | **`Test Designer`** | 🔜 **NEXT — NOT STARTED.** Nothing test-facing has been written |
+| **—** | **No tag until that run is green.** Unchanged | owner |
+
+---
+
+# 🔴 READ THIS FIRST — the purpose reveal
+
+**The owner stated, for the first time anywhere in this workspace, what these libraries are *for*. It
+reframes an open feature request from "deferred" into the release gate.** Verbatim, at sign-off:
+
+> *"i want to pickup with this and get it SQLServer certified when we pickup. the whole point is to build
+> these two pieces of software so i can leverage them when building a new app (BPA or even another web
+> based tool that i've not mentioned yet HashDB) those will use a MSSqlServer locally for build/debugging,
+> and i want to deploy to Azure SQL instance for production. if we can't say EFTools is cleared to work in
+> SQL Server, then it's not worth pushing out. the one real customer is me, and it needs to be ready."*
+
+## What is new here, and why each item matters
+
+| # | Reveal | Why it is not recoverable from any file |
+|---|---|---|
+| 1 | **`HashDB` — a web-based tool, not previously mentioned** | **It appears in no document in this workspace.** No repo, no `AGENTS.md`, no feature-request index, no README. It exists only in this paragraph |
+| 2 | **`ProphetsWay.BPA` has a stated purpose for the first time** | Measured tonight: HEAD `4c0ba1f` *"Initial commit"*, and `git ls-files` returns **exactly `.gitignore`** — no `AGENTS.md`, no `README.md`, no source. Every prior handoff called it *"a deliberate empty scaffold. Not neglect."* Still true — but it is now a scaffold **with a consumer relationship to EFTools** |
+| 3 | **Deployment target: local MSSQL for dev/debug, Azure SQL for production** | **Nothing in this workspace has ever considered Azure SQL.** See the dedicated warning below — it is *not* simply remote SQL Server |
+| 4 | **The release bar, in the owner's own words** | *"if we can't say EFTools is cleared to work in SQL Server, then it's not worth pushing out."* A stated gate on the 3.0.0 tag, not a preference. *"The one real customer is me"* — so there is no external pressure to ship early, and no external tolerance for shipping wrong |
+
+## ⚠️ Azure SQL is a separate question from SQL Server — do not fold them together
+
+The owner named **two** environments. Certifying against a local MSSQL instance does **not** certify Azure
+SQL. The differences that bear on a DAL are real, and none of them has ever been looked at here:
+
+- **Connection resiliency / retry.** Azure SQL disconnects routinely, so EF Core's `EnableRetryOnFailure`
+  execution strategy is effectively mandatory — and **an execution strategy is incompatible with a
+  user-initiated transaction unless that transaction is wrapped in `ExecuteInTransaction`.**
+  `BaseEFDataAccess<TContext>` exposes `TransactionStart` / `Commit` / `RollBack` as first-class contract
+  members, so this lands **directly on this library's transaction contract**, not on the consumer's code.
+- **Transient fault handling** — error numbers and backoff behaviour a local instance never produces.
+- **No `USE` statement**, different auth (Entra ID / managed identity rather than Integrated Security),
+  and elastic-pool timeouts.
+
+**Treat "certified on SQL Server" and "certified on Azure SQL" as two separate legs.** Recorded below as
+blocking question **P2**.
+
+---
+
+# 🔴 FR 11 IS THE RELEASE GATE — reframed tonight
+
+> **Disambiguation first, because the numbering collides.** Feature-request numbers are **per repository**.
+> **`ProphetsWay.EFTools` FR 11 = the SQLite / SQL Server certification legs** — that is the one below.
+> **`ProphetsWay.BaseDataAccess` FR 11 = `<Nullable>enable</Nullable>`**, an unrelated `Proposed` entry
+> still sitting in *Deliberately Deferred*. **Never conflate the two.**
+
+## The lead's error, recorded plainly so it is not repeated
+
+Earlier tonight the lead advised: **"leave FR 11 where it is — not release-blocking."** The reasoning was
+that the certification claim is not printed on the package, so the documents had not outrun the evidence.
+
+**That was right about the documents and wrong about the purpose.** The owner then supplied the purpose,
+and by their own bar **FR 11 is the release gate for EFTools 3.0.0.** `Purpose Refiner`'s earlier ruling —
+that FR 11 was *not release-blocking*, and that *"nothing needs building within a week"* — **is superseded
+by the same reveal.**
+
+**The general lesson, worth keeping:** scope reasoning from written artifacts alone cannot see an unwritten
+purpose. When a ruling turns on *who is this for and what will they do with it*, ask the owner before
+ruling rather than inferring from the docs.
+
+## What FR 11 actually requires — verified by reading the entry tonight
+
+### ✅ Already done — do NOT re-do this
+
+**SQL Server is wired and working.** `ProphetsWay.EFTools.Tests/Constants.cs` holds
+`Data Source=localhost;Initial Catalog=ProphetsWay.Example;Integrated Security=True;TrustServerCertificate=True`;
+the **13 adapted upstream classes** reach it through `TestSeam`'s `[ModuleInitializer]`; and **they ran for
+real today** — that is where the **270 / 270 / 0** figure came from. **Schema deployment and pointing EF at
+the instance is not the outstanding work.** Anyone starting there will spend a session rebuilding something
+that already works.
+
+### ❌ Genuinely outstanding — exactly two items
+
+| # | Item | Detail |
+|---|---|---|
+| **1** | **No single provider runs the whole suite** | The split is **fixed by construction**: 8 locally-written classes on SQLite in-memory / InMemory, 13 adapted classes on SQL Server. The entry names the fix — **make `Constants.GetExampleDataAccess` provider-selectable**, so the adapted classes can also run on SQLite and **one provider can run all 270** |
+| **2** | **`LocalTestsOnly: 'yes'`** | CI executes **none** of the 270, so a green pipeline proves **compilation only**. Its stated justification — a local SQL Server dependency — **has decayed**: the conformance gate now runs in **~2 seconds** and most locally-written classes need no database at all. `Pipeline Engineer` owns that edit; **it is NOT authorized** |
+
+### 💀 Dead — do not restate
+
+FR 11's own **"fact 2"** — *"the provider this package currently depends on is structurally unable to
+verify the contract"* — **is false as of today.** After `77cfe5c` the package depends on **no provider at
+all**: `ProphetsWay.EFTools.csproj` references `Microsoft.EntityFrameworkCore` and
+`ProphetsWay.BaseDataAccess` and nothing else. The entry needs **re-scoping on that point**, not merely a
+status move. **`Purpose Refiner` owns it.**
+
+---
+
+# ~~🚩 ONE UNCOMMITTED FILE IN THE WHOLE WORKSPACE~~ — ✅ SUPERSEDED 2026-08-24
+
+> ✅ **This section is history.** The file it names was committed as **`e2f2120`** on 2026-08-24 and
+> `ProphetsWay.EFTools` is now **clean**. Kept for the record of what the change contained and how it was
+> proven. **The only uncommitted file in the workspace is now `prophets-pipelines/docs/session-handoff.md`.**
+
+**Measured 22:00 on 2026-08-23 with `git status -sb -uall` in all eight repositories.**
+
+| Repo | File | State |
+|---|---|---|
+| **`ProphetsWay.EFTools`** | **`ProphetsWay.EFTools/ProphetsWay.EFTools.csproj`** | ✅ **COMMIT THIS.** Complete, verified, proven by a real `dotnet pack` |
+| Everything else | — | **Clean.** All eight repos 0 ahead / 0 behind. **No untracked files anywhere**, including `ProphetsWay.BPA` |
+
+**What the change contains:** Source Link, symbol packages, `RepositoryType` `GitHub` → `git`,
+`GenerateDocumentationFile`, and the previously-empty packaging metadata stubs filled.
+
+**How it was proven — not inferred:** `dotnet pack` produced **a `.nupkg` *and* a `.snupkg`**, with the
+nuspec carrying `type="git"` and an **embedded commit SHA**. Build **0 errors / 0 warnings**; tests
+**270 / 270 / 0** (owner-reported).
+
+**It needs a commit message and a commit. That is the owner's decision, and it is the first action of the
+next session.** Note also that last night's `ProphetsWay.EFTools.sln` — flagged 🚩 **DISCARD** twice — **is
+gone from the working tree.** That carried item is closed.
+
+---
+
+## Where We Are
+
+`ProphetsWay.EFTools` **3.0.0 is functionally complete and green** — 270/270/0, provider-neutral, zero
+preprocessor directives, packaging metadata now filled — **and it is deliberately not being tagged**,
+because the owner's release bar is SQL Server certification and that is not yet claimable. The shared
+release pipeline was rewritten and simplified today, and a **silent defect that had been shipping empty
+GitHub releases for three repos** was found and fixed along the way. A four-repo documentation sweep
+corrected roughly two dozen false claims.
+
+## Current Focus
+
+🔴 **The Gate 1 SQL Server certification cycle is at its final red micro-lap, and the last step belongs to
+the owner.** Stage 3 ran, reached green **twice** — 303/303 after the migration lap, 327/327 after the
+cleanup lap, both with **zero orphan databases** — and then took a deliberate red-phase test that exposed a
+real ordering defect in `TestStore`'s constructor. **The suite stands at 328 total / 327 passed / 1 failed;
+Gate 1 is NOT currently green.** The failure is correct and intended.
+
+**The one remaining action is a hand edit to `ProphetsWay.EFTools.Tests/TestStore.cs`'s
+`Store(TestStoreProvider, string)` constructor — register before provisioning, and roll back on failure.**
+It cannot be delegated: `Vanguard` cannot write code and no remaining leaf charter permits a
+behaviour-changing edit inside a test project on a red baseline. The `Implementer` invoked for it returned
+`BLOCKED` having written nothing — **a charter boundary, not a code failure.** The exact edit and the five
+validation commands are in the 2026-08-25 section at the top.
+
+**Eleven files are dirty in `ProphetsWay.EFTools` and nothing has been committed all cycle** — HEAD is still
+`e2f2120`. `git diff --check` is clean. **Gate 2 (Azure SQL) is also a release gate and has not started.**
+
+---
+
+# What This Session Did — summary, not an inventory
+
+| Area | Outcome |
+|---|---|
+| **Release pipeline fixed and simplified** | `nuget.exe` 6.4.0 **auto-pushes a co-located `.snupkg`** — **measured**, a `Created` on `/api/v2/symbolpackage/` in the 04:45 `Deploy Alpha` log. The redundant explicit push and its detection step were **deleted**, `NuGetToolInstaller@1` **pinned to 6.4.0**, and the artifact download **hoisted above** the GitHub release steps. Landed as `6110d69`, a substantial revert of the same morning's `63dd56b` |
+| 🔴 **A silent defect fixed by that hoist** | `steps/create-github-release.yml` globs the artifact folder for its `assets`, and the download used to run *after* the release steps — so **every Beta and Release GitHub release for `BaseDataAccess`, `EFTools` and `Logger` had been created with no package attached.** Green and silent. Both auditor passes rated this the strongest reason to take the change set |
+| **BaseDataAccess 3.2.0 taken into EFTools** | Ten `CS8766` suppression pairs retired across eight files — **zero `#pragma` directives remain in the library** |
+| **Providers no longer forced on consumers** | `Microsoft.EntityFrameworkCore.SqlServer` and `.InMemory` removed from the library; `.InMemory` moved to the test project. **Breaking, and deliberately landed before the tag** — after publishing it would have cost a 4.0.0 |
+| **Nine `Scope=Contract` failures fixed** | A missing `ApplyIncludes` in the **proving ground**, never a library defect — see the corrected guardrail below |
+| **A `StoreCapabilities` mechanism added upstream** | An implementation now **declares what its store can structurally do**; two permanently-failing `Characterization` tests branch instead of failing forever. **270/270/0, full run 32 s → 2 s** |
+| **The D12 release-note obligation discharged** | All four 2.2.0 defects named — **three of which fail silently** |
+| **A four-repo documentation sweep** | Roughly **two dozen false claims** found and corrected across `EFTools`, `Example`, `BaseDataAccess` and `prophets-pipelines` |
+
+---
+
+# Repository State — measured at sign-off
+
+**All eight repos are 0 ahead / 0 behind their upstreams. One file is dirty in the entire workspace.**
+
+| Repo | Branch | HEAD | State |
+|---|---|---|---|
+| `ProphetsWay.EFTools` | `main` | ~~`af43048`~~ → **`e2f2120`** *Complete package metadata and enable Source Link* | ✅ **CLEAN as of 2026-08-24**, 0/0. Re-measured this checkpoint |
+| `ProphetsWay.Example` | `main` | **`39d0e72`** *Bring the documentation back in line with the tree* | Clean, 0/0 |
+| `ProphetsWay.BaseDataAccess` | `main` | **`30bfc71`** *Correct the symbol-publication caveat and refresh the analysis documents* | Clean, 0/0 |
+| `prophets-pipelines` | `main` | **`8095b6e`** *Record the deploy-release rewrite and the non-idempotent Beta delete* | Clean, 0/0. **Last night's handoff is now committed here** |
+| `ProphetsWay.BPA` | `main` | **`4c0ba1f`** *Initial commit* | Clean — **empty scaffold; `.gitignore` is the only tracked file.** The `.toolbelt-stress-*` fixtures are gone |
+| `ProphetsWay.Logger` | `main` | `66bfa3c` | Clean, 0/0 — untouched this session |
+| `ProphetsWay.Utilities` | `master` | `bb7bcaa` | Clean, 0/0 — untouched this session |
+| `ProphetsWay.Hasher` | `master` | `4b286ae` | Clean, 0/0 — untouched this session |
+
+**Submodule.** `ProphetsWay.EFTools` pins `ProphetsWay.Example` at **`39d0e72`** — **that repo's own HEAD**,
+so the two are in step and `git status` reports no pointer drift. `git submodule status` describes it as
+**`3.1.1-511.Beta-1-g39d0e72`**: a **`3.1.1-511.Beta` tag now exists** on `ProphetsWay.Example` and the
+pointer is **one commit past it**. **Every earlier pointer this file has carried — `61d9e7d`, `967fd26`,
+`d845863`, `f93f0a4` — is superseded and must not be restated.**
+
+**Publication status: `ProphetsWay.EFTools` 3.0.0 is set in `app-variables.yml`, still not tagged, and
+nuget.org still serves 2.2.0.** As of tonight that is **deliberate**, gated on FR 11 — not an oversight.
+
+---
+
+# Next Session — Start Here
+
+> 🔄 **Revised 2026-08-25 01:42.** Tasks 0 and 0b are done. **Stage 3 ran and is one owner edit from
+> green** — it is **task 1** below and it is **not delegable**. Everything that follows it is blocked on it.
 
 | # | Task | Agent | Why it's next |
 |---|---|---|---|
-| **0** | **Commit `stages/deploy-release.yml` and this handoff** — two separate commits | owner + `Commit Author` | Both are uncommitted and this file is the sole copy of last night's record. **Do this before anything else** |
-| 1 | **Decide auditor finding A2** — `continueOnError: true` on the Beta `GitHubRelease@1 action: 'delete'` | owner | **Medium, NOT approved.** That task is **fatal and non-idempotent**: a Release stage failing at or after it **can never be re-run to green** |
-| 2 | **EFTools follow-on** — reference BaseDataAccess **3.2.0**, delete the **10 `CS8766` suppression pairs across 8 library files**, absorb the `CS8767` wave | `Implementer` | **NOW UNBLOCKED** — it was gated on the 3.2.0 publish, which is confirmed fired |
-| 3 | **File the F10 non-equivalence finding** into `ProphetsWay.EFTools/docs/api-contract.md` (~2049 and ~5206) | `Contract Reviewer`, then `Interface Architect` | Carried from last night. The document **still asserts the equivalence disproved on 08-22** |
-| 4 | **Refresh `prophets-pipelines/AGENTS.md`** — its Known Gaps table **predates all of today** | `Repo Analyst` | Gap 5/6/7 re-verified present; nothing there knows the symbol machinery was reverted |
-| 5 | **Tag and publish EFTools 3.0.0** | owner | Merged since 08-22; nuget.org still serves **2.2.0** |
-| 6 | `Purpose Refiner` on **FR 8** | `Purpose Refiner` | Its index row still reads *"the pipeline push step is still owed"* — the measured finding now settles the whole question |
-| 7 | **`ProphetsWay.EFTools` `LocalTestsOnly: 'yes'`** — narrow with a `--filter` rather than removing the flag | `Pipeline Engineer` | See the new finding below |
+| ~~**0**~~ | ~~Commit the Source Link / metadata csproj~~ | — | ✅ **DONE** — `e2f2120`, 2026-08-24 |
+| ~~**0b**~~ | ~~Reconcile EFTools FR 11 + `Modernizer` recon~~ | — | ✅ **DONE** — Stage 1, 2026-08-24 |
+| **1** | 🔴 **Edit `ProphetsWay.EFTools.Tests/TestStore.cs`'s `Store(TestStoreProvider, string)` constructor by hand** — `RegisterIdentity` **before** provisioning; `try` around the SQLite keeper construction/`Open()` and `CreateSqlServerDatabase`; on failure dispose a non-null `_sqliteKeeper`, `ForgetIdentity(identity)`, rethrow. Then run the five validation commands | **owner — NOT DELEGABLE** | **The suite is red at 327/328 until this lands.** No leaf charter permits it: `Implementer` returned `BLOCKED` with no writes. Targets: `Area=StoreCleanup` **25/25**, full **328/328**, gate **303/303**, orphan count **0**. Do not edit a test to accommodate it — the guard is correct |
+| **2** | **`Commit Author`** — commit the whole Gate 1 change set once task 1 is green | `Commit Author` | `Code Reviewer` already cleared it: **0 Must Fix**, *"ship with minor changes, MAY PROCEED"*. **11 dirty files, nothing committed all cycle** — the single largest thing at risk in the workspace |
+| **3** | **Add the direct SQL Server / `Microsoft.Data.SqlClient` `PackageReference`** | **`Modernizer`** | 🔴 `Code Reviewer` **Must Fix 2**, open and **accepted-deferred by owner decision** until the cycle is green. **The likeliest item to be lost** — it is a carried Must Fix, not a resolved finding |
+| **4** | **Gate 2 — Azure SQL certification.** Decide the Azure infrastructure repository and the 10 other open FR 19 inputs, then plan the leg | **owner**, then `Purpose Refiner` | **A release gate by settled decision, alongside local MSSQL.** Not started; no Azure deployment authorized. `EnableRetryOnFailure` vs. a user-initiated transaction lands on this library's own transaction contract |
+| **5** | Post-Gate-1 test debt — startup provider validation (Should Fix 5), the untested cleanup-**failure** branch, `OpenStore`/`ConfigureExisting` argument validation, the 6 *Consider* items | `Test Auditor` → `Test Designer` | All non-blocking, all recorded in the 011452-h19l receipt. Do not let them re-enter Gate 1's scope |
+| **6** | **Move FR 16 → `Done`** and **FR 18 → re-scoped** | `Purpose Refiner` | Materially closed since 08-24, still reading open. Cheap; not gating |
+| **2** | **Move FR 16 → `Done`** (closed by `e2f2120`, proven by `dotnet pack`) and **FR 18 → resolved** (`TestResults/` is gone and untracked) | `Purpose Refiner` | Stage 1 deliberately took **no** status transitions. Both are materially closed but still read open. Cheap; not gating |
+| **3** | **Answer Q5 — does Azure SQL need its own certification leg, and when?** | owner | **Q5 is the durable form of the old P2**, now recorded in `docs/purpose-and-scope.md`. `EnableRetryOnFailure` vs. a user-initiated transaction lands on **this library's own transaction contract** |
+| **4** | **Remove the dead `#if` guards from five proving-ground DAOs** — FR 17 | `Refactorer` / `Modernizer` | Owner asked for this on 08-23 and it was never routed. `CompanyDao`, `JobDao`, `ResourceDao`, `TransactionDao`, `UserDao` under a `net10.0`-only project |
+| **5** | **Refresh `ProphetsWay.EFTools/AGENTS.md` deviations 5 and 7, its "What has not landed" list, and its submodule pointer — plus ~4 places in `docs/repo-profile.md`** | `Repo Analyst` | **Stale, and confirmed stale by both Stage 1 leaves.** Deviation 5 lists packaging gaps `e2f2120` closed; deviation 7's *"you will conclude Source Link works"* **has inverted — it now does work**; `AGENTS.md` still says the submodule is `f93f0a4` when **`git submodule status` reads `39d0e72` (`3.1.1-1-g39d0e72`)**; and `repo-profile.md` still says FR 11 is not release-blocking. **All of it is outside the Stage 1 leaf charters** — reported by both agents, edited by neither |
+| 6 | **Decide auditor finding A2** — `continueOnError: true` on the Beta `GitHubRelease@1 action: 'delete'` | owner | **Medium, still NOT approved.** Fatal and non-idempotent. Recorded durably as `prophets-pipelines/AGENTS.md` gap 8 |
+| 7 | **`LocalTestsOnly: 'yes'`** — narrow with a `--filter` rather than removing the flag | `Pipeline Engineer` | **FR 11 item 2, and not authorized.** The ~2-second conformance gate is the obvious candidate |
+| 8 | **Tag and publish EFTools 3.0.0** | owner | **Gated on task 2 by the owner's own bar. No tag until green.** nuget.org still serves **2.2.0** |
 
 **Exact invocation for a fresh start:**
 
 ```
-@Vanguard — Read prophets-pipelines/docs/session-handoff.md first; its 2026-08-23 checkpoint is at the top
-and last night's sign-off is preserved below it. TWO FILES ARE UNCOMMITTED in prophets-pipelines
-(stages/deploy-release.yml and docs/session-handoff.md) — commit those first, separately.
-Then run the EFTools follow-on that deletes the 10 CS8766 suppression pairs: BaseDataAccess 3.2.0
-published successfully overnight, so that work is unblocked.
+@Vanguard — Read prophets-pipelines/docs/session-handoff.md first; it is a 2026-08-25 01:42 `live`
+checkpoint, so reconcile the five unscoped repo heads against git before trusting them.
+GATE 1 IS NOT GREEN RIGHT NOW. It reached green twice — 303/303 and 327/327, zero orphans — and a
+deliberate red-phase test was added afterwards. The suite is 328 total / 327 passed / 1 FAILED.
+The failure is INTENDED and CORRECT: ShouldRegisterAStoreBeforeProvisioningItAndForgetItIfProvisioningFails
+proves TestStore's constructor provisions before it registers. Do NOT weaken, skip or delete it.
+THE NEXT STEP IS THE OWNER'S AND CANNOT BE DELEGATED — a hand edit to
+ProphetsWay.EFTools.Tests/TestStore.cs, constructor Store(TestStoreProvider, string): call
+RegisterIdentity(identity) after the IsDisposableIdentity check and BEFORE both provider branches; wrap
+the SQLite keeper construction/Open() and CreateSqlServerDatabase(identity) in a try; on failure dispose
+_sqliteKeeper if non-null, ForgetIdentity(identity), rethrow. An Implementer already returned BLOCKED on
+this with zero writes — a charter boundary, NOT a code failure. Do not re-invoke it for this.
+Then with EFTOOLS_PROVIDER=SqlServer: build 0/0; Area=StoreCleanup 25/25; full 328/328; gate
+"Scope=Contract|Guard=Seam" 303/303; sys.databases LIKE 'EFToolsTest[_]%' = 0. Only then Commit Author.
+EFTools HEAD is e2f2120 with ELEVEN dirty files and NOTHING committed all cycle; git diff --check is clean.
+DO NOT LOSE: the direct SQL Server / SqlClient PackageReference is an OPEN Code Reviewer Must Fix,
+Modernizer-owned, deferred by owner decision until this cycle is green.
+GATE 2 — Azure SQL — is ALSO a release gate and has NOT started; the Azure infrastructure repository and
+10 other FR 19 inputs are undecided. No tag, publish, version bump, YAML change or Azure deployment.
 ```
 
 ---
 
-### Open Questions — Blocking
+## Open Questions — Blocking
 
 | # | Question | Blocks | Raised |
 |---|---|---|---|
-| **A2** | **Approve `continueOnError: true` on the Beta `GitHubRelease@1 action: 'delete'`?** Auditor finding, **Medium**, unapproved | A re-runnable Release stage. Today a failure at or after it is unrecoverable | 08-23 |
+| ~~**P1**~~ | ~~**Can all 270 tests run against SQL Server alone?**~~ ✅ **ANSWERED 2026-08-25 — yes.** A whole-suite run reached **303/303/0** and then **327/327/0** on `EFTOOLS_PROVIDER=SqlServer` with **zero orphan databases**, every store-touching case outside the exempt 14-case provider-comparison spike reaching the selected provider. ⚠️ **The suite is red *right now* at 327/328** on one deliberately added test — see the top. **Gate 1 closes when that one case passes**, not when this question is re-asked | **The EFTools 3.0.0 tag and publish** — now jointly with **P2** | 08-23, answered 08-25 |
+| ~~**P2 → Q5**~~ | ~~**Does Azure SQL need its own certification leg, and when?**~~ ✅ **ANSWERED — yes, it is a release gate.** Settled owner decision: **both local Microsoft SQL Server and Azure SQL certification gate the 3.0.0 tag and publish.** Recorded durably as **D20–D22** / **FR 19** per the `Purpose Refiner` receipts — ⚠️ **those documents were not opened this checkpoint**. 🔵 **What is still undecided is the *work*, not the scope:** the **Azure infrastructure repository** and **10 other FR 19 inputs**. `EnableRetryOnFailure` forbids a user-initiated transaction unless wrapped, which lands on `TransactionStart`/`Commit`/`RollBack` — **still never examined** | **Gate 2.** The 3.0.0 tag, and production readiness for BPA and HashDB | 08-23, recorded 08-24, answered 08-25 |
+| **A2** | **Approve `continueOnError: true` on the Beta `GitHubRelease@1 action: 'delete'`?** Auditor finding, Medium, unapproved | A re-runnable Release stage. Today a failure at or after it is unrecoverable | 08-23 |
 
-### Open Questions — Non-Blocking
+## Open Questions — Non-Blocking
 
 | # | Question | Raised |
 |---|---|---|
-| **B′** | Amend `63dd56b`'s message at all, now that its change is reverted? | 08-23 |
-| **C** | **Which EFTools test subset can run headless?** Undecided — needed to size the `--filter` for item 7 | 08-23 |
-| — | *All of last night's non-blocking questions **a–f** remain open and are listed in the preserved section below.* | |
+| **P3** | **What are `BPA` and `HashDB`, concretely?** BPA is an empty scaffold with no `AGENTS.md`; HashDB is a name and a sentence. Both are now stated consumers of EFTools, so their shape influences what "certified" has to mean | 08-23 |
+| **B′** | Amend `63dd56b`'s commit message at all, now that its change is largely reverted by `6110d69`? **The stakes have collapsed** — it describes undone work | 08-23 |
+| **C** | **Which EFTools test subset can run headless?** — needed to size the `--filter` for task 7. **Nearly answered:** the `Scope=Contract\|Guard=Seam` gate is 245 cases in ~2 s, and 7 of 8 local classes need no database | 08-23 |
+| **a** | **What version does `ProphetsWay.Example` carry at *release*-tag time?** `app-variables.yml` reads 3/1/1 — a **patch** — but `TestDataAccessFactory.Use` is new public API (MINOR by house rule). **Partly overtaken:** a pipeline tag **`3.1.1-511.Beta`** now exists and HEAD is one commit past it | 08-16 |
+| **b** | **`ThrowIfDisposed()` is missing from 32 of `ExampleDataAccess`'s 40 forwarders** — a contract requirement with no test | 08-18 |
+| **c** | **Source Link for `Logger`, `Hasher` and `Utilities`** — the same small change. **EFTools' own gap closes with the uncommitted csproj**, leaving these three as the last holdouts | 08-16, revived 08-22 |
+| **d** | **A31's three version-sensitive EF Core surfaces** — `IgnoreQueryFilters()` granularity, `SetValues` against shadow foreign keys, `MultipleCollectionIncludeWarning`. Nobody had a verifiable source **and nobody guessed** | 08-16 |
+| **e** | Should the seven `Guard=Seam` tests also carry a `Scope` trait? A deliberate choice of a different trait key, not an omission | 08-20 |
+| **f** | Whether to state hard-delete explicitly on the five silent DAOs | earlier |
 
 ---
 
-### Still Open — pipeline
+## In Flight
 
-| Item | State |
-|---|---|
-| **Auditor finding A2** | **Medium, NOT approved.** Fatal, non-idempotent `action: 'delete'`. Remedy proposed, awaiting the owner |
-| **F2 hazard** | **Recorded in a comment, deliberately unfixed.** The surviving push has **no `continueOnError`** and the symbol half rides inside it — a feed rejecting a `.snupkg` fails the step **after** the `.nupkg` is public, **stranding a version.** This is the risk the owner explicitly owned in the quote above |
-| **F6** | `IncludeSymbols` is on **only** `ProphetsWay.BaseDataAccess` — **not** EFTools, **not** Logger. For those two, *"no symbols produced"* and *"produced and silently dropped"* look identical |
-| **`AGENTS.md` gaps 5, 6, 7** | All **re-verified present and untouched**: hardcoded `gitHubConnection` discarding its own parameter; `local/local-pipeline.yml` passing an **undeclared** `PostTargetToNuGet`; `local/app-variables.yml` omitting `LocalTestsOnly` and carrying stale values |
-| **`prophets-pipelines/AGENTS.md` is stale** | Its Known Gaps table predates this entire session |
-
-### 🆕 New finding — flagged twice by `Pipeline Auditor`
-
-**`ProphetsWay.EFTools` sets `LocalTestsOnly: 'yes'`, which compiles the test task out of both PR and CI.
-Its CI reported success through the entire 3.x redesign without executing one of its 270 tests.**
-Per its own `AGENTS.md`, **seven of eight** locally-written test classes now build a **SQLite in-memory**
-context and need no database at all, so the recorded justification has decayed. **Likely remedy: a
-`--filter` narrowing rather than removing the flag** — see non-blocking question C.
-
----
-
-### In Flight
+> 🔄 **Revised 2026-08-25 01:42.** 🔴 **One thing IS mid-flight and it is the whole cycle:** the Gate 1
+> change set is complete, reviewed and **red by one intended test**, awaiting a single owner edit. Nothing
+> in it is half-written — every lap that touched it validated and reported.
 
 | Item | State | Where |
 |---|---|---|
-| `stages/deploy-release.yml` change set | **Complete, gated, uncommitted** | `prophets-pipelines` |
-| EFTools follow-on — drop the 10 `CS8766` pairs | Specified, unstarted, **now unblocked** | `ProphetsWay.EFTools/ProphetsWay.EFTools/` |
-| F10 non-equivalence, filed into the contract | Found, **still not filed** | `ProphetsWay.EFTools/docs/api-contract.md` ~2049, ~5206 |
-| EFTools 3.0.0 tag + publish | Merged, unpublished | owner / Azure DevOps |
-| FR 8 status move | **Unblocked** — question A is answered | `ProphetsWay.BaseDataAccess/docs/feature-requests.md` |
-| A2 remedy | Proposed, **unapproved** | `prophets-pipelines/stages/deploy-release.yml` |
-
-### Uncommitted Changes
-
-| Repo | File | Delta | Description |
-|---|---|---|---|
-| **`prophets-pipelines`** | `stages/deploy-release.yml` | +34 / −35 | ✅ **Commit this.** The complete, twice-audited, owner-approved change set |
-| **`prophets-pipelines`** | `docs/session-handoff.md` | +420 / −1536 | ✅ **Commit this.** **Sole copy of last night's sign-off** plus today's checkpoint |
-| **`ProphetsWay.EFTools`** | `ProphetsWay.EFTools.sln` | +84 / −0 | 🚩 **STILL DISCARD** — `git checkout --`. Carried from last night, not re-measured this run |
-| **`ProphetsWay.BPA`** | `.toolbelt-stress-*` | untracked | Owner's to remove. Carried |
-
-**Nothing was staged, committed or pushed by this checkpoint.**
-
----
-
-### 🤖 Agent protocol observations — worth keeping
-
-- **`Pipeline Auditor` has no terminal.** It **said so plainly across three runs rather than fabricating a
-  `git diff`.** One lead packet **wrongly asserted it did** have one. The correct workaround — used
-  successfully — is for the **lead** to run `git diff` and paste it into the packet.
-- **`Pipeline Engineer` cannot invoke sub-agents either.** It could not reach `Pipeline Auditor` on its
-  own, so **the lead must run the gate.**
-- **Every receipt artifact this session was written correctly and matched its final report.** The protocol
-  introduced on 08-22 is holding.
-
-### Verification Record — this checkpoint
-
-**Ran** in `C:\Projects\ProphetManX\prophets-pipelines`: `git status --short` (both files confirmed
-modified on disk), `git log -1 --format='%h %cI %s'` (**`63dd56b`, 2026-08-23T00:14:31−04:00**, unmoved),
-`git diff --stat` (**454 insertions / 1571 deletions across 2 files**, from which the per-file split above
-is derived). **Opened:** this handoff in full before editing it.
-**Not re-measured — carried from last night or reported by the owner:** the seven other repos' SHAs, the
-`ProphetsWay.EFTools.sln` delta, the `Deploy Alpha` log text, the `.csproj` line numbers, and the
-`git diff` of `stages/deploy-release.yml` filtered to non-comment lines.
+| 🔴 **`TestStore.Store(TestStoreProvider, string)` — register before provisioning + rollback** | **THE ONLY OPEN STEP. Owner's, not delegable.** `Implementer` returned `BLOCKED`, zero writes, zero validation — charter, not failure. Targets: StoreCleanup 25/25, full 328/328, gate 303/303, 0 orphans | `ProphetsWay.EFTools/ProphetsWay.EFTools.Tests/TestStore.cs` — **untracked**, 324 lines |
+| ✅ **Provider-selectable test seam + whole-suite SQL Server run** | **DONE and green when measured** — 303/303/0, gate 278/278/0, 0 orphans. Superseded as a *current* figure by the cleanup and red laps | `ProphetsWay.EFTools.Tests/` — 7 modified files |
+| ✅ **Cleanup / isolation surface + reporting `Dispose`** | **DONE and green when measured** — 327/327/0, gate 302/302/0, StoreCleanup 24/24, 0 orphans. Per-store `ClearPool` replaced process-global `ClearAllPools` | `ProphetsWay.EFTools.Tests/TestStore.cs`, `ProviderSelectionTests.cs` |
+| ✅ **Final correctness review** | **DONE** — 0 Must Fix, 3 Should Fix (2 now closed), 6 Consider. *"Ship with minor changes; MAY PROCEED"* | read-only — no file changed |
+| 🔴 **The whole Gate 1 change set is UNCOMMITTED** | **11 dirty files, HEAD unmoved at `e2f2120` all cycle.** Cleared for commit once the edit above is green | `ProphetsWay.EFTools` |
+| 🔴 **Direct SQL Server / `SqlClient` `PackageReference`** | **OPEN `Code Reviewer` Must Fix, accepted-deferred by owner decision** until the cycle is green. **Do not lose it** | `ProphetsWay.EFTools.Tests.csproj` — `Modernizer` |
+| 🔵 **Gate 2 — Azure SQL certification** | **A release gate by settled decision. NOT STARTED.** Azure infrastructure repository + 10 other FR 19 inputs undecided. No deployment authorized | owner → `Purpose Refiner` |
+| Post-Gate-1 test debt — Should Fix 5/7, the untested cleanup-**failure** branch, 6 *Consider*, 4 *Untested Behaviour* | Recorded, non-blocking. Keep out of Gate 1's scope | `Test Auditor` → `Test Designer` |
+| SQLite whole-suite leg (`EFTOOLS_PROVIDER=Sqlite`) | Deferred by prior settled decision — **non-gating** | `ProphetsWay.EFTools.Tests/` |
+| ~~Source Link / metadata csproj change~~ | ✅ **COMMITTED** as `e2f2120`, 2026-08-24 — proven by `dotnet pack`, not by reading | `ProphetsWay.EFTools/ProphetsWay.EFTools/ProphetsWay.EFTools.csproj` |
+| ~~FR 11 reconciliation~~ | ✅ **DONE, uncommitted.** D20–D22 and FR 19 now in the durable record per the `Purpose Refiner` receipts — ⚠️ **not opened this checkpoint** | `ProphetsWay.EFTools/docs/feature-requests.md`, `docs/purpose-and-scope.md` |
+| FR 16 → `Done`, FR 18 → re-scoped | Materially closed, still reading open | `ProphetsWay.EFTools/docs/feature-requests.md` |
+| FR 17 — dead `#if` guards in five proving-ground DAOs | Owner asked on 08-23; still never routed | `ProphetsWay.EFTools/ProphetsWay.Example.DataAccess.EF/Daos/` |
+| EFTools `AGENTS.md` deviations 5 and 7 | 🔴 **Stale** — `e2f2120` inverted deviation 7's Source Link caveat; the file still names the submodule `f93f0a4` where git reads `39d0e72` | `ProphetsWay.EFTools/AGENTS.md` |
+| A2 remedy | Proposed, **unapproved**; recorded in `AGENTS.md` gap 8 | `prophets-pipelines/stages/deploy-release.yml` |
+| EFTools 3.0.0 tag + publish | **Gated on BOTH Gate 1 and Gate 2. No tag until both are green** | owner / Azure DevOps |
 
 ---
 
-<!-- ══════════════════ END OF CHECKPOINT — 2026-08-23 ══════════════════
+## Uncommitted Changes
+
+> 🔄 **Re-measured 2026-08-25 01:42** with `git status --porcelain`, `git diff --stat` and
+> `git diff --check`, in the two scoped repos only. **Nothing here is accidental.** Both repos are `main`,
+> 0 ahead / 0 behind. 🔴 **`ProphetsWay.EFTools` HEAD has not moved all cycle — the entire Gate 1 body of
+> work is uncommitted.**
+
+| Repo | File | Description |
+|---|---|---|
+| **`ProphetsWay.EFTools`** | `ProphetsWay.EFTools.Tests/`**`TestStore.cs`** | 🆕 **UNTRACKED, 324 lines.** The provider seam and cleanup surface. 🔴 **The one file the owner must edit** — constructor only |
+| **`ProphetsWay.EFTools`** | `ProphetsWay.EFTools.Tests/`**`ProviderSelectionTests.cs`** | 🆕 **UNTRACKED, 2 460 lines.** 57 cases: provider certification, the residual seam scanner, `TestStoreCleanup`, and the 25 `Area=StoreCleanup` guards — **1 of which is the intended red** |
+| **`ProphetsWay.EFTools`** | `ProphetsWay.EFTools.Tests/Constants.cs` | Modified, ±40. Provider selection via `EFTOOLS_PROVIDER`; the `_sqliteStore` keeper and its non-obvious finalizer comment |
+| **`ProphetsWay.EFTools`** | `ProphetsWay.EFTools.Tests/IdentifierResolutionTests.cs` | Modified, ±84. `WithStore` migrated; `UnopenedContext(store)`; **both plain-`using` sites routed through `DisposeReportingFailure`** in the final lap |
+| **`ProphetsWay.EFTools`** | `FailedInsertWriteBackTests.cs`, `KeyPredicateOpenKeyTests.cs`, `KeylessDaoTests.cs`, `KeylessSoftDaoTests.cs`, `SoftDeleteTimestampHookTests.cs` | Modified, ±23–26 each. `WithStore` migrated to `TestStore.OpenStore(…)` + `store.Configure(builder)`; interceptor/recorder overloads and `EnsureCreated` preserved; unused `Microsoft.Data.Sqlite` usings removed |
+| **`ProphetsWay.EFTools`** | `docs/feature-requests.md` | ✅ **Expected — `Purpose Refiner`.** +499. FR 11 re-scoped and release-blocking; **FR 19** filed. Last touched only to strip one EOF blank line |
+| **`ProphetsWay.EFTools`** | `docs/purpose-and-scope.md` | ✅ **Expected — `Purpose Refiner`.** +287. The certification-gate section carrying **D20–D22** |
+| **`prophets-pipelines`** | **`docs/session-handoff.md`** | ✅ **This file.** The 01:42 checkpoint. The only dirty file in that repo |
+| The other five repos | — | **Not re-measured this checkpoint** — out of scope. Reconcile against git before trusting the carried heads |
+
+**Total: 12 files, 2 repos** — 9 tracked + 2 untracked in EFTools, 1 here. `git diff --stat` in EFTools:
+**940 insertions, 90 deletions across the 9 tracked files** — 154/46 code, 786/44 docs.
+✅ **`git diff --check` exits 0** — measured this checkpoint, confirming the `Purpose Refiner` whitespace
+lap (one extra EOF newline removed from `docs/feature-requests.md`, no semantic change, no status moved).
+🔎 **Submodule confirmed unchanged:** `39d0e72` — `3.1.1-1-g39d0e72`.
+
+~~✅ **Two carried items are closed:**~~ still true — `ProphetsWay.EFTools.sln` is no longer dirty and
+`ProphetsWay.BPA`'s `.toolbelt-stress-*` fixtures are gone.
+
+**Committing is the owner's decision. Nothing was staged, committed or pushed by this checkpoint.**
+
+---
+
+## Corrections to Carried Claims — check these before trusting an older note
+
+| Claim | Status |
+|---|---|
+| 🚩 **Guardrail: *"Do not 'fix' the 10 `EFSnapshotDeepCopyTests` failures by overriding `ApplyIncludes` on an EF DAO"*** | **CONTRADICTED BY TONIGHT'S `3ac9615`**, which cleared nine of them by doing exactly that. The reconciliation: identity remains the **library's** default per OD-1 / A18, and what changed is the **proving ground's own DAOs** overriding the seam — a consumer using an extension point as designed, not a change to the library. **Flagged rather than silently rewritten; the owner should confirm the guardrail's new wording** |
+| **Guardrail: submodule pinned at `61d9e7d`** | **Superseded.** It is `39d0e72`. The rule itself stands: **never edit under `ProphetsWay.EFTools/ProphetsWay.Example/`** |
+| **Guardrail: don't "fix" `EFDataAccessTransactionTests.ShouldExposeUncommittedWritesToAnotherInstance`** | **Superseded.** Renamed to `…OnlyWhereTheStoreDoesNotIsolateThem` and now **passes** by branching on `StoreCapabilities`. The rule survives in a stronger form: **`StoreCapabilities` flags are positive capabilities on two independent axes, not a store-kind label** — adding `DenormalizedNavigationWrites` to a relational DAL to "fix" a failure asserts an in-memory outcome against a relational store |
+| **FR 18 — *"the committed `.trx` files read authoritative and are stale"*** | **PREMISE DISPROVEN.** They are **not tracked**: `.gitignore` line 43 `[Tt]est[Rr]esult*/` already excludes them, confirmed tonight by `git status -uall` reporting them nowhere. Seven stale files sit **on disk only**. The entry should be **re-scoped** — *never cite a local `.trx` as current* — rather than closed |
+| **EFTools FR 11 "fact 2"** | **DEAD.** The package depends on no provider at all as of `77cfe5c` |
+| **EFTools `AGENTS.md` deviations 5 and 7** | **Stale on commit of the pending csproj.** Deviation 7's *"read the two rows together or you will conclude Source Link works"* is the specific sentence that inverts |
+| **`ProphetsWay.EFTools.sln` — 🚩 DISCARD** | ✅ **Closed.** Gone from the working tree; measured with `git status -uall` |
+| **`ProphetsWay.BPA` `.toolbelt-stress-*` untracked fixtures** | ✅ **Closed.** BPA is entirely clean |
+| **Open question A** — did 3.2.0 publish and did symbols push? | ✅ **CLOSED overnight.** Both succeeded; symbols returned `Created` |
+
+---
+
+## 🤖 Process Observations — the reason to keep the receipt protocol
+
+- **Three delegated agents ended silently tonight**, each having done substantial work. **All three were
+  recovered from their receipt artifacts.** Without the protocol, three change sets would have landed as
+  unexplained diffs with no account of intent. **The receipt protocol earned its keep, again.**
+- **Two agents reported having no terminal and said so** rather than fabricating verification. That is the
+  behaviour to preserve; it costs a round-trip and buys a true record.
+- 🔴 **The recurring failure mode all evening was carrying a claim instead of checking it** — including
+  **one agent introducing a fresh false claim during the sweep that existed to remove them.** The shared
+  block's *"affirming an inherited claim is not verifying it"* rule is doing real work and must not be
+  softened.
+- **Scope reasoning from written artifacts alone cannot see an unwritten purpose.** Tonight's FR 11
+  reversal is the case study — see the lead's error above.
+
+---
+
+## Verification Record — what this wrapup ran and opened
+
+**Ran** (22:00, 2026-08-23): `git log -1 --format='HEAD %h %s'` and `git status -sb` in **all eight**
+repositories; `git status -sb -uall` in `ProphetsWay.EFTools` and `ProphetsWay.BPA`;
+`git submodule status` in `ProphetsWay.EFTools`; `git ls-files` in `ProphetsWay.BPA`;
+`git describe --tags` in `ProphetsWay.Example`; a heading outline and line count of the outgoing handoff.
+
+**Opened:** this handoff in full — the 14:10 checkpoint, and the preserved 08-22 sign-off's open questions,
+Deliberately Deferred, Standing Guardrails and Recent Sessions — before rewriting it.
+
+**Not measured — owner-reported and labelled where used:** every build and test figure (0/0 build,
+270/270/0 suite, 245/245/0 gate, 32 s → 2 s), the `dotnet pack` nuspec inspection, the `nuget.exe` 6.4.0
+log excerpt, `Constants.cs`'s connection string, `.gitignore` line 43, and the text of the FR 11 entry.
+**These come from the session record, not from a run in this scribe pass.**
+
+**Not done:** no artifact-ledger scan — that is `resume`'s job, not `wrapup`'s.
+
+---
+
+<!-- ══════════════════ END OF THE 2026-08-23 SIGN-OFF ══════════════════
      Everything below is the 2026-08-22 → 08-23 sign-off, PRESERVED VERBATIM.
-     It exists nowhere else — HEAD still holds the 23:55 checkpoint it replaced.
-     Do not delete it until this file is committed.
+     It is ALSO committed as prophets-pipelines 8095b6e — the alarm it carries
+     about being the sole copy is discharged. Read it as history only, and
+     read the Corrections table above before trusting any claim in it.
      ═══════════════════════════════════════════════════════════════════ -->
 
 # ⬇ PRESERVED — the 2026-08-22 → 08-23 sign-off
 
-> ⚠️ **Historical as of 2026-08-23 14:10.** Its blocking question **A is now closed** and question **B is
-> largely moot** — see the checkpoint above. Everything else below still stands.
+> ⚠️ **Historical as of the 2026-08-23 22:05 sign-off above.** It is **also committed** as
+> `prophets-pipelines` **`8095b6e`**, so the alarm it carries about being the sole copy of itself is
+> **discharged** — read every 🚨 in it as answered.
+>
+> **Closed since it was written:** blocking question **A** (the 3.2.0 publish fired and symbols pushed);
+> question **B** is largely moot; the `ProphetsWay.EFTools.sln` 🚩 **DISCARD** item; the BPA
+> `.toolbelt-stress-*` fixtures; the EFTools follow-on and the `CS8766` suppressions; and the F10 filing.
+>
+> 🔴 **Read the *Corrections to Carried Claims* table above before trusting anything below.** Three of its
+> **Standing Guardrails** are now wrong — the `ApplyIncludes` rule, the `61d9e7d` submodule pointer, and
+> the `ShouldExposeUncommittedWritesToAnotherInstance` rule.
+>
+> ✅ **Two sections below are still the LIVE lists, not history:** *Deliberately Deferred* and *Standing
+> Guardrails*. They were not duplicated into the new sign-off; they are amended by the Corrections table
+> above and otherwise stand as written. **Also still live:** non-blocking questions **a–f**, which the new
+> sign-off carries forward by name.
 
 > ✅ **SIGN-OFF — 2026-08-22 → 2026-08-23.** This supersedes the **three `live` checkpoints** written
 > during 2026-08-22 (09:41, 22:15 and 23:55). There is now **one** entry for that session, not three.
@@ -757,6 +1173,35 @@ EFTools suite requires a local SQL Server carrying `ProphetsWay.Example`; the la
 ---
 
 ## Recent Sessions
+
+> ✅ **This index is LIVE, not preserved history** — it simply sits at the foot of the file. Its newest
+> entry is **tonight's, 2026-08-23**, written by the sign-off at the top.
+
+### 2026-08-23 — *the purpose reveal, and a release gate that was not visible in any document*
+
+**The session's most valuable output was a sentence, not a commit.** The owner stated for the first time
+what these libraries are *for* — **`BPA`, and a previously-unmentioned web tool `HashDB`, on local MSSQL
+for dev and Azure SQL for production** — and with it a release bar: *"if we can't say EFTools is cleared to
+work in SQL Server, then it's not worth pushing out."* That **reversed a scope ruling made hours earlier**:
+the lead and `Purpose Refiner` had both correctly reasoned from the written artifacts that FR 11 was not
+release-blocking, and both were **wrong about the purpose**, which was nowhere written down. **EFTools
+3.0.0 is now deliberately untagged** pending certification, and **Azure SQL is a second, never-examined
+leg.**
+
+Technically: the release pipeline was **simplified by measurement** — `nuget.exe` 6.4.0 auto-pushes a
+co-located `.snupkg`, so a push step written that morning was **substantially reverted the same day**
+(`63dd56b` → `6110d69`), the tool pinned to 6.4.0, and an artifact download hoisted — **which fixed a
+silent defect that had been creating empty GitHub releases for three repos.** BaseDataAccess **3.2.0** was
+taken into EFTools, retiring **ten `CS8766` suppressions**; **EF providers were removed from the package**
+(breaking, deliberately pre-tag); a missing `ApplyIncludes` in the proving ground cleared **nine `Contract`
+failures**; and a new **`StoreCapabilities`** mechanism let two permanently-failing `Characterization`
+tests branch — **270/270/0, full run 32 s → 2 s.** A four-repo sweep corrected roughly two dozen false
+claims. **Ended with exactly one dirty file** across eight repos: the verified Source Link csproj.
+
+**Process:** three delegated agents ended silently and **all three were recovered from their receipts**;
+two agents correctly reported having no terminal rather than fabricating verification; and the evening's
+recurring failure was **carrying a claim instead of checking it** — once by an agent *inside the sweep that
+existed to remove such claims.*
 
 ### 2026-08-22 → 08-23 — *two releases prepared, one toolbelt repaired*
 

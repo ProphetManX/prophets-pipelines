@@ -1,0 +1,43 @@
+{
+  "generation": "v2",
+  "status": "retired",
+  "archivedUtc": "2026-10-24T05:40:19.3615827+00:00",
+  "source": "Verified live VS Code user prompt generation and matching versioned mirror",
+  "agentFiles": [
+    "docs-a-changelog-author-v2.agent.md",
+    "docs-a-commit-author-v2.agent.md",
+    "docs-a-purpose-refiner-v2.agent.md",
+    "docs-a-readme-author-v2.agent.md",
+    "docs-a-repo-analyst-v2.agent.md",
+    "infra-a-deployment-reviewer-v2.agent.md",
+    "infra-a-engineer-v2.agent.md",
+    "meta-a-toolbelt-keeper-v2.agent.md",
+    "ops-a-modernizer-v2.agent.md",
+    "ops-a-pipeline-auditor-v2.agent.md",
+    "ops-a-pipeline-engineer-v2.agent.md",
+    "ops-a-repository-operator-v2.agent.md",
+    "ops-a-scaffolder-v2.agent.md",
+    "proj-a-owner-delegate-v2.agent.md",
+    "proj-a-product-discovery-v2.agent.md",
+    "proj-a-requirements-reviewer-v2.agent.md",
+    "proj-a-session-scribe-v2.agent.md",
+    "proj-a-solution-architect-v2.agent.md",
+    "proj-a-vanguard-v2.agent.md",
+    "sec-a-security-reviewer-v2.agent.md",
+    "sec-a-threat-modeler-v2.agent.md",
+    "tdd-a-api-designer-v2.agent.md",
+    "tdd-a-code-reviewer-v2.agent.md",
+    "tdd-a-contract-reviewer-v2.agent.md",
+    "tdd-a-implementer-v2.agent.md",
+    "tdd-a-interface-architect-v2.agent.md",
+    "tdd-a-refactorer-v2.agent.md",
+    "tdd-a-test-auditor-v2.agent.md",
+    "tdd-a-test-designer-v2.agent.md",
+    "tdd-a-test-harness-engineer-v2.agent.md"
+  ],
+  "promptFiles": [
+    "docs-p-sweep-workspace.prompt.md",
+    "docs-p-sync-agents-md.prompt.md"
+  ],
+  "ownedSkills": []
+}

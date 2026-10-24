@@ -1,12 +1,14 @@
-# Agent Toolbelt — Session Handoff
+# Agent Toolbelt — Historical Session Handoff
 
 > **This file is not auto-loaded.** Attach it with `#file` when starting a session about
 > building, changing, or debugging agent customizations. Do not add it to `AGENTS.md` — it
 > is administrative context, irrelevant to day-to-day coding sessions.
+> **The roster and workflows below describe retired v1/v2 customizations, not the active suite.**
+> The current source and installation guide are in [`agent-suite-v3/`](agent-suite-v3/README.md).
 
 **Built:** 2026-08-08 · **Revised:** 2026-10-03 · **Owner:** G. Gordon Nasseri (ProphetManX)
 **Covers:** the customization roster and the `AGENTS.md` conventions system across 8 repos —
-**30 active v2 agents**, **26 archived v1 agents**, **2 active prompts**, and **1 shared skill bundle**.
+**30 retired v2 agents**, **26 archived v1 agents**, **2 retired prompts**, and **1 historical skill bundle**.
 
 **2026-10-03 targeted reporting repairs:** under fresh idle confirmation and bounded owner approval,
 the shared validation helper gains optional post-preparation `LatestStartUtc` admission and evidence;
@@ -94,7 +96,7 @@ Roster, models, tools, picker visibility, product repositories and archived gene
 This does not resume an old run, extend its deadline or authorize product/Git operations. See the
 [current workflow](agent-toolbelt-v2.md) and [skill inventory](agent-toolbelt-v2.md#12-shared-skill-inventory).
 
-**Current v2 workflow:** one approved assignment can contain rolling immutable slice targets, selected
+**Historical v2 workflow:** one approved assignment could contain rolling immutable slice targets, selected
 just in time inside designed work areas/exclusions. Focused independent verification and explicit
 checkpoint authority lead to `NEXT_ACTION`, not sign-off after every slice. `single-final` still permits
 only its one complete-target commit; explicit `rolling` authority permits successive local checkpoints,

@@ -1,6 +1,10 @@
-# Agent Toolbelt v2 - Workflow And Role Map
+# Agent Toolbelt v2 - Historical Workflow And Role Map
 
-**Status:** **Active selector generation.** v1 is archived for rollback, not deleted. **Created:**
+> **Historical only:** v2 is retired and its exact 30-agent/two-prompt generation is preserved in
+> [`toolbelt/archive/v2/`](toolbelt/archive/v2/). Do not use this file to route new work or reinstall
+> v2. The active source is the [v3 source and install guide](agent-suite-v3/README.md).
+
+**Status:** **Retired selector generation.** v1 is archived for rollback, not deleted. **Created:**
 2026-08-29. **Revised:** 2026-10-03 - full project-run structured reporting rollout.
 **Owner:** G. Gordon Nasseri (ProphetManX). **Roster:** 30 v2 agents: `Vanguard v2`,
 twenty-eight leaves in its allowlist, and `Toolbelt Keeper v2` deliberately outside it.

@@ -1,6 +1,10 @@
-# Agent Protocol v2 - Shared Delegation Mechanics
+# Agent Protocol v2 - Historical Delegation Mechanics
 
-**Applies to:** the active v2 roster. **Revised:** 2026-10-03. **Owner:** G. Gordon Nasseri (ProphetManX).
+> **Historical only:** this protocol governed v2 runs and does not apply to the active v3 suite.
+> Preserve it for interpreting v2 evidence and existing run records. See the
+> [v3 suite specification](agent-suite-v3/specification.md) for current behavior.
+
+**Applies to:** the retired v2 roster and its historical runs. **Revised:** 2026-10-03. **Owner:** G. Gordon Nasseri (ProphetManX).
 
 On 2026-10-03 the owner confirmed all agents idle and authorized preparation of the bounded dashboard
 reporting pilot in section 10. Only Vanguard, Implementer and Code Reviewer participate. Default
