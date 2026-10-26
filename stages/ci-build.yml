@@ -11,6 +11,14 @@ parameters:
 - name: LocalVariables
   type: string
 
+- name: EnableLinuxTesting
+  type: string
+  default: 'no'
+
+- name: EnableMacTesting
+  type: string
+  default: 'no'
+
 
 stages:
 - stage: Build
@@ -133,3 +141,8 @@ stages:
           OutputDir: 'Release'
           VersionVariable: 'SemanticVersion'
 
+  - template: '../jobs/os-platform-testing.yml'
+    parameters:
+      LocalVariables: ${{ parameters.LocalVariables }}
+      EnableLinuxTesting: ${{ parameters.EnableLinuxTesting }}
+      EnableMacTesting: ${{ parameters.EnableMacTesting }}

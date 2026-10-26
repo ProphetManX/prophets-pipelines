@@ -1,0 +1,47 @@
+parameters:
+- name: LocalVariables
+  type: string
+
+- name: EnableLinuxTesting
+  type: string
+
+- name: EnableMacTesting
+  type: string
+
+
+jobs:
+- ${{ if eq(parameters.EnableLinuxTesting, 'yes') }}:
+  - job: LinuxTesting
+    displayName: 'Build and Test (Linux)'
+    variables:
+    - template: '${{ parameters.LocalVariables }}@self'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - checkout: self
+      submodules: true
+
+    - template: '../steps/restore-build-test.yml'
+      parameters:
+        HasSqlProj: 'no'
+        LocalTestsOnly: ${{ variables.LocalTestsOnly }}
+        BuildArguments: '--configuration Release --framework net10.0'
+        TestArguments: '--no-build --configuration Release --framework net10.0 --filter "Requires!=LocalDb"'
+
+- ${{ if eq(parameters.EnableMacTesting, 'yes') }}:
+  - job: MacTesting
+    displayName: 'Build and Test (macOS)'
+    variables:
+    - template: '${{ parameters.LocalVariables }}@self'
+    pool:
+      vmImage: 'macOS-latest'
+    steps:
+    - checkout: self
+      submodules: true
+
+    - template: '../steps/restore-build-test.yml'
+      parameters:
+        HasSqlProj: 'no'
+        LocalTestsOnly: ${{ variables.LocalTestsOnly }}
+        BuildArguments: '--configuration Release --framework net10.0'
+        TestArguments: '--no-build --configuration Release --framework net10.0 --filter "Requires!=LocalDb"'
