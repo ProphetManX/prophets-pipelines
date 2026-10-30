@@ -61,13 +61,13 @@ stages:
           - ${{ if eq( variables.PostTargetToNuGet, 'yes' )}}:
             # pinned, not floated: nuget.exe is whatever the hosted image ships, and its version decides whether the
             # single push below also publishes an adjacent .snupkg, so an image refresh could change what reaches the
-            # feed with no commit anywhere. 6.4.0 is the spec the 2026-08-23T04:45 log resolved unpinned, reporting
-            # file version 6.4.0.123, so this holds today's behaviour rather than changing it
+            # feed with no commit anywhere. Azure DevOps external service connections using API-key authentication require
+            # NuGet 7.6+, and this exact 7.6.0 pin preserves deterministic behavior across hosted-image refreshes
             # deliberately fatal: a wrong nuget.exe changes publish behaviour quietly, a missing one fails loudly
             - task: NuGetToolInstaller@1
-              displayName: 'Pin NuGet CLI to 6.4.0'
+              displayName: 'Pin NuGet CLI to 7.6.0'
               inputs:
-                versionSpec: '6.4.0'
+                versionSpec: '7.6.0'
 
             # ahead of the release below rather than beside the push further down: create-github-release.yml globs
             # this folder for its assets, and downloading afterwards attached nothing while still reporting success.
@@ -112,7 +112,7 @@ stages:
           # so it has to stay below the GitHub release steps that sit between the two blocks. Merging them would
           # publish before those steps can fail, stranding a version no re-run can replace
           - ${{ if eq( variables.PostTargetToNuGet, 'yes' )}}:
-            # one push, symbols included: on 6.4.0 a single push of the .nupkg also pushes the .snupkg beside it,
+            # one push, symbols included: the 2026-08-23 log historically measured 6.4.0 symbol auto-push, not 7.6.0,
             # measured not inferred - the 2026-08-23 Push NuGet Alpha Package log shows an unprompted PUT to
             # /symbolpackage/ returning Created. The pin and the co-located download above keep that true
             # unguarded, accepted: the symbol half rides inside this fatal push, so a feed with no symbol endpoint
